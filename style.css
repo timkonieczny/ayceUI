@@ -1,0 +1,113 @@
+html, body{
+    width:100%;
+    height:100%;
+    margin:0;
+    padding:0;
+    border:0;
+    /*font-family: 'Montserrat', sans-serif;*/
+    font-family: 'PT Sans', sans-serif;
+    color: #fff;
+}
+#export_code{
+    display: inline-block;
+    background-color: #676767;
+    margin: 5px;
+    padding: 5px;
+    border-radius: 3px
+}
+#main_menu{
+    width:100%;
+}
+h2{
+    margin-bottom: 0;
+    font-weight: normal;
+    font-size: 1.5em;
+}
+ul{
+    padding: 0;
+    margin: 0;
+}
+li{
+    list-style-type: none;
+    background-color: #676767;
+    margin: 5px 0px 5px 0px;
+    padding: 5px;
+    border-radius: 3px
+}
+.add_object, #add_light, #export_code, .object_in_scene{
+    cursor: pointer;
+}
+#sidebar_left, #sidebar_right{
+    position: absolute;
+    z-index: 1;
+    background-color: #3e3e3e;
+    width: 20em;
+    height:100%;
+    overflow: auto;
+    padding: 0px 5px 0px 5px;
+}
+#sidebar_left{
+    left:0;
+}
+#sidebar_right{
+    right:0;
+    display: none;
+}
+#objects_in_scene_div{
+    margin-top:0.83em;
+    padding: 0px 5px 5px 5px;
+    background-color: #cccccc;
+    border-radius: 3px
+}
+#objects_in_scene_div h2{
+    margin-top:0px;
+}
+.property_input{
+    width:30%;
+    margin:0;
+    /*overflow: scroll;*/
+}
+fieldset{
+    margin: 0;
+    border: 0;
+    padding: 0;
+}
+#main_canvas{
+    z-index: 0;
+    position: absolute;
+    /*float: left;*/
+    /*display: inline-block;*/
+    /*background-color: #000000;*/
+    /*flex:3;*/
+    /*height:100%;*/
+    /*width:70%;*/
+}
+#export_code_div{
+    height: 80%;
+    width: 60%;
+    position: fixed;
+    z-index: 2;
+    display: none;
+    right: 0;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    margin: auto;
+
+}
+#export_code_textarea{
+    width:100%;
+    height:100%;
+    resize: none;
+    padding: 0;
+    border: 0;
+}
+#export_code_close{
+    position: absolute;
+    top:0;
+    right:0;
+    z-index: 23;
+    background-color: red;
+    margin:0;
+    padding: 0px 1em 0px 1em;
+}
