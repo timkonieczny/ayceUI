@@ -105,18 +105,39 @@ function update() {
     if(cursor.down){
         console.log(cursor.x + " " + cursor.y);
     }
-    var y = (Date.now() / 2000) % Math.PI * 2.0;
-    //cube.rotation.fromEulerAngles(0, y, 0);
+    /*var y = (Date.now() / 2000) % Math.PI * 2.0;
+    cube.rotation.fromEulerAngles(0, y, 0);*/
 
     Ayce.requestAnimFrame(update);
     scene.updateScene();
     scene.drawScene();
 }
 
+var addClass = function(element, className){
+    element.className += " "+className;
+};
+
+var removeClass = function(element, className2){
+    element.className =
+        element.className.replace
+        (className2, '');
+};
+
+var activeProperties = null;
+
 var showProperties = function(e){           // TODO: create properties screen for lighting
-    document.getElementById("sidebar_right").style.display = "";
-    alert();
+    document.getElementById("sidebar_right").style.display = "block";
+    addClass(this, "button_active");
     currentObjectId = this.dataset.id;
+    
+    this.removeEventListener("click", showProperties);
+    this.addEventListener("click", hideProperties, false);
+    if(activeProperties!=null && activeProperties != this){
+        activeProperties.removeEventListener("click", hideProperties);
+        activeProperties.addEventListener("click", showProperties, false);
+        removeClass(activeProperties, "button_active");
+    }
+    activeProperties = this;
 
     propertiesUI.position.x.value = objects[currentObjectId].position.x;
     propertiesUI.position.y.value = objects[currentObjectId].position.y;
@@ -140,6 +161,12 @@ var showProperties = function(e){           // TODO: create properties screen fo
     propertiesUI.lighting.specular.checked = objects[currentObjectId].useSpecularLighting;
 };
 
+var hideProperties = function(){
+    document.getElementById("sidebar_right").style.display = "none";
+    this.removeEventListener("click", hideProperties);
+    this.addEventListener("click", showProperties, false);
+};
+
 var i;
 var addObjectButtons = document.getElementsByClassName("add_object");
 for(i = 0; i < addObjectButtons.length; i++){
@@ -157,6 +184,14 @@ for(i = 0; i < addObjectButtons.length; i++){
         child.dataset.id = (objects.length-1);
         child.className = "object_in_scene";
         child.onclick = showProperties;
+
+        //var child = document.createElement('input');
+        //child.dataset.id = (objects.length-1);
+        //child.className = "object_in_scene";
+        //child.title = this.innerText;
+        //child.type = "radio";
+        //child.onclick = showProperties;
+
         document.getElementById("objects_in_scene").appendChild(child);
     }
 }
@@ -236,7 +271,7 @@ for(i = 0; i < propertyInputs.length; i++){
                 objects[currentObjectId][attribute[0]][attribute[1]] = Number(e.target.value);
         }
     };
-    propertyInputs[i].onwheel = function(e){    // TODO: colors are saved in an array per vertex
+    propertyInputs[i].onwheel = function(e){
         e.preventDefault();
         var factor = e.deltaY / 100;
         switch(e.srcElement.id){
