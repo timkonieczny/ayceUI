@@ -25,23 +25,6 @@ var quaternion_to_euler = function(q){   // TODO: move to ayceVR
         Math.atan2(2*q.x*q.w-2*q.y*q.z , -sqx + sqy - sqz + sqw)
     ]
 };
-
-/*function quat_to_axis(q1) {
-    if (q1.w > 1) q1.normalize(); // if w>1 acos and sqrt will produce errors, this cant happen if quaternion is normalised
-    angle = 2 * Math.acos(q1.w);
-    double s = Math.sqrt(1-q1.w*q1.w); // assuming quaternion normalised then w is less than 1, so term always positive.
-    if (s < 0.001) { // test to avoid divide by zero, s is always positive due to sqrt
-        // if s close to zero then direction of axis not important
-        x = q1.x; // if it is important that axis is normalised then replace with x=1; y=z=0;
-        y = q1.y;
-        z = q1.z;
-    } else {
-        x = q1.x / s; // normalise axis
-        y = q1.y / s;
-        z = q1.z / s;
-    }
-}*/
-
 var canvas = document.getElementById("main_canvas");
 var cursor = {
     x: 0,
@@ -60,45 +43,10 @@ canvas.addEventListener("mousedown", function() {
 canvas.addEventListener("mouseup", function() {
     cursor.down = false;
 });
-//window.onscroll = function(e){
-//    console.log(e);
-//    console.log("bal");
-//};
-
-var propertiesUI = {
-    rotation: {
-        x: document.getElementById("rotation_x"),
-        y: document.getElementById("rotation_y"),
-        z: document.getElementById("rotation_z"),
-        w: document.getElementById("rotation_w")
-    },
-    position: {
-        x: document.getElementById("position_x"),
-        y: document.getElementById("position_y"),
-        z: document.getElementById("position_z")
-    },
-    scale: {
-        x: document.getElementById("scale_x"),
-        y: document.getElementById("scale_y"),
-        z: document.getElementById("scale_z")
-    },
-    colors: {
-        r: document.getElementById("colors_r"),
-        g: document.getElementById("colors_g"),
-        b: document.getElementById("colors_b"),
-        a: document.getElementById("colors_a")
-    },
-    visible: document.getElementById("visible"),
-    lighting: {
-        fragment: document.getElementById("use_fragment_lighting"),
-        specular: document.getElementById("use_specular_lighting")
-    }
-};
 
 var scene = new Ayce.Scene(canvas);
 
 var objects = [];
-var lights = [];
 var currentObjectId;
 
 function update() {
@@ -125,19 +73,26 @@ var activeObject = null;
 
 var uiFactory = new UIFactory();
 
-var showProperties = function(e){           // TODO: create properties screen for lighting
+var showProperties = function(e) {
     document.getElementById("sidebar_right").style.display = "block";
     addClass(this, "button_active");
     currentObjectId = this.dataset.id;
     uiFactory.resetAttributes();
-    uiFactory.position = true;
-    uiFactory.rotation = true;
-    uiFactory.scale = true;
-    uiFactory.color = true;
-    uiFactory.twoFaceTransparency = true;
-    uiFactory.lighting = true;
-    uiFactory.visibility = true;
-    document.getElementById("properties_list").innerHTML = uiFactory.buildUI();     // TODO: update values in propertiesUI variable
+    if (e.srcElement.dataset.type == "plane"||
+        e.srcElement.dataset.type == "cube"||
+        e.srcElement.dataset.type == "sphere"||
+        e.srcElement.dataset.type == "icosahedron"){
+        uiFactory.position = true;
+        uiFactory.rotation = true;
+        uiFactory.scale = true;
+        uiFactory.color = true;
+        uiFactory.twoFaceTransparency = true;
+        uiFactory.lighting = true;
+        uiFactory.visibility = true;
+    }else if(e.srcElement.dataset.type == "light"){
+        uiFactory.position = true;
+    }
+    document.getElementById("properties_list").innerHTML = uiFactory.buildUI();
     setEventListeners();
 
     this.removeEventListener("click", showProperties);
@@ -149,26 +104,33 @@ var showProperties = function(e){           // TODO: create properties screen fo
     }
     activeObject = this;
 
-    document.getElementById("position_x").value = objects[currentObjectId].position.x;
-    document.getElementById("position_y").value = objects[currentObjectId].position.y;
-    document.getElementById("position_z").value = objects[currentObjectId].position.z;
-
-    var eulerAngles = quaternion_to_euler(objects[currentObjectId].rotation);
-    document.getElementById("rotation_x").value = eulerAngles[0];    // TODO: quaternion to euler angle
-    document.getElementById("rotation_y").value = eulerAngles[1];
-    document.getElementById("rotation_z").value = eulerAngles[2];
-
-    document.getElementById("scale_x").value = objects[currentObjectId].scale.x;
-    document.getElementById("scale_y").value = objects[currentObjectId].scale.y;
-    document.getElementById("scale_z").value = objects[currentObjectId].scale.z;
-
-    document.getElementById("colors_r").value = document.getElementById("colors_g").value = document.getElementById("colors_b").value = 0.5;
-    document.getElementById("colors_a").value = 1;    // TODO: Can't use 1 here
-
-    document.getElementById("visible").checked = objects[currentObjectId].visible;
-
-    document.getElementById("use_fragment_lighting").checked = objects[currentObjectId].useFragmentLighting;
-    document.getElementById("use_specular_lighting").checked = objects[currentObjectId].useSpecularLighting;
+    if(uiFactory.position) {
+        document.getElementById("position_x").value = objects[currentObjectId].position.x;
+        document.getElementById("position_y").value = objects[currentObjectId].position.y;
+        document.getElementById("position_z").value = objects[currentObjectId].position.z;
+    }
+    if(uiFactory.rotation) {
+        var eulerAngles = quaternion_to_euler(objects[currentObjectId].rotation);
+        document.getElementById("rotation_x").value = eulerAngles[0];    // TODO: quaternion to euler angle
+        document.getElementById("rotation_y").value = eulerAngles[1];
+        document.getElementById("rotation_z").value = eulerAngles[2];
+    }
+    if(uiFactory.scale) {
+        document.getElementById("scale_x").value = objects[currentObjectId].scale.x;
+        document.getElementById("scale_y").value = objects[currentObjectId].scale.y;
+        document.getElementById("scale_z").value = objects[currentObjectId].scale.z;
+    }
+    if(uiFactory.color) {
+        document.getElementById("colors_r").value = document.getElementById("colors_g").value = document.getElementById("colors_b").value = 0.5;
+        document.getElementById("colors_a").value = 1;    // TODO: Can't use 1 here
+    }
+    if(uiFactory.visibility) {
+        document.getElementById("visible").checked = objects[currentObjectId].visible;
+    }
+    if(uiFactory.lighting) {
+        document.getElementById("use_fragment_lighting").checked = objects[currentObjectId].useFragmentLighting;
+        document.getElementById("use_specular_lighting").checked = objects[currentObjectId].useSpecularLighting;
+    }
 };
 
 var hideProperties = function(){
@@ -185,7 +147,11 @@ for(i = 0; i < addObjectButtons.length; i++){
         document.getElementById("objects_in_scene_div").style.display = "block";
         objects.push(eval(this.dataset.constructor));
         if(!eval(this.dataset.centered)) {
-            objects[objects.length - 1].offset.set(-objects[objects.length - 1].a / 2.0, -objects[objects.length - 1].b / 2.0, -objects[objects.length - 1].c / 2.0);
+            objects[objects.length - 1].offset.set(
+                -objects[objects.length - 1].a / 2.0,
+                -objects[objects.length - 1].b / 2.0,
+                -objects[objects.length - 1].c / 2.0
+            );
         }
         objects[objects.length-1] = objects[objects.length-1].getO3D();
         objects[objects.length-1].position.z = -2;
@@ -194,6 +160,7 @@ for(i = 0; i < addObjectButtons.length; i++){
         var child = document.createElement('li');
         child.innerHTML = this.innerText;
         child.dataset.id = (objects.length-1);
+        child.dataset.type = (this.dataset.type);
         child.className = "object_in_scene";
         child.onclick = showProperties;
 
@@ -211,11 +178,12 @@ for(i = 0; i < addObjectButtons.length; i++){
 document.getElementById("add_light").onclick = function(){
     document.getElementById("objects_in_scene_div").style.display = "block";
     //document.getElementById('test').appendChild(child);
-    lights.push(new Ayce.Light());
-    scene.addToScene(lights[lights.length-1]);
+    objects.push(new Ayce.Light());
+    scene.addToScene(objects[objects.length-1]);
     var child = document.createElement('li');
     child.innerHTML = "Light";
-    child.dataset.id = (lights.length-1);
+    child.dataset.id = (objects.length-1);
+    child.dataset.type = (this.dataset.type);
     child.className = "object_in_scene";
     child.onclick = showProperties;
     document.getElementById("objects_in_scene").appendChild(child);
@@ -301,6 +269,7 @@ var setEventListeners = function() {
         propertyInputs[i].onwheel = function (e) {
             e.preventDefault();
             var factor = e.deltaY / 100;
+            var i;
             switch (e.srcElement.id) {
                 case "rotation_x":
                     e.target.value = (Number(e.target.value) + factor * 0.1) % (2 * Math.PI);
@@ -335,7 +304,7 @@ var setEventListeners = function() {
                     e.target.value = Number(e.target.value) + factor * 0.1;
                     document.getElementById("colors_r").value = Math.min(Number(document.getElementById("colors_r").value), 1);
                     document.getElementById("colors_r").value = Math.max(Number(document.getElementById("colors_r").value), 0);
-                    for (var i = 0; i < objects[currentObjectId].vertices.length / 3; i++) {
+                    for (i = 0; i < objects[currentObjectId].vertices.length / 3; i++) {
                         objects[currentObjectId].colors.push(Number(document.getElementById("colors_r").value));
                         objects[currentObjectId].colors.push(Number(document.getElementById("colors_g").value));
                         objects[currentObjectId].colors.push(Number(document.getElementById("colors_b").value));
@@ -349,7 +318,7 @@ var setEventListeners = function() {
                     e.target.value = Number(e.target.value) + factor * 0.1;
                     document.getElementById("colors_g").value = Math.min(Number(document.getElementById("colors_g").value), 1);
                     document.getElementById("colors_g").value = Math.max(Number(document.getElementById("colors_g").value), 0);
-                    for (var i = 0; i < objects[currentObjectId].vertices.length / 3; i++) {
+                    for (i = 0; i < objects[currentObjectId].vertices.length / 3; i++) {
                         objects[currentObjectId].colors.push(Number(document.getElementById("colors_r").value));
                         objects[currentObjectId].colors.push(Number(document.getElementById("colors_g").value));
                         objects[currentObjectId].colors.push(Number(document.getElementById("colors_b").value));
@@ -363,7 +332,7 @@ var setEventListeners = function() {
                     e.target.value = Number(e.target.value) + factor * 0.1;
                     document.getElementById("colors_b").value = Math.min(Number(document.getElementById("colors_b").value), 1);
                     document.getElementById("colors_b").value = Math.max(Number(document.getElementById("colors_b").value), 0);
-                    for (var i = 0; i < objects[currentObjectId].vertices.length / 3; i++) {
+                    for (i = 0; i < objects[currentObjectId].vertices.length / 3; i++) {
                         objects[currentObjectId].colors.push(Number(document.getElementById("colors_r").value));
                         objects[currentObjectId].colors.push(Number(document.getElementById("colors_g").value));
                         objects[currentObjectId].colors.push(Number(document.getElementById("colors_b").value));
@@ -377,13 +346,13 @@ var setEventListeners = function() {
                     e.target.value = Number(e.target.value) + factor * 0.1;
                     document.getElementById("colors_a").value = Math.min(Number(document.getElementById("colors_a").value), 1);
                     document.getElementById("colors_a").value = Math.max(Number(document.getElementById("colors_a").value), 0);
-                    for (var i = 0; i < objects[currentObjectId].vertices.length / 3; i++) {
+                    for (i = 0; i < objects[currentObjectId].vertices.length / 3; i++) {
                         objects[currentObjectId].colors.push(Number(document.getElementById("colors_r").value));
                         objects[currentObjectId].colors.push(Number(document.getElementById("colors_g").value));
                         objects[currentObjectId].colors.push(Number(document.getElementById("colors_b").value));
                         objects[currentObjectId].colors.push(Number(document.getElementById("colors_a").value));
                     }
-                    if (propertiesUI.colors.a.value < 1) {
+                    if (document.getElementById("colors_a").value < 1) {
                         objects[currentObjectId].transparent = true;
                     }
                     scene.addToScene(objects[currentObjectId]);

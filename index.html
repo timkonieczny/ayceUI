@@ -21,70 +21,39 @@
         <div>
             <h2><i class="fa fa-cube"></i> Objects</h2>
             <ul>
-                <li class="add_object button_inactive add_object_left_column" id="create_plane" data-constructor="new Ayce.Geometry.Plane(1, 1, 2, 2, false)" data-centered="true">Plane</li>
-                <li class="add_object button_inactive add_object_right_column" id="create_cube" data-constructor="new Ayce.Geometry.Box(1, 1, 1)" data-centered="false">Cube</li>
-                <li class="add_object button_inactive add_object_left_column" id="create_sphere" data-constructor="new Ayce.Geometry.Sphere(0.5)" data-centered="true">Sphere</li>
-                <li class="add_object button_inactive add_object_right_column" id="create_ico" data-constructor="new Ayce.Geometry.Icosahedron(2)" data-centered="true">Icosahedron</li>
+                <li class="add_object button_inactive add_object_left_column" id="create_plane"
+                    data-constructor="new Ayce.Geometry.Plane(1, 1, 2, 2, false)"
+                    data-centered="true"
+                    data-type="plane">Plane</li>
+                <li class="add_object button_inactive add_object_right_column" id="create_cube"
+                    data-constructor="new Ayce.Geometry.Box(1, 1, 1)"
+                    data-centered="false"
+                    data-type="cube">Cube</li>
+                <li class="add_object button_inactive add_object_left_column" id="create_sphere"
+                    data-constructor="new Ayce.Geometry.Sphere(0.5)"
+                    data-centered="true"
+                    data-type="sphere">Sphere</li>
+                <li class="add_object button_inactive add_object_right_column" id="create_ico"
+                    data-constructor="new Ayce.Geometry.Icosahedron(2)"
+                    data-centered="true"
+                    data-type="icosahedron">Icosahedron</li>
             </ul>
         </div>
         <div>
             <h2><i class="fa fa-lightbulb-o"></i> Light</h2>
             <ul>
-                <li id="add_light">Light</li>
+                <li id="add_light" data-type="light">Light</li>
             </ul>
         </div>
         <div id="objects_in_scene_div">
             <h2><i class="fa fa-globe"></i> Objects in the scene</h2>
-            <!--<fieldset id="objects_in_scene">-->
-                <!--<input type="radio" id="mc" name="Zahlmethode" value="Mastercard"><label for="mc"> Mastercard</label><br>-->
-                <!--<input type="radio" id="vi" name="Zahlmethode" value="Visa"><label for="vi">  Visa</label><br>-->
-                <!--<input type="radio" id="ae" name="Zahlmethode" value="AmericanExpress"><label for="ae"> American Express</label>-->
-            <!--</fieldset>-->
             <ul id="objects_in_scene"></ul>
         </div>
     </div>
     <canvas id="main_canvas"></canvas>
     <div id="sidebar_right">
         <h2><i class="fa fa-sliders"></i> Properties</h2>
-        <ul id="properties_list">
-            <li>Position:<br>
-                <input class="property_input" id="position_x" title="position_x"/>
-                <input class="property_input" id="position_y" title="position_y"/>
-                <input class="property_input" id="position_z" title="position_z"/>
-            </li>
-
-            <li>Rotation:<br>
-                <input class="property_input" id="rotation_x" title="rotation_x"/>
-                <input class="property_input" id="rotation_y" title="rotation_y"/>
-                <input class="property_input" id="rotation_z" title="rotation_z"/>
-            </li>
-
-            <li>Scale:<br>
-                <input class="property_input" id="scale_x" title="scale_x"/>
-                <input class="property_input" id="scale_y" title="scale_y"/>
-                <input class="property_input" id="scale_z" title="scale_z"/>
-            </li>
-
-            <li>Color:<br>
-                <input class="property_input" id="colors_r" title="colors_r"/>
-                <input class="property_input" id="colors_g" title="colors_g"/>
-                <input class="property_input" id="colors_b" title="colors_b"/>
-                <input class="property_input" id="colors_a" title="colors_a"/>
-            </li>
-
-            <li>Two-Face Transparency:<br>
-                <input class="property_input" id="two_face_transparency" type="checkbox" title="two_face_transparency"/>
-            </li>
-
-            <li>Lighting:<br>
-                <input class="property_input" id="use_fragment_lighting" type="checkbox"/><label for="use_fragment_lighting">Fragment Lighting</label>
-                <input class="property_input" id="use_specular_lighting" type="checkbox"/><label for="use_specular_lighting">Specular Lighting</label>
-            </li>
-
-            <li>Visible:<br>
-                <input class="property_input" id="visible" type="checkbox" title="visible"/>
-            </li>
-        </ul>
+        <ul id="properties_list"></ul>
     </div>
     <script type="text/javascript" src="UIFactory.js"></script>
     <script type="text/javascript" src="editor.js"></script>
