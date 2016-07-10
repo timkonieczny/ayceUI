@@ -37,7 +37,7 @@ li{
 /*.button_inactive{
 }*/
 .button_active{
-    background-color: red;
+    background-color: #0091ff;
 }
 .add_object, #add_light, #export_code, .object_in_scene{
     cursor: pointer;
@@ -59,9 +59,10 @@ li{
     display: none;
 }
 #objects_in_scene_div{
-    margin-top:0.83em;
+    margin-top:40px;
     padding: 0px 5px 5px 5px;
-    background-color: #cccccc;
+    background-color: transparent;
+    border: 2px solid #676767;
     border-radius: 3px
 }
 #objects_in_scene_div h2{

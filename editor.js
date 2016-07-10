@@ -118,12 +118,10 @@ var addClass = function(element, className){
 };
 
 var removeClass = function(element, className2){
-    element.className =
-        element.className.replace
-        (className2, '');
+    element.className = element.className.replace(new RegExp(className2, 'g'), "");
 };
 
-var activeProperties = null;
+var activeObject = null;
 
 var uiFactory = new UIFactory();
 
@@ -144,12 +142,12 @@ var showProperties = function(e){           // TODO: create properties screen fo
 
     this.removeEventListener("click", showProperties);
     this.addEventListener("click", hideProperties, false);
-    if(activeProperties!=null && activeProperties != this){
-        activeProperties.removeEventListener("click", hideProperties);
-        activeProperties.addEventListener("click", showProperties, false);
-        removeClass(activeProperties, "button_active");
+    if(activeObject!=null && activeObject != this){
+        activeObject.removeEventListener("click", hideProperties);
+        activeObject.addEventListener("click", showProperties, false);
+        removeClass(activeObject, "button_active");
     }
-    activeProperties = this;
+    activeObject = this;
 
     document.getElementById("position_x").value = objects[currentObjectId].position.x;
     document.getElementById("position_y").value = objects[currentObjectId].position.y;
@@ -177,6 +175,7 @@ var hideProperties = function(){
     document.getElementById("sidebar_right").style.display = "none";
     this.removeEventListener("click", hideProperties);
     this.addEventListener("click", showProperties, false);
+    removeClass(activeObject, "button_active");
 };
 
 var i;
