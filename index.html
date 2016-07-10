@@ -18,17 +18,21 @@
         <div id="main_menu">
             <a id="export_code"><i class="fa fa-hdd-o"></i> Export Code</a>
         </div>
-        <h2><i class="fa fa-cube"></i> Objects</h2>
+        <div>
+            <h2><i class="fa fa-cube"></i> Objects</h2>
             <ul>
-                <li class="add_object button_inactive" id="create_plane" data-constructor="new Ayce.Geometry.Plane(1, 1, 2, 2, false)" data-centered="true">Plane</li>
-                <li class="add_object button_inactive" id="create_cube" data-constructor="new Ayce.Geometry.Box(1, 1, 1)" data-centered="false">Cube</li>
-                <li class="add_object button_inactive" id="create_sphere" data-constructor="new Ayce.Geometry.Sphere(0.5)" data-centered="true">Sphere</li>
-                <li class="add_object button_inactive" id="create_ico" data-constructor="new Ayce.Geometry.Icosahedron(2)" data-centered="true">Icosahedron</li>
+                <li class="add_object button_inactive add_object_left_column" id="create_plane" data-constructor="new Ayce.Geometry.Plane(1, 1, 2, 2, false)" data-centered="true">Plane</li>
+                <li class="add_object button_inactive add_object_right_column" id="create_cube" data-constructor="new Ayce.Geometry.Box(1, 1, 1)" data-centered="false">Cube</li>
+                <li class="add_object button_inactive add_object_left_column" id="create_sphere" data-constructor="new Ayce.Geometry.Sphere(0.5)" data-centered="true">Sphere</li>
+                <li class="add_object button_inactive add_object_right_column" id="create_ico" data-constructor="new Ayce.Geometry.Icosahedron(2)" data-centered="true">Icosahedron</li>
             </ul>
-        <h2><i class="fa fa-lightbulb-o"></i> Light</h2>
+        </div>
+        <div>
+            <h2><i class="fa fa-lightbulb-o"></i> Light</h2>
             <ul>
                 <li id="add_light">Light</li>
             </ul>
+        </div>
         <div id="objects_in_scene_div">
             <h2><i class="fa fa-globe"></i> Objects in the scene</h2>
             <!--<fieldset id="objects_in_scene">-->
