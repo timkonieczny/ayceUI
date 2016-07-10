@@ -182,6 +182,7 @@ var i;
 var addObjectButtons = document.getElementsByClassName("add_object");
 for(i = 0; i < addObjectButtons.length; i++){
     addObjectButtons[i].onclick = function(){
+        document.getElementById("objects_in_scene_div").style.display = "block";
         objects.push(eval(this.dataset.constructor));
         if(!eval(this.dataset.centered)) {
             objects[objects.length - 1].offset.set(-objects[objects.length - 1].a / 2.0, -objects[objects.length - 1].b / 2.0, -objects[objects.length - 1].c / 2.0);
@@ -208,6 +209,7 @@ for(i = 0; i < addObjectButtons.length; i++){
 }
 
 document.getElementById("add_light").onclick = function(){
+    document.getElementById("objects_in_scene_div").style.display = "block";
     //document.getElementById('test').appendChild(child);
     lights.push(new Ayce.Light());
     scene.addToScene(lights[lights.length-1]);
