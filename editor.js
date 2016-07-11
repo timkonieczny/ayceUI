@@ -1,4 +1,6 @@
 var canvas = document.getElementById("main_canvas");
+
+/* Code for direct object modification
 var cursor = {
     x: 0,
     y: 0,
@@ -16,22 +18,26 @@ canvas.addEventListener("mousedown", function() {
 canvas.addEventListener("mouseup", function() {
     cursor.down = false;
 });
+*/
 
 var scene = new Ayce.Scene(canvas);
+var basePlane = (new Ayce.Geometry.Plane(10, 10, 2, 2, false)).getO3D();
+basePlane.position.x = -2.5;
+basePlane.position.y = -0.5;    // TODO: move camera up instead
+basePlane.rotation.fromEulerAngles(Math.PI/2, 0, 0);
+basePlane.textureCoords = [
+     0, 0,
+     0,10,
+    10, 0,
+    10,10
+];
+basePlane.transparent = true;
+basePlane.colors = null;
+basePlane.imageSrc = "grid.png";
+scene.addToScene(basePlane);
 
 var objects = [];
 var currentObjectId;
-
-function update() {
-    if(cursor.down){
-        console.log(cursor.x + " " + cursor.y);
-    }
-
-    Ayce.requestAnimFrame(update);
-    scene.updateScene();
-    scene.drawScene();
-}
-
 var activeObject = null;
 
 var i;
@@ -74,6 +80,16 @@ document.getElementById("add_light").onclick = function(){
     child.onclick = showProperties;
     document.getElementById("objects_in_scene").appendChild(child);
 };
+
+function update() {
+    /*if(cursor.down){
+        console.log(cursor.x + " " + cursor.y);
+    }*/
+
+    Ayce.requestAnimFrame(update);
+    scene.updateScene();
+    scene.drawScene();
+}
 
 update();
 
