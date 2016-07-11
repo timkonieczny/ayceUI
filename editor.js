@@ -21,9 +21,12 @@ canvas.addEventListener("mouseup", function() {
 */
 
 var scene = new Ayce.Scene(canvas);
+var modifier = new Ayce.CameraModifier();
+modifier.position.y = .5;
+scene.getCamera().getManager().modifiers.push(modifier);
+
 var basePlane = (new Ayce.Geometry.Plane(10, 10, 2, 2, false)).getO3D();
 basePlane.position.x = -2.5;
-basePlane.position.y = -0.5;    // TODO: move camera up instead
 basePlane.rotation.fromEulerAngles(Math.PI/2, 0, 0);
 basePlane.textureCoords = [
      0, 0,
