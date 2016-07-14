@@ -1,9 +1,5 @@
 var setRotation = function(x, y, z){
-    objects[currentObjectId].rotation.fromEulerAngles(
-        x,
-        y,
-        z
-    );
+    objects[currentObjectId].rotation.fromEulerAngles(x, y, z);
     cameraPreview.objects[currentObjectId].rotation = objects[currentObjectId].rotation;
 };
 
@@ -23,100 +19,58 @@ var setColor = function(r, g, b, a){
 };
 
 var setEventListeners = function() {
+    var updateProperties = function(e){
+        e.preventDefault();
+        var factor = e.deltaY / 100;
+        switch (e.srcElement.id) {
+            case "rotation_x":
+            case "rotation_y":
+            case "rotation_z":
+                if(e.type == "wheel"){
+                    e.target.value = (Number(e.target.value) + factor * 0.1) % (2 * Math.PI);
+                }
+                if (Number(e.target.value) < 0) e.target.value = Number(e.target.value) + Math.PI * 2;
+                setRotation(
+                    document.getElementById("rotation_x").value,
+                    document.getElementById("rotation_y").value,
+                    document.getElementById("rotation_z").value
+                );
+                break;
+            case "colors_r":
+            case "colors_g":
+            case "colors_b":
+            case "colors_a":
+                var element = document.getElementById(e.srcElement.id);
+                if(e.type == "wheel") {
+                    element.value = Number(element.value) + factor * 0.1;
+                }
+                element.value = Math.min(Number(element.value), 1);
+                element.value = Math.max(Number(element.value), 0);
+                setColor(
+                    document.getElementById("colors_r").value,
+                    document.getElementById("colors_g").value,
+                    document.getElementById("colors_b").value,
+                    document.getElementById("colors_a").value
+                );
+                break;
+            default:
+                var attribute = e.srcElement.id.split("_");
+                if(e.type == "wheel") {
+                    e.target.value = Number(e.target.value) + factor * 0.1;
+                }
+                switch (attribute[0]) {
+                    case "scale":
+                        e.target.value = Math.max(e.target.value, 0.00001);
+                        break;
+                }
+                objects[currentObjectId][attribute[0]][attribute[1]] = Number(e.target.value);
+        }
+    };
+
     var propertyInputs = document.getElementsByClassName("property_input");
     for (var i = 0; i < propertyInputs.length; i++) {
-        propertyInputs[i].onchange = function (e) {
-
-            switch (e.srcElement.id) {
-                case "rotation_x":
-                case "rotation_y":
-                case "rotation_z":
-                    e.target.value = Number(e.target.value) % (2 * Math.PI);
-                    if (Number(e.target.value) < 0) e.target.value = Number(e.target.value) + Math.PI * 2;
-                    setRotation(
-                        document.getElementById("rotation_x").value,
-                        document.getElementById("rotation_y").value,
-                        document.getElementById("rotation_z").value
-                    );
-                    break;
-                case "colors_r":            // TODO: color per vertex (enable edit array in textarea). Set transparency attribute from there too.
-                case "colors_g":
-                case "colors_b":
-                case "colors_a":
-                    var element = document.getElementById(e.srcElement.id);
-                    element.value = Math.min(Number(element.value), 1);
-                    element.value = Math.max(Number(element.value), 0);
-                    setColor(
-                        document.getElementById("colors_r").value,
-                        document.getElementById("colors_g").value,
-                        document.getElementById("colors_b").value,
-                        document.getElementById("colors_a").value
-                    );
-
-                    break;
-                case "visible":
-                    objects[currentObjectId].visible = e.target.checked;
-                    break;
-                case "use_fragment_lighting":
-                    scene.removeFromScene(objects[currentObjectId]);
-                    objects[currentObjectId].useFragmentLighting = e.target.checked;
-                    scene.addToScene(objects[currentObjectId]);
-                    break;
-                case "use_specular_lighting":
-                    scene.removeFromScene(objects[currentObjectId]);
-                    objects[currentObjectId].useSpecularLighting = e.target.checked;
-                    scene.addToScene(objects[currentObjectId]);
-                    break;
-                default:
-                    var attribute = e.srcElement.id.split("_");
-                    switch (attribute[0]) {
-                        case "scale":
-                            e.target.value = Number(Math.max(e.target.value, 0.00001));
-                            break;
-                    }
-                    objects[currentObjectId][attribute[0]][attribute[1]] = Number(e.target.value);
-            }
-        };
-        propertyInputs[i].onwheel = function (e) {
-            e.preventDefault();
-            var factor = e.deltaY / 100;
-            switch (e.srcElement.id) {
-                case "rotation_x":
-                case "rotation_y":
-                case "rotation_z":
-                    e.target.value = (Number(e.target.value) + factor * 0.1) % (2 * Math.PI);
-                    if (Number(e.target.value) < 0) e.target.value = Number(e.target.value) + Math.PI * 2;
-                    setRotation(
-                        document.getElementById("rotation_x").value,
-                        document.getElementById("rotation_y").value,
-                        document.getElementById("rotation_z").value
-                    );
-                    break;
-                case "colors_r":
-                case "colors_g":
-                case "colors_b":
-                case "colors_a":
-                    var element = document.getElementById(e.srcElement.id);
-                    element.value = Number(element.value) + factor * 0.1;
-                    element.value = Math.min(Number(element.value), 1);
-                    element.value = Math.max(Number(element.value), 0);
-                    setColor(
-                        document.getElementById("colors_r").value,
-                        document.getElementById("colors_g").value,
-                        document.getElementById("colors_b").value,
-                        document.getElementById("colors_a").value
-                    );
-                    break;
-                default:
-                    var attribute = e.srcElement.id.split("_");
-                    e.target.value = Number(e.target.value) + factor * 0.1;
-                    switch (attribute[0]) {
-                        case "scale":
-                            e.target.value = Math.max(e.target.value, 0.00001);
-                            break;
-                    }
-                    objects[currentObjectId][attribute[0]][attribute[1]] = Number(e.target.value);
-            }
+        propertyInputs[i].onchange = propertyInputs[i].onwheel = function (e) {
+            updateProperties(e)
         };
     }
 };
