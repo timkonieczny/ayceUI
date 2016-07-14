@@ -44,15 +44,16 @@ li{
 .button_active{
     background-color: #0091ff;
 }
-.add_object, #add_light, #export_code, .object_in_scene{
+.add_object, #add_light, #add_camera, #export_code, .object_in_scene{
     cursor: pointer;
 }
-.add_object:hover, #add_light:hover, #export_code:hover, .object_in_scene:hover{
+.add_object:hover, #add_light:hover, #add_camera:hover, #export_code:hover, .object_in_scene:hover{
     /*background-color: #676767;*/
     background-color: #7d7d7d;
 }
 .button_active:hover{
-    background-color: #007ce5;
+    background-color: #16a7ff;
+
 }
 .add_object{
     width: 147.5px; /* 320-25 */

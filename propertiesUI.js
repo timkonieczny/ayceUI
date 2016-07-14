@@ -75,6 +75,16 @@ var setEventListeners = function() {
                     cameraPreview.objects[currentObjectId].visible = e.target.checked;
                 }
                 break;
+            case "camera_position_x":
+            case "camera_position_y":
+            case "camera_position_z":
+                if(e.type == "wheel") {
+                    e.target.value = Number(e.target.value) + factor * 0.1;
+                }
+                cameraPreview.modifier.position.x = Number(document.getElementById("camera_position_x").value);
+                cameraPreview.modifier.position.y = Number(document.getElementById("camera_position_y").value);
+                cameraPreview.modifier.position.z = Number(document.getElementById("camera_position_z").value);
+                break;
             default:
                 var attribute = e.srcElement.id.split("_");
                 if(e.type == "wheel") {
@@ -118,6 +128,9 @@ var showProperties = function(e) {
         uiFactory.visibility = true;
     }else if(e.srcElement.dataset.type == "light"){
         uiFactory.position = true;
+    }else if(e.srcElement.dataset.type == "camera"){
+        uiFactory.camera = true;
+        // TODO: assemble ui
     }
     document.getElementById("properties_list").innerHTML = uiFactory.buildUI();
     setEventListeners();
@@ -157,6 +170,15 @@ var showProperties = function(e) {
     if(uiFactory.lighting) {
         document.getElementById("use_fragment_lighting").checked = objects[currentObjectId].useFragmentLighting;
         document.getElementById("use_specular_lighting").checked = objects[currentObjectId].useSpecularLighting;
+    }
+    if(uiFactory.camera){
+        document.getElementById("camera_position_x").value = cameraPreview.modifier.position.x;
+        document.getElementById("camera_position_y").value = cameraPreview.modifier.position.y;
+        document.getElementById("camera_position_z").value = cameraPreview.modifier.position.z;
+        eulerAngles = quaternion_to_euler(cameraPreview.modifier.orientation);
+        document.getElementById("camera_rotation_x").value = eulerAngles[0];
+        document.getElementById("camera_rotation_y").value = eulerAngles[1];
+        document.getElementById("camera_rotation_z").value = eulerAngles[2];
     }
 };
 

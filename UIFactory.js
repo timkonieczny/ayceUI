@@ -6,6 +6,7 @@ var UIFactory = function(){
     this.twoFaceTransparency = false;
     this.lighting = false;
     this.visibility = false;
+    this.camera = false;
 
     this.resetAttributes = function(){
         this.position = false;
@@ -15,6 +16,7 @@ var UIFactory = function(){
         this.twoFaceTransparency = false;
         this.lighting = false;
         this.visibility = false;
+        this.camera = false;
     };
 
     this.buildUI = function(){
@@ -64,6 +66,18 @@ var UIFactory = function(){
         if(this.lighting){
             ui+='<li>Visible:<br>' +
                 '<input class="property_input" id="visible" type="checkbox" title="visible"/>' +
+                '</li>';
+        }
+        if(this.camera){
+            ui+='<li>Position:<br>' +
+                '<input class="property_input" id="camera_position_x" title="camera_position_x"/>' +
+                '<input class="property_input" id="camera_position_y" title="camera_position_y"/>' +
+                '<input class="property_input" id="camera_position_z" title="camera_position_z"/>' +
+                '</li>' +
+                '<li>Rotation:<br>' +
+                '<input class="property_input" id="camera_rotation_x" title="camera_rotation_x"/>' +
+                '<input class="property_input" id="camera_rotation_y" title="camera_rotation_y"/>' +
+                '<input class="property_input" id="camera_rotation_z" title="camera_rotation_z"/>' +
                 '</li>';
         }
         return ui;

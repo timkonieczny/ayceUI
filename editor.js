@@ -93,6 +93,16 @@ document.getElementById("add_light").onclick = function(){
     document.getElementById("objects_in_scene").appendChild(child);
 };
 
+document.getElementById("add_camera").onclick = function(){
+    document.getElementById("objects_in_scene_div").style.display = "block";
+    var child = document.createElement('li');
+    child.innerHTML = "Camera";
+    child.dataset.type = (this.dataset.type);
+    child.className = "object_in_scene";
+    child.onclick = showProperties;
+    document.getElementById("objects_in_scene").appendChild(child);
+};
+
 var renderPreview = true;
 
 function update() {
