@@ -1,3 +1,12 @@
+var setRotation = function(x, y, z){
+    objects[currentObjectId].rotation.fromEulerAngles(
+        x,
+        y,
+        z
+    );
+    cameraPreview.objects[currentObjectId].rotation = objects[currentObjectId].rotation;
+};
+
 var setEventListeners = function() {
     var propertyInputs = document.getElementsByClassName("property_input");
     for (i = 0; i < propertyInputs.length; i++) {
@@ -5,28 +14,15 @@ var setEventListeners = function() {
 
             switch (e.srcElement.id) {
                 case "rotation_x":
-                    objects[currentObjectId].rotation.fromEulerAngles(
-                        Number(e.target.value),
-                        document.getElementById("rotation_y").value,
-                        document.getElementById("rotation_z").value
-                    );
-                    e.target.value = Number(e.target.value);
-                    break;
                 case "rotation_y":
-                    objects[currentObjectId].rotation.fromEulerAngles(
-                        document.getElementById("rotation_x").value,
-                        Number(e.target.value),
-                        document.getElementById("rotation_z").value
-                    );
-                    e.target.value = Number(e.target.value);
-                    break;
                 case "rotation_z":
-                    objects[currentObjectId].rotation.fromEulerAngles(
+                    e.target.value = Number(e.target.value) % (2 * Math.PI);
+                    if (Number(e.target.value) < 0) e.target.value = Number(e.target.value) + Math.PI * 2;
+                    setRotation(
                         document.getElementById("rotation_x").value,
                         document.getElementById("rotation_y").value,
-                        Number(e.target.value)
+                        document.getElementById("rotation_z").value
                     );
-                    e.target.value = Number(e.target.value) + 0.1;
                     break;
                 case "colors_r":            // TODO: color per vertex (enable edit array in textarea). Set transparency attribute from there too.
                 case "colors_g":
@@ -82,30 +78,14 @@ var setEventListeners = function() {
             var i;
             switch (e.srcElement.id) {
                 case "rotation_x":
-                    e.target.value = (Number(e.target.value) + factor * 0.1) % (2 * Math.PI);
-                    if (Number(e.target.value) < 0) e.target.value = Number(e.target.value) + Math.PI * 2;
-                    objects[currentObjectId].rotation.fromEulerAngles(
-                        Number(e.target.value),
-                        document.getElementById("rotation_y").value,
-                        document.getElementById("rotation_z").value
-                    );
-                    break;
                 case "rotation_y":
-                    e.target.value = (Number(e.target.value) + factor * 0.1) % (2 * Math.PI);
-                    if (Number(e.target.value) < 0) e.target.value = Number(e.target.value) + Math.PI * 2;
-                    objects[currentObjectId].rotation.fromEulerAngles(
-                        document.getElementById("rotation_x").value,
-                        Number(e.target.value),
-                        document.getElementById("rotation_z").value
-                    );
-                    break;
                 case "rotation_z":
                     e.target.value = (Number(e.target.value) + factor * 0.1) % (2 * Math.PI);
                     if (Number(e.target.value) < 0) e.target.value = Number(e.target.value) + Math.PI * 2;
-                    objects[currentObjectId].rotation.fromEulerAngles(
+                    setRotation(
                         document.getElementById("rotation_x").value,
                         document.getElementById("rotation_y").value,
-                        Number(e.target.value)
+                        document.getElementById("rotation_z").value
                     );
                     break;
                 case "colors_r":

@@ -58,7 +58,7 @@ for(i = 0; i < addObjectButtons.length; i++){
 
         var geometry = objects[objects.length-1];
 
-        objects.push(geometry.getO3D());
+        objects[objects.length-1] = geometry.getO3D();
         cameraPreview.objects.push(geometry.getO3D());
 
         objects[objects.length-1].position.z = -2;
@@ -91,7 +91,7 @@ document.getElementById("add_light").onclick = function(){
     document.getElementById("objects_in_scene").appendChild(child);
 };
 
-var renderPreview = false;
+var renderPreview = true;
 
 function update() {
     /*if(cursor.down){
