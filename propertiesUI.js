@@ -7,6 +7,27 @@ var setRotation = function(x, y, z){
     cameraPreview.objects[currentObjectId].rotation = objects[currentObjectId].rotation;
 };
 
+var setColor = function(r, g, b, a){
+    scene.removeFromScene(objects[currentObjectId]);
+    cameraPreview.scene.removeFromScene(cameraPreview.objects[currentObjectId]);
+    objects[currentObjectId].colors = cameraPreview.objects[currentObjectId].colors = [];
+    for (var i = 0; i < objects[currentObjectId].vertices.length / 3; i++) {
+        objects[currentObjectId].colors.push(Number(r));
+        objects[currentObjectId].colors.push(Number(g));
+        objects[currentObjectId].colors.push(Number(b));
+        objects[currentObjectId].colors.push(Number(a));
+        cameraPreview.objects[currentObjectId].colors.push(Number(r));
+        cameraPreview.objects[currentObjectId].colors.push(Number(g));
+        cameraPreview.objects[currentObjectId].colors.push(Number(b));
+        cameraPreview.objects[currentObjectId].colors.push(Number(a));
+    }
+    if (a < 1) {
+        objects[currentObjectId].transparent = cameraPreview.objects[currentObjectId].transparent = true;
+    }
+    scene.addToScene(objects[currentObjectId]);
+    cameraPreview.scene.addToScene(cameraPreview.objects[currentObjectId]);
+};
+
 var setEventListeners = function() {
     var propertyInputs = document.getElementsByClassName("property_input");
     for (i = 0; i < propertyInputs.length; i++) {
@@ -28,26 +49,16 @@ var setEventListeners = function() {
                 case "colors_g":
                 case "colors_b":
                 case "colors_a":
-                    scene.removeFromScene(objects[currentObjectId]);
-                    objects[currentObjectId].colors = [];
-                    document.getElementById("colors_r").value = Math.min(Number(document.getElementById("colors_r").value), 1);
-                    document.getElementById("colors_r").value = Math.max(Number(document.getElementById("colors_r").value), 0);
-                    document.getElementById("colors_g").value = Math.min(Number(document.getElementById("colors_g").value), 1);
-                    document.getElementById("colors_g").value = Math.max(Number(document.getElementById("colors_g").value), 0);
-                    document.getElementById("colors_b").value = Math.min(Number(document.getElementById("colors_b").value), 1);
-                    document.getElementById("colors_b").value = Math.max(Number(document.getElementById("colors_b").value), 0);
-                    document.getElementById("colors_a").value = Math.min(Number(document.getElementById("colors_a").value), 1);
-                    document.getElementById("colors_a").value = Math.max(Number(document.getElementById("colors_a").value), 0);
-                    for (var i = 0; i < objects[currentObjectId].vertices.length / 3; i++) {
-                        objects[currentObjectId].colors.push(Number(document.getElementById("colors_r").value));
-                        objects[currentObjectId].colors.push(Number(document.getElementById("colors_g").value));
-                        objects[currentObjectId].colors.push(Number(document.getElementById("colors_b").value));
-                        objects[currentObjectId].colors.push(Number(document.getElementById("colors_a").value));
-                    }
-                    if (document.getElementById("colors_a").value < 1) {
-                        objects[currentObjectId].transparent = true;
-                    }
-                    scene.addToScene(objects[currentObjectId]);
+                    var element = document.getElementById(e.srcElement.id);
+                    element.value = Math.min(Number(element.value), 1);
+                    element.value = Math.max(Number(element.value), 0);
+                    setColor(
+                        document.getElementById("colors_r").value,
+                        document.getElementById("colors_g").value,
+                        document.getElementById("colors_b").value,
+                        document.getElementById("colors_a").value
+                    );
+
                     break;
                 case "visible":
                     objects[currentObjectId].visible = e.target.checked;
@@ -89,63 +100,19 @@ var setEventListeners = function() {
                     );
                     break;
                 case "colors_r":
-                    scene.removeFromScene(objects[currentObjectId]);
-                    objects[currentObjectId].colors = [];
-                    e.target.value = Number(e.target.value) + factor * 0.1;
-                    document.getElementById("colors_r").value = Math.min(Number(document.getElementById("colors_r").value), 1);
-                    document.getElementById("colors_r").value = Math.max(Number(document.getElementById("colors_r").value), 0);
-                    for (i = 0; i < objects[currentObjectId].vertices.length / 3; i++) {
-                        objects[currentObjectId].colors.push(Number(document.getElementById("colors_r").value));
-                        objects[currentObjectId].colors.push(Number(document.getElementById("colors_g").value));
-                        objects[currentObjectId].colors.push(Number(document.getElementById("colors_b").value));
-                        objects[currentObjectId].colors.push(Number(document.getElementById("colors_a").value));
-                    }
-                    scene.addToScene(objects[currentObjectId]);
-                    break;
                 case "colors_g":
-                    scene.removeFromScene(objects[currentObjectId]);
-                    objects[currentObjectId].colors = [];
-                    e.target.value = Number(e.target.value) + factor * 0.1;
-                    document.getElementById("colors_g").value = Math.min(Number(document.getElementById("colors_g").value), 1);
-                    document.getElementById("colors_g").value = Math.max(Number(document.getElementById("colors_g").value), 0);
-                    for (i = 0; i < objects[currentObjectId].vertices.length / 3; i++) {
-                        objects[currentObjectId].colors.push(Number(document.getElementById("colors_r").value));
-                        objects[currentObjectId].colors.push(Number(document.getElementById("colors_g").value));
-                        objects[currentObjectId].colors.push(Number(document.getElementById("colors_b").value));
-                        objects[currentObjectId].colors.push(Number(document.getElementById("colors_a").value));
-                    }
-                    scene.addToScene(objects[currentObjectId]);
-                    break;
                 case "colors_b":
-                    scene.removeFromScene(objects[currentObjectId]);
-                    objects[currentObjectId].colors = [];
-                    e.target.value = Number(e.target.value) + factor * 0.1;
-                    document.getElementById("colors_b").value = Math.min(Number(document.getElementById("colors_b").value), 1);
-                    document.getElementById("colors_b").value = Math.max(Number(document.getElementById("colors_b").value), 0);
-                    for (i = 0; i < objects[currentObjectId].vertices.length / 3; i++) {
-                        objects[currentObjectId].colors.push(Number(document.getElementById("colors_r").value));
-                        objects[currentObjectId].colors.push(Number(document.getElementById("colors_g").value));
-                        objects[currentObjectId].colors.push(Number(document.getElementById("colors_b").value));
-                        objects[currentObjectId].colors.push(Number(document.getElementById("colors_a").value));
-                    }
-                    scene.addToScene(objects[currentObjectId]);
-                    break;
                 case "colors_a":
-                    scene.removeFromScene(objects[currentObjectId]);
-                    objects[currentObjectId].colors = [];
-                    e.target.value = Number(e.target.value) + factor * 0.1;
-                    document.getElementById("colors_a").value = Math.min(Number(document.getElementById("colors_a").value), 1);
-                    document.getElementById("colors_a").value = Math.max(Number(document.getElementById("colors_a").value), 0);
-                    for (i = 0; i < objects[currentObjectId].vertices.length / 3; i++) {
-                        objects[currentObjectId].colors.push(Number(document.getElementById("colors_r").value));
-                        objects[currentObjectId].colors.push(Number(document.getElementById("colors_g").value));
-                        objects[currentObjectId].colors.push(Number(document.getElementById("colors_b").value));
-                        objects[currentObjectId].colors.push(Number(document.getElementById("colors_a").value));
-                    }
-                    if (document.getElementById("colors_a").value < 1) {
-                        objects[currentObjectId].transparent = true;
-                    }
-                    scene.addToScene(objects[currentObjectId]);
+                    var element = document.getElementById(e.srcElement.id);
+                    element.value = Number(element.value) + factor * 0.1;
+                    element.value = Math.min(Number(element.value), 1);
+                    element.value = Math.max(Number(element.value), 0);
+                    setColor(
+                        document.getElementById("colors_r").value,
+                        document.getElementById("colors_g").value,
+                        document.getElementById("colors_b").value,
+                        document.getElementById("colors_a").value
+                    );
                     break;
                 default:
                     var attribute = e.srcElement.id.split("_");

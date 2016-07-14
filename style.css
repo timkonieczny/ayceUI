@@ -66,7 +66,7 @@ li{
 }
 #sidebar_left, #sidebar_right{
     position: absolute;
-    z-index: 1;
+    z-index: 2;
     background-color: rgba(62, 62, 62, 0.9);
     width: 320px;
     height: 100%;
@@ -148,7 +148,7 @@ fieldset{
 }
 #camera_preview{
     position: fixed;
-    z-index: 2;
+    z-index: 1;
     background-color: white;
     bottom: 5px;
     left: 335px;
