@@ -53,6 +53,28 @@ var setEventListeners = function() {
                     document.getElementById("colors_a").value
                 );
                 break;
+            case "use_fragment_lighting":
+                if(e.type != "wheel"){
+                    scene.removeFromScene(objects[currentObjectId]);
+                    cameraPreview.scene.removeFromScene(cameraPreview.objects[currentObjectId]);
+                    objects[currentObjectId].useFragmentLighting =
+                        cameraPreview.objects[currentObjectId].useFragmentLighting = e.target.checked;
+                    scene.addToScene(objects[currentObjectId]);
+                    cameraPreview.scene.addToScene(cameraPreview.objects[currentObjectId]);
+                }
+                break;
+            case "use_specular_lighting":
+                if(e.type != "wheel"){
+                    objects[currentObjectId].useSpecularLighting= e.target.checked;
+                    cameraPreview.objects[currentObjectId].useSpecularLighting = e.target.checked;
+                }
+                break;
+            case "visible":
+                if(e.type != "wheel"){
+                    objects[currentObjectId].visible = e.target.checked;
+                    cameraPreview.objects[currentObjectId].visible = e.target.checked;
+                }
+                break;
             default:
                 var attribute = e.srcElement.id.split("_");
                 if(e.type == "wheel") {
@@ -63,7 +85,8 @@ var setEventListeners = function() {
                         e.target.value = Math.max(e.target.value, 0.00001);
                         break;
                 }
-                objects[currentObjectId][attribute[0]][attribute[1]] = Number(e.target.value);
+                objects[currentObjectId][attribute[0]][attribute[1]] =
+                    cameraPreview.objects[currentObjectId][attribute[0]][attribute[1]] = Number(e.target.value);
         }
     };
 

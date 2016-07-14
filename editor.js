@@ -81,7 +81,9 @@ for(i = 0; i < addObjectButtons.length; i++){
 document.getElementById("add_light").onclick = function(){
     document.getElementById("objects_in_scene_div").style.display = "block";
     objects.push(new Ayce.Light());
+    cameraPreview.objects.push(new Ayce.Light());
     scene.addToScene(objects[objects.length-1]);
+    cameraPreview.scene.addToScene(cameraPreview.objects[cameraPreview.objects.length-1]);
     var child = document.createElement('li');
     child.innerHTML = "Light";
     child.dataset.id = (objects.length-1);
