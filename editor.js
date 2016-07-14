@@ -1,5 +1,3 @@
-var canvas = document.getElementById("main_canvas");
-
 /* Code for direct object modification
 var cursor = {
     x: 0,
@@ -20,7 +18,7 @@ canvas.addEventListener("mouseup", function() {
 });
 */
 
-var scene = new Ayce.Scene(canvas);
+var scene = new Ayce.Scene(document.getElementById("main_canvas"));
 var modifier = new Ayce.CameraModifier();
 modifier.position.y = .5;
 scene.getCamera().getManager().modifiers.push(modifier);
@@ -40,6 +38,7 @@ basePlane.imageSrc = "grid.png";
 scene.addToScene(basePlane);
 
 var objects = [];
+var cameraPreview = new CameraPreview();
 var currentObjectId;
 var activeObject = null;
 
@@ -56,10 +55,18 @@ for(i = 0; i < addObjectButtons.length; i++){
                 -objects[objects.length - 1].c / 2.0
             );
         }
-        objects[objects.length-1] = objects[objects.length-1].getO3D();
+
+        var geometry = objects[objects.length-1];
+
+        objects.push(geometry.getO3D());
+        cameraPreview.objects.push(geometry.getO3D());
+
         objects[objects.length-1].position.z = -2;
+        cameraPreview.objects[cameraPreview.objects.length-1].position.z = -2;
 
         scene.addToScene(objects[objects.length-1]);
+        cameraPreview.scene.addToScene(cameraPreview.objects[cameraPreview.objects.length-1]);
+
         var child = document.createElement('li');
         child.innerHTML = this.innerText;
         child.dataset.id = (objects.length-1);
@@ -84,6 +91,8 @@ document.getElementById("add_light").onclick = function(){
     document.getElementById("objects_in_scene").appendChild(child);
 };
 
+var renderPreview = false;
+
 function update() {
     /*if(cursor.down){
         console.log(cursor.x + " " + cursor.y);
@@ -92,6 +101,9 @@ function update() {
     Ayce.requestAnimFrame(update);
     scene.updateScene();
     scene.drawScene();
+
+    if(renderPreview)
+        cameraPreview.update();
 }
 
 update();
