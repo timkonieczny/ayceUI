@@ -12,14 +12,8 @@ var setColor = function(r, g, b, a){
     cameraPreview.scene.removeFromScene(cameraPreview.objects[currentObjectId]);
     objects[currentObjectId].colors = cameraPreview.objects[currentObjectId].colors = [];
     for (var i = 0; i < objects[currentObjectId].vertices.length / 3; i++) {
-        objects[currentObjectId].colors.push(Number(r));
-        objects[currentObjectId].colors.push(Number(g));
-        objects[currentObjectId].colors.push(Number(b));
-        objects[currentObjectId].colors.push(Number(a));
-        cameraPreview.objects[currentObjectId].colors.push(Number(r));
-        cameraPreview.objects[currentObjectId].colors.push(Number(g));
-        cameraPreview.objects[currentObjectId].colors.push(Number(b));
-        cameraPreview.objects[currentObjectId].colors.push(Number(a));
+        objects[currentObjectId].colors.push(Number(r), Number(g), Number(b), Number(a));
+        cameraPreview.objects[currentObjectId].colors.push(Number(r), Number(g), Number(b), Number(a));
     }
     if (a < 1) {
         objects[currentObjectId].transparent = cameraPreview.objects[currentObjectId].transparent = true;
@@ -30,7 +24,7 @@ var setColor = function(r, g, b, a){
 
 var setEventListeners = function() {
     var propertyInputs = document.getElementsByClassName("property_input");
-    for (i = 0; i < propertyInputs.length; i++) {
+    for (var i = 0; i < propertyInputs.length; i++) {
         propertyInputs[i].onchange = function (e) {
 
             switch (e.srcElement.id) {
@@ -86,7 +80,6 @@ var setEventListeners = function() {
         propertyInputs[i].onwheel = function (e) {
             e.preventDefault();
             var factor = e.deltaY / 100;
-            var i;
             switch (e.srcElement.id) {
                 case "rotation_x":
                 case "rotation_y":
