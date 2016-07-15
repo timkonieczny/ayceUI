@@ -146,11 +146,8 @@ fieldset{
 #camera_preview_wrapper{
     width: 240px;
     height: 135px;
-}
-#camera_preview{
-    position: fixed;
     z-index: 1;
-    background-color: white;
+    position: fixed;
     bottom: 5px;
     left: 335px;
 }

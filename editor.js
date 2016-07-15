@@ -39,6 +39,7 @@ scene.addToScene(basePlane);
 
 var objects = [];
 var cameraPreview = new CameraPreview();
+document.getElementById("camera_preview_wrapper").style.display = "none";
 var currentObjectId;
 var activeObject = null;
 
@@ -95,6 +96,7 @@ document.getElementById("add_light").onclick = function(){
 
 document.getElementById("add_camera").onclick = function(){
     document.getElementById("objects_in_scene_div").style.display = "block";
+    document.getElementById("camera_preview_wrapper").style.display = "block";
     var child = document.createElement('li');
     child.innerHTML = "Camera";
     child.dataset.type = (this.dataset.type);
