@@ -173,13 +173,15 @@ document.getElementById("obj_drop").addEventListener("drop", function(e){       
     e.preventDefault();
 
     document.getElementById("obj_drop").style.display = "none";
-    document.getElementById("obj_drop_done").style.display = "flex";
+    document.getElementById("obj_drop_loading").style.display = "flex";
 
     var file = e.dataTransfer.files[0];             // TODO: Loading...
     var reader = new FileReader();
     reader.onload = function (e) {
         console.log(e.currentTarget.result);
         objString = e.currentTarget.result;
+        document.getElementById("obj_drop_loading").style.display = "none";
+        document.getElementById("obj_drop_done").style.display = "flex";
         if(mtlString){
             createGeometry(objString, mtlString)
         }
@@ -192,13 +194,15 @@ document.getElementById("mtl_drop").addEventListener("drop", function(e){       
     e.preventDefault();
 
     document.getElementById("mtl_drop").style.display = "none";
-    document.getElementById("mtl_drop_done").style.display = "flex";
+    document.getElementById("mtl_drop_loading").style.display = "flex";
 
     var file = e.dataTransfer.files[0];             // TODO: Loading...
     var reader = new FileReader();
     reader.onload = function (e) {
         console.log(e.currentTarget.result);
         mtlString = e.currentTarget.result;
+        document.getElementById("mtl_drop_loading").style.display = "none";
+        document.getElementById("mtl_drop_done").style.display = "flex";
         if(objString){
             createGeometry(objString, mtlString)
         }

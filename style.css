@@ -170,7 +170,7 @@ fieldset{
     height: 100%;
     background-color: #ffffff;
 }
-#obj_drop, #mtl_drop, #obj_drop_done, #mtl_drop_done{
+#obj_drop, #mtl_drop, #obj_drop_done, #mtl_drop_done, #obj_drop_loading, #mtl_drop_loading{
     height: calc(50% - 9px - 4px);
     width: calc(100% - 12px - 4px);
     margin: 6px;
@@ -180,11 +180,11 @@ fieldset{
     align-items: center;
     cursor: default;
 }
-#obj_drop, #obj_drop_done{
+#obj_drop, #obj_drop_done, #obj_drop_loading{
     float: left;
     margin-bottom: 3px;
 }
-#mtl_drop, #mtl_drop_done{
+#mtl_drop, #mtl_drop_done, #mtl_drop_loading{
     float: left;
     margin-top: 3px;
 }
@@ -201,6 +201,9 @@ fieldset{
 }
 #obj_drop_done p, #mtl_drop_done p{
     color: #ffffff;
+}
+#obj_drop_loading, #mtl_drop_loading{
+    display: none;
 }
 #camera_preview_wrapper{
     width: 240px;
