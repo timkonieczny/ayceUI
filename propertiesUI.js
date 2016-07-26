@@ -118,7 +118,8 @@ var showProperties = function(e) {
     if (e.srcElement.dataset.type == "plane"||
         e.srcElement.dataset.type == "cube"||
         e.srcElement.dataset.type == "sphere"||
-        e.srcElement.dataset.type == "icosahedron"){
+        e.srcElement.dataset.type == "icosahedron"||
+        e.srcElement.dataset.type == "obj"){
         uiFactory.position = true;
         uiFactory.rotation = true;
         uiFactory.scale = true;

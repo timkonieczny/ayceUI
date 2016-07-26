@@ -7,12 +7,67 @@
     <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=PT+Sans" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
-    <script type="text/javascript" src="AyceVR.min.js"></script>
+
+    <script type="text/javascript" src="lib/allyoucaneatVR.js"></script>
+
+    <script type="text/javascript" src="lib/math/Vector2.js"></script>
+    <script type="text/javascript" src="lib/math/Vector3.js"></script>
+    <script type="text/javascript" src="lib/math/Matrix3.js"></script>
+    <script type="text/javascript" src="lib/math/Matrix4.js"></script>
+    <script type="text/javascript" src="lib/math/Quaternion.js"></script>
+    <script type="text/javascript" src="lib/math/Geometry.js"></script>
+
+    <script type="text/javascript" src="lib/stage/buffer/Buffer.js"></script>
+    <script type="text/javascript" src="lib/stage/buffer/BufferMulti.js"></script>
+    <script type="text/javascript" src="lib/stage/buffer/Shader.js"></script>
+    <script type="text/javascript" src="lib/stage/buffer/ShaderGenerator.js"></script>
+    <script type="text/javascript" src="lib/stage/camera/Camera.js"></script>
+    <script type="text/javascript" src="lib/stage/camera/CameraManager.js"></script>
+    <script type="text/javascript" src="lib/stage/camera/cameraModifiers/CameraModifier.js"></script>
+    <script type="text/javascript" src="lib/stage/camera/cameraModifiers/Cardboard.js"></script>
+    <script type="text/javascript" src="lib/stage/camera/cameraModifiers/Gamepad.js"></script>
+    <script type="text/javascript" src="lib/stage/camera/cameraModifiers/MouseKeyboard.js"></script>
+    <script type="text/javascript" src="lib/stage/camera/cameraModifiers/WebVR.js"></script>
+    <script type="text/javascript" src="lib/stage/renderer/Renderer.js"></script>
+    <script type="text/javascript" src="lib/stage/renderer/VRRenderer.js"></script>
+    <script type="text/javascript" src="lib/stage/sound/AudioContext.js"></script>
+    <script type="text/javascript" src="lib/stage/sound/Sound.js"></script>
+    <script type="text/javascript" src="lib/stage/Light.js"></script>
+    <script type="text/javascript" src="lib/stage/Scene.js"></script>
+    <script type="text/javascript" src="lib/stage/Timer.js"></script>
+    <script type="text/javascript" src="lib/stage/XMLLoader.js"></script>
+
+    <script type="text/javascript" src="lib/inputHandlers/GamepadHandler.js"></script>
+    <script type="text/javascript" src="lib/inputHandlers/HMDHandler.js"></script>
+    <script type="text/javascript" src="lib/inputHandlers/KeyboardHandler.js"></script>
+    <script type="text/javascript" src="lib/inputHandlers/MouseHandler.js"></script>
+    <script type="text/javascript" src="lib/inputHandlers/SensorsHandler.js"></script>
+
+    <script type="text/javascript" src="lib/objects/Object3D.js"></script>
+    <script type="text/javascript" src="lib/objects/loader/OBJLoader.js"></script>
+    <script type="text/javascript" src="lib/objects/types/ParticleSystem.js"></script>
+    <script type="text/javascript" src="lib/objects/types/Skybox.js"></script>
+    <script type="text/javascript" src="lib/objects/types/VRSquare.js"></script>
+    <script type="text/javascript" src="lib/objects/examples/Cube3D.js"></script>
+    <script type="text/javascript" src="lib/objects/examples/Pyramid3D.js"></script>
+    <script type="text/javascript" src="lib/objects/examples/Sphere3D.js"></script>
+    <script type="text/javascript" src="lib/objects/examples/Square.js"></script>
+
+
+    <!--<script type="text/javascript" src="AyceVR.min.js"></script>-->
 </head>
 <body>
-    <div id="export_code_div">
-        <a id="export_code_close">&#215</a>
+    <div id="modal">
+        <a id="modal_close">&#215</a>
         <textarea id="export_code_textarea" spellcheck="false" title="export_code_textarea"></textarea>
+        <div id="file_upload_wrapper">
+            <div id="obj_drop">
+                <p><i class="fa fa-file-code-o"></i><br>drop .obj here</p>
+            </div>
+            <div id="mtl_drop">
+                <p><i class="fa fa-file-code-o"></i><br>drop .mtl here</p>
+            </div>
+        </div>
     </div>
     <div id="sidebar_left">
         <div id="main_menu">
@@ -37,6 +92,8 @@
                     data-constructor="new Ayce.Geometry.Icosahedron(2)"
                     data-centered="true"
                     data-type="icosahedron">Icosahedron</li>
+                <li class="add_object button_inactive add_object_left_column" id="import_obj" data-type="obj">
+                    <i class="fa fa-plus-circle"></i>Import OBJ File</li>
             </ul>
         </div>
         <div>
@@ -53,7 +110,9 @@
     </div>
     <canvas id="main_canvas"></canvas>
     <div id="sidebar_right">
-        <h2><i class="fa fa-sliders"></i>Properties</h2>
+        <div id="properties_header">
+            <i class="fa fa-sliders" id="properties_icon"></i><input title="object_name" id="object_name" value="Properties"/>
+        </div>
         <ul id="properties_list"></ul>
     </div>
     <div id="camera_preview_wrapper">

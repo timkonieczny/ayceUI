@@ -47,35 +47,37 @@ var i;
 var addObjectButtons = document.getElementsByClassName("add_object");
 for(i = 0; i < addObjectButtons.length; i++){
     addObjectButtons[i].onclick = function(){
-        document.getElementById("objects_in_scene_div").style.display = "block";
-        objects.push(eval(this.dataset.constructor));
-        if(!eval(this.dataset.centered)) {
-            objects[objects.length - 1].offset.set(
-                -objects[objects.length - 1].a / 2.0,
-                -objects[objects.length - 1].b / 2.0,
-                -objects[objects.length - 1].c / 2.0
-            );
+        if(this.id != "import_obj"){
+            document.getElementById("objects_in_scene_div").style.display = "block";
+            objects.push(eval(this.dataset.constructor));
+            if(!eval(this.dataset.centered)) {
+                objects[objects.length - 1].offset.set(
+                    -objects[objects.length - 1].a / 2.0,
+                    -objects[objects.length - 1].b / 2.0,
+                    -objects[objects.length - 1].c / 2.0
+                );
+            }
+
+            var geometry = objects[objects.length-1];
+
+            objects[objects.length-1] = geometry.getO3D();
+            cameraPreview.objects.push(geometry.getO3D());
+
+            objects[objects.length-1].position.z = -2;
+            cameraPreview.objects[cameraPreview.objects.length-1].position.z = -2;
+
+            scene.addToScene(objects[objects.length-1]);
+            cameraPreview.scene.addToScene(cameraPreview.objects[cameraPreview.objects.length-1]);
+
+            var child = document.createElement('li');
+            child.innerHTML = this.innerText;
+            child.dataset.id = (objects.length-1);
+            child.dataset.type = (this.dataset.type);
+            child.className = "object_in_scene";
+            child.onclick = showProperties;
+
+            document.getElementById("objects_in_scene").appendChild(child);
         }
-
-        var geometry = objects[objects.length-1];
-
-        objects[objects.length-1] = geometry.getO3D();
-        cameraPreview.objects.push(geometry.getO3D());
-
-        objects[objects.length-1].position.z = -2;
-        cameraPreview.objects[cameraPreview.objects.length-1].position.z = -2;
-
-        scene.addToScene(objects[objects.length-1]);
-        cameraPreview.scene.addToScene(cameraPreview.objects[cameraPreview.objects.length-1]);
-
-        var child = document.createElement('li');
-        child.innerHTML = this.innerText;
-        child.dataset.id = (objects.length-1);
-        child.dataset.type = (this.dataset.type);
-        child.className = "object_in_scene";
-        child.onclick = showProperties;
-
-        document.getElementById("objects_in_scene").appendChild(child);
     }
 }
 
@@ -105,6 +107,14 @@ document.getElementById("add_camera").onclick = function(){
     document.getElementById("objects_in_scene").appendChild(child);
 };
 
+document.getElementById("import_obj").onclick = function(){
+    document.getElementById("modal").style.display = "block";
+    document.getElementById("export_code_textarea").style.display = "none";
+    document.getElementById("modal_close").onclick = function(){
+        document.getElementById("modal").style.display = "none"
+    }
+};
+
 var renderPreview = true;
 
 function update() {
@@ -127,9 +137,81 @@ document.getElementById("export_code").onclick = function(){
     for(var i = 0; i < objects.length; i++){
         output+="object"+i+JSON.stringify(objects[i], null, "\t")+";\n";      // TODO: assign object name
     }
-    document.getElementById("export_code_div").style.display = "block";
+    document.getElementById("modal").style.display = "block";
+    document.getElementById("export_code_textarea").style.display = "block";
     document.getElementById("export_code_textarea").value = output;
-    document.getElementById("export_code_close").onclick = function(){
-        document.getElementById("export_code_div").style.display = "none"
+    document.getElementById("modal_close").onclick = function(){
+        document.getElementById("modal").style.display = "none"
     }
+};
+
+document.getElementById("obj_drop").addEventListener("dragover", function(e){
+    //e.stopPropagation();
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'copy';
+    console.log("drag");
+}, false);
+
+document.getElementById("mtl_drop").addEventListener("dragover", function(e){
+    //e.stopPropagation();
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'copy';
+    console.log("drag");
+}, false);
+
+var objString = null;
+var mtlString = null;
+
+document.getElementById("obj_drop").addEventListener("drop", function(e){       // TODO: include Ayce in long form
+    e.stopPropagation();
+    e.preventDefault();
+
+    var file = e.dataTransfer.files[0];             // TODO: Loading...
+    var reader = new FileReader();
+    reader.onload = function (e) {
+        console.log(e.currentTarget.result);
+        objString = e.currentTarget.result;
+        if(mtlString){
+            createGeometry(objString, mtlString)
+        }
+    };
+    reader.readAsText(file);     // TODO: enable direct data passing to OBJLoader
+}, false);
+
+document.getElementById("mtl_drop").addEventListener("drop", function(e){       // TODO: include Ayce in long form
+    e.stopPropagation();
+    e.preventDefault();
+
+    var file = e.dataTransfer.files[0];             // TODO: Loading...
+    var reader = new FileReader();
+    reader.onload = function (e) {
+        console.log(e.currentTarget.result);
+        mtlString = e.currentTarget.result;
+        if(objString){
+            createGeometry(objString, mtlString)
+        }
+    };
+    reader.readAsText(file);     // TODO: enable direct data passing to OBJLoader
+}, false);
+
+var createGeometry = function(obj, mtl){
+
+    objects.push(new Ayce.OBJLoader(obj, mtl, true)[0]);                // TODO: more efficient solution for copying the O3D
+    cameraPreview.objects.push(new Ayce.OBJLoader(obj, mtl, true)[0]);
+
+    objects[objects.length-1].position.z = -2;
+    cameraPreview.objects[cameraPreview.objects.length-1].position.z = -2;
+
+    scene.addToScene(objects[objects.length-1]);
+    cameraPreview.scene.addToScene(cameraPreview.objects[cameraPreview.objects.length-1]);
+
+    document.getElementById("objects_in_scene_div").style.display = "block";
+    var child = document.createElement('li');
+    child.innerHTML = "Imported Object";
+    child.dataset.id = (objects.length-1);
+    child.dataset.type = "obj";
+    child.className = "object_in_scene";
+    child.onclick = showProperties;
+
+    document.getElementById("objects_in_scene").appendChild(child);
 };

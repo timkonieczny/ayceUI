@@ -93,8 +93,30 @@ li{
 #objects_in_scene_div h2{
     margin-top:0px;
 }
+#object_name{
+    font-size: 1.5em;
+    font-family: 'PT Sans', sans-serif;
+    display: inline-block;
+    background-color: transparent;
+    border: 2px solid transparent;
+    color: #ffffff;
+}
+#object_name:hover{
+    border: 2px solid #676767;
+}
+#object_name:focus{
+    border: 2px solid #ffffff;
+}
+#properties_icon{
+    font-size: 1.5em;
+    width: calc(1.2em - 2px);
+}
+#properties_header{
+    margin-top: 0.83em;
+    margin-bottom: 2px;
+}
 .property_input{
-    width:30%;
+    width: calc(33.33% - 4px);
     margin:0;
     /*overflow: scroll;*/
 }
@@ -113,27 +135,20 @@ fieldset{
     /*height:100%;*/
     /*width:70%;*/
 }
-#export_code_div{
+#modal {
     height: 80%;
     width: 60%;
     position: fixed;
-    z-index: 2;
+    z-index: 3;
     display: none;
     right: 0;
     left: 0;
     top: 0;
     bottom: 0;
     margin: auto;
-
+    background-color: white;
 }
-#export_code_textarea{
-    width:100%;
-    height:100%;
-    resize: none;
-    padding: 0;
-    border: 0;
-}
-#export_code_close{
+#modal_close {
     position: absolute;
     top:0;
     right:0;
@@ -142,6 +157,42 @@ fieldset{
     margin:0;
     padding: 0px 1em 0px 1em;
     cursor: pointer;
+}
+#export_code_textarea{
+    width:100%;
+    height:100%;
+    resize: none;
+    padding: 0;
+    border: 0;
+}
+#file_upload_wrapper{
+    width:100%;
+    height: 100%;
+    background-color: #ffffff;
+}
+#obj_drop, #mtl_drop{
+    height: calc(50% - 9px - 4px);
+    width: calc(100% - 12px - 4px);
+    margin: 6px;
+    border-radius: 3px;
+    border: 2px solid #dddddd;
+    display: flex;
+    align-items: center;
+    cursor: default;
+}
+#obj_drop{
+    float: left;
+    margin-bottom: 3px;
+}
+#mtl_drop{
+    float: left;
+    margin-top: 3px;
+}
+#obj_drop p, #mtl_drop p{
+    color: #676767;
+    width: 100%;
+    text-align: center;
+    font-size: 1.7em;
 }
 #camera_preview_wrapper{
     width: 240px;
