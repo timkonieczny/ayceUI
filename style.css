@@ -170,7 +170,7 @@ fieldset{
     height: 100%;
     background-color: #ffffff;
 }
-#obj_drop, #mtl_drop{
+#obj_drop, #mtl_drop, #obj_drop_done, #mtl_drop_done{
     height: calc(50% - 9px - 4px);
     width: calc(100% - 12px - 4px);
     margin: 6px;
@@ -180,19 +180,27 @@ fieldset{
     align-items: center;
     cursor: default;
 }
-#obj_drop{
+#obj_drop, #obj_drop_done{
     float: left;
     margin-bottom: 3px;
 }
-#mtl_drop{
+#mtl_drop, #mtl_drop_done{
     float: left;
     margin-top: 3px;
 }
-#obj_drop p, #mtl_drop p{
+#obj_drop p, #mtl_drop p, #obj_drop_done p, #mtl_drop_done p{
     color: #676767;
     width: 100%;
     text-align: center;
     font-size: 1.7em;
+}
+#obj_drop_done, #mtl_drop_done{
+    display: none;
+    border: 2px solid #00d682;
+    background-color: #00d682;
+}
+#obj_drop_done p, #mtl_drop_done p{
+    color: #ffffff;
 }
 #camera_preview_wrapper{
     width: 240px;

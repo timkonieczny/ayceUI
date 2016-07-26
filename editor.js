@@ -111,7 +111,13 @@ document.getElementById("import_obj").onclick = function(){
     document.getElementById("modal").style.display = "block";
     document.getElementById("export_code_textarea").style.display = "none";
     document.getElementById("modal_close").onclick = function(){
-        document.getElementById("modal").style.display = "none"
+        document.getElementById("obj_drop").style.display = "flex";
+        document.getElementById("obj_drop_done").style.display = "none";
+        document.getElementById("mtl_drop").style.display = "flex";
+        document.getElementById("mtl_drop_done").style.display = "none";
+        document.getElementById("modal").style.display = "none";
+        objString = null;
+        mtlString = null;
     }
 };
 
@@ -166,6 +172,9 @@ document.getElementById("obj_drop").addEventListener("drop", function(e){       
     e.stopPropagation();
     e.preventDefault();
 
+    document.getElementById("obj_drop").style.display = "none";
+    document.getElementById("obj_drop_done").style.display = "flex";
+
     var file = e.dataTransfer.files[0];             // TODO: Loading...
     var reader = new FileReader();
     reader.onload = function (e) {
@@ -181,6 +190,9 @@ document.getElementById("obj_drop").addEventListener("drop", function(e){       
 document.getElementById("mtl_drop").addEventListener("drop", function(e){       // TODO: include Ayce in long form
     e.stopPropagation();
     e.preventDefault();
+
+    document.getElementById("mtl_drop").style.display = "none";
+    document.getElementById("mtl_drop_done").style.display = "flex";
 
     var file = e.dataTransfer.files[0];             // TODO: Loading...
     var reader = new FileReader();
