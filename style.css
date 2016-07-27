@@ -4,7 +4,6 @@ html, body{
     margin:0;
     padding:0;
     border:0;
-    /*font-family: 'Montserrat', sans-serif;*/
     font-family: 'PT Sans', sans-serif;
     color: #fff;
 }
@@ -159,8 +158,14 @@ fieldset{
     cursor: pointer;
 }
 #export_code_textarea{
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    display: none;
+    border-radius: 3px;
+    align-items: center;
+    cursor: default;
     width:100%;
-    height:100%;
     resize: none;
     padding: 0;
     border: 0;
@@ -170,40 +175,60 @@ fieldset{
     height: 100%;
     background-color: #ffffff;
 }
-#obj_drop, #mtl_drop, #obj_drop_done, #mtl_drop_done, #obj_drop_loading, #mtl_drop_loading{
+.modal_top_half, .modal_bottom_half{
     height: calc(50% - 9px - 4px);
     width: calc(100% - 12px - 4px);
     margin: 6px;
     border-radius: 3px;
     border: 2px solid #dddddd;
-    display: flex;
+    display: none;
     align-items: center;
     cursor: default;
 }
-#obj_drop, #obj_drop_done, #obj_drop_loading{
-    float: left;
+.modal_top_half{
     margin-bottom: 3px;
 }
-#mtl_drop, #mtl_drop_done, #mtl_drop_loading{
-    float: left;
+.modal_bottom_half{
     margin-top: 3px;
 }
-#obj_drop p, #mtl_drop p, #obj_drop_done p, #mtl_drop_done p{
+.modal_top_half p, .modal_bottom_half p{
     color: #676767;
     width: 100%;
     text-align: center;
     font-size: 1.7em;
 }
-#obj_drop_done, #mtl_drop_done{
+.modal_file_done{
     display: none;
     border: 2px solid #00d682;
     background-color: #00d682;
 }
-#obj_drop_done p, #mtl_drop_done p{
+.modal_file_done p{
     color: #ffffff;
 }
-#obj_drop_loading, #mtl_drop_loading{
+.modal_file_loading{
     display: none;
+}
+.modal_top_half{
+    position: absolute;
+    top: 0;
+}
+.modal_bottom_half{
+    position: absolute;
+    bottom: 0;
+}
+#import_processing{
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    border: 2px solid #00d682;
+    background-color: #00d682;
+    margin: 6px;
+    display: none;
+    left: 0;
+    right: 0;
+    border-radius: 3px;
+    align-items: center;
+    cursor: default;
 }
 #camera_preview_wrapper{
     width: 240px;

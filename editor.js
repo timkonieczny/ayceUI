@@ -107,19 +107,39 @@ document.getElementById("add_camera").onclick = function(){
     document.getElementById("objects_in_scene").appendChild(child);
 };
 
-document.getElementById("import_obj").onclick = function(){
-    document.getElementById("modal").style.display = "block";
-    document.getElementById("export_code_textarea").style.display = "none";
-    document.getElementById("modal_close").onclick = function(){
+var openModal = function(type){
+    if(type == "obj"){
+        document.getElementById("modal").style.display = "block";
         document.getElementById("obj_drop").style.display = "flex";
-        document.getElementById("obj_drop_done").style.display = "none";
         document.getElementById("mtl_drop").style.display = "flex";
-        document.getElementById("mtl_drop_done").style.display = "none";
-        document.getElementById("modal").style.display = "none";
-        objString = null;
-        mtlString = null;
+    }else if(type == "code"){
+        var output = "";
+        for(var i = 0; i < objects.length; i++){
+            output+="object"+i+JSON.stringify(objects[i], null, "\t")+";\n";      // TODO: assign object name
+        }
+        document.getElementById("modal").style.display = "block";
+        document.getElementById("export_code_textarea").style.display = "block";
+        document.getElementById("export_code_textarea").value = output;
     }
+    document.getElementById("modal_close").onclick = closeModal;
 };
+
+var closeModal = function(){
+    document.getElementById("obj_drop").style.display = "none";
+    document.getElementById("obj_drop_done").style.display = "none";
+    document.getElementById("mtl_drop").style.display = "none";
+    document.getElementById("mtl_drop_done").style.display = "none";
+    document.getElementById("import_processing").style.display = "none";
+    document.getElementById("export_code_textarea").style.display = "none";
+    document.getElementById("modal").style.display = "none";
+    objString = null;
+    mtlString = null;
+};
+
+document.getElementById("import_obj").addEventListener('click', function(){
+    openModal("obj");
+});
+
 
 var renderPreview = true;
 
@@ -138,18 +158,9 @@ function update() {
 
 update();
 
-document.getElementById("export_code").onclick = function(){
-    var output = "";
-    for(var i = 0; i < objects.length; i++){
-        output+="object"+i+JSON.stringify(objects[i], null, "\t")+";\n";      // TODO: assign object name
-    }
-    document.getElementById("modal").style.display = "block";
-    document.getElementById("export_code_textarea").style.display = "block";
-    document.getElementById("export_code_textarea").value = output;
-    document.getElementById("modal_close").onclick = function(){
-        document.getElementById("modal").style.display = "none"
-    }
-};
+document.getElementById("export_code").addEventListener('click', function(){
+    openModal("code");
+});
 
 document.getElementById("obj_drop").addEventListener("dragover", function(e){
     //e.stopPropagation();
@@ -175,7 +186,7 @@ document.getElementById("obj_drop").addEventListener("drop", function(e){       
     document.getElementById("obj_drop").style.display = "none";
     document.getElementById("obj_drop_loading").style.display = "flex";
 
-    var file = e.dataTransfer.files[0];             // TODO: Loading...
+    var file = e.dataTransfer.files[0];
     var reader = new FileReader();
     reader.onload = function (e) {
         console.log(e.currentTarget.result);
@@ -183,6 +194,9 @@ document.getElementById("obj_drop").addEventListener("drop", function(e){       
         document.getElementById("obj_drop_loading").style.display = "none";
         document.getElementById("obj_drop_done").style.display = "flex";
         if(mtlString){
+            document.getElementById("obj_drop_done").style.display = "none";
+            document.getElementById("mtl_drop_done").style.display = "none";
+            document.getElementById("import_processing").style.display = "flex";
             createGeometry(objString, mtlString)
         }
     };
@@ -196,7 +210,7 @@ document.getElementById("mtl_drop").addEventListener("drop", function(e){       
     document.getElementById("mtl_drop").style.display = "none";
     document.getElementById("mtl_drop_loading").style.display = "flex";
 
-    var file = e.dataTransfer.files[0];             // TODO: Loading...
+    var file = e.dataTransfer.files[0];
     var reader = new FileReader();
     reader.onload = function (e) {
         console.log(e.currentTarget.result);
@@ -204,10 +218,13 @@ document.getElementById("mtl_drop").addEventListener("drop", function(e){       
         document.getElementById("mtl_drop_loading").style.display = "none";
         document.getElementById("mtl_drop_done").style.display = "flex";
         if(objString){
+            document.getElementById("obj_drop_done").style.display = "none";
+            document.getElementById("mtl_drop_done").style.display = "none";
+            document.getElementById("import_processing").style.display = "flex";
             createGeometry(objString, mtlString)
         }
     };
-    reader.readAsText(file);     // TODO: enable direct data passing to OBJLoader
+    reader.readAsText(file);
 }, false);
 
 var createGeometry = function(obj, mtl){
@@ -230,4 +247,6 @@ var createGeometry = function(obj, mtl){
     child.onclick = showProperties;
 
     document.getElementById("objects_in_scene").appendChild(child);
+
+    closeModal();
 };
