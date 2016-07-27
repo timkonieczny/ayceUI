@@ -73,7 +73,7 @@ for(i = 0; i < addObjectButtons.length; i++){
             child.innerHTML = this.innerText;
             child.dataset.id = (objects.length-1);
             child.dataset.type = (this.dataset.type);
-            child.className = "object_in_scene";
+            child.className = "object_in_scene button";
             child.onclick = showProperties;
 
             document.getElementById("objects_in_scene").appendChild(child);
@@ -91,7 +91,7 @@ document.getElementById("add_light").onclick = function(){
     child.innerHTML = "Light";
     child.dataset.id = (objects.length-1);
     child.dataset.type = (this.dataset.type);
-    child.className = "object_in_scene";
+    child.className = "object_in_scene button";
     child.onclick = showProperties;
     document.getElementById("objects_in_scene").appendChild(child);
 };
@@ -102,7 +102,7 @@ document.getElementById("add_camera").onclick = function(){
     var child = document.createElement('li');
     child.innerHTML = "Camera";
     child.dataset.type = (this.dataset.type);
-    child.className = "object_in_scene";
+    child.className = "object_in_scene button";
     child.onclick = showProperties;
     document.getElementById("objects_in_scene").appendChild(child);
 };
@@ -243,7 +243,7 @@ var createGeometry = function(obj, mtl){
     child.innerHTML = "Imported Object";
     child.dataset.id = (objects.length-1);
     child.dataset.type = "obj";
-    child.className = "object_in_scene";
+    child.className = "object_in_scene button";
     child.onclick = showProperties;
 
     document.getElementById("objects_in_scene").appendChild(child);

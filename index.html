@@ -61,103 +61,105 @@
 </head>
 <body>
     <div id="modal">
-        <a id="modal_close">&#215</a>
-        <textarea id="export_code_textarea" spellcheck="false" title="export_code_textarea"></textarea>
-        <div id="file_upload_wrapper">
-            <div id="obj_drop" class="modal_top_half modal_file_drop">
-                <p><i class="fa fa-file-code-o"></i><br>drop .obj here</p>
-            </div>
-            <div id="obj_drop_loading" class="modal_top_half modal_file_loading">
-                <div class="sk-circle">
-                    <div class="sk-circle1 sk-child"></div>
-                    <div class="sk-circle2 sk-child"></div>
-                    <div class="sk-circle3 sk-child"></div>
-                    <div class="sk-circle4 sk-child"></div>
-                    <div class="sk-circle5 sk-child"></div>
-                    <div class="sk-circle6 sk-child"></div>
-                    <div class="sk-circle7 sk-child"></div>
-                    <div class="sk-circle8 sk-child"></div>
-                    <div class="sk-circle9 sk-child"></div>
-                    <div class="sk-circle10 sk-child"></div>
-                    <div class="sk-circle11 sk-child"></div>
-                    <div class="sk-circle12 sk-child"></div>
+        <div id="modal_window">
+            <a id="modal_close">&#215</a>
+            <textarea id="export_code_textarea" spellcheck="false" title="export_code_textarea"></textarea>
+            <div id="file_upload_wrapper">
+                <div id="obj_drop" class="modal_top_half modal_file_drop">
+                    <p><i class="fa fa-file-code-o"></i><br>drop .obj here</p>
                 </div>
-            </div>
-            <div id="obj_drop_done" class="modal_top_half modal_file_done">
-                <p><i class="fa fa-check"></i><br>.obj</p>
-            </div>
-            <div id="mtl_drop" class="modal_bottom_half modal_file_drop">
-                <p><i class="fa fa-file-code-o"></i><br>drop .mtl here</p>
-            </div>
-            <div id="mtl_drop_loading" class="modal_bottom_half modal_file_loading">
-                <div class="sk-circle">
-                    <div class="sk-circle1 sk-child"></div>
-                    <div class="sk-circle2 sk-child"></div>
-                    <div class="sk-circle3 sk-child"></div>
-                    <div class="sk-circle4 sk-child"></div>
-                    <div class="sk-circle5 sk-child"></div>
-                    <div class="sk-circle6 sk-child"></div>
-                    <div class="sk-circle7 sk-child"></div>
-                    <div class="sk-circle8 sk-child"></div>
-                    <div class="sk-circle9 sk-child"></div>
-                    <div class="sk-circle10 sk-child"></div>
-                    <div class="sk-circle11 sk-child"></div>
-                    <div class="sk-circle12 sk-child"></div>
+                <div id="obj_drop_loading" class="modal_top_half modal_file_loading">
+                    <div class="sk-circle">
+                        <div class="sk-circle1 sk-child"></div>
+                        <div class="sk-circle2 sk-child"></div>
+                        <div class="sk-circle3 sk-child"></div>
+                        <div class="sk-circle4 sk-child"></div>
+                        <div class="sk-circle5 sk-child"></div>
+                        <div class="sk-circle6 sk-child"></div>
+                        <div class="sk-circle7 sk-child"></div>
+                        <div class="sk-circle8 sk-child"></div>
+                        <div class="sk-circle9 sk-child"></div>
+                        <div class="sk-circle10 sk-child"></div>
+                        <div class="sk-circle11 sk-child"></div>
+                        <div class="sk-circle12 sk-child"></div>
+                    </div>
                 </div>
-            </div>
-            <div id="mtl_drop_done" class="modal_bottom_half modal_file_done">
-                <p><i class="fa fa-check"></i><br>.mtl</p>
-            </div>
-            <div id="import_processing">
-                <div class="sk-circle">
-                    <div class="sk-circle1 sk-child"></div>
-                    <div class="sk-circle2 sk-child"></div>
-                    <div class="sk-circle3 sk-child"></div>
-                    <div class="sk-circle4 sk-child"></div>
-                    <div class="sk-circle5 sk-child"></div>
-                    <div class="sk-circle6 sk-child"></div>
-                    <div class="sk-circle7 sk-child"></div>
-                    <div class="sk-circle8 sk-child"></div>
-                    <div class="sk-circle9 sk-child"></div>
-                    <div class="sk-circle10 sk-child"></div>
-                    <div class="sk-circle11 sk-child"></div>
-                    <div class="sk-circle12 sk-child"></div>
+                <div id="obj_drop_done" class="modal_top_half modal_file_done">
+                    <p><i class="fa fa-check"></i><br>.obj</p>
+                </div>
+                <div id="mtl_drop" class="modal_bottom_half modal_file_drop">
+                    <p><i class="fa fa-file-code-o"></i><br>drop .mtl here</p>
+                </div>
+                <div id="mtl_drop_loading" class="modal_bottom_half modal_file_loading">
+                    <div class="sk-circle">
+                        <div class="sk-circle1 sk-child"></div>
+                        <div class="sk-circle2 sk-child"></div>
+                        <div class="sk-circle3 sk-child"></div>
+                        <div class="sk-circle4 sk-child"></div>
+                        <div class="sk-circle5 sk-child"></div>
+                        <div class="sk-circle6 sk-child"></div>
+                        <div class="sk-circle7 sk-child"></div>
+                        <div class="sk-circle8 sk-child"></div>
+                        <div class="sk-circle9 sk-child"></div>
+                        <div class="sk-circle10 sk-child"></div>
+                        <div class="sk-circle11 sk-child"></div>
+                        <div class="sk-circle12 sk-child"></div>
+                    </div>
+                </div>
+                <div id="mtl_drop_done" class="modal_bottom_half modal_file_done">
+                    <p><i class="fa fa-check"></i><br>.mtl</p>
+                </div>
+                <div id="import_processing">
+                    <div class="sk-circle">
+                        <div class="sk-circle1 sk-child"></div>
+                        <div class="sk-circle2 sk-child"></div>
+                        <div class="sk-circle3 sk-child"></div>
+                        <div class="sk-circle4 sk-child"></div>
+                        <div class="sk-circle5 sk-child"></div>
+                        <div class="sk-circle6 sk-child"></div>
+                        <div class="sk-circle7 sk-child"></div>
+                        <div class="sk-circle8 sk-child"></div>
+                        <div class="sk-circle9 sk-child"></div>
+                        <div class="sk-circle10 sk-child"></div>
+                        <div class="sk-circle11 sk-child"></div>
+                        <div class="sk-circle12 sk-child"></div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
     <div id="sidebar_left">
         <div id="main_menu">
-            <a id="export_code"><i class="fa fa-hdd-o"></i>Export Code</a>
+            <a id="export_code" class="button"><i class="fa fa-hdd-o"></i>Export Code</a>
         </div>
         <div>
             <h2><i class="fa fa-cube"></i>Geometries</h2>
             <ul>
-                <li class="add_object button_inactive" id="create_plane"
+                <li class="add_object button" id="create_plane"
                     data-constructor="new Ayce.Geometry.Plane(1, 1, 2, 2, false)"
                     data-centered="true"
                     data-type="plane">Plane</li>
-                <li class="add_object button_inactive" id="create_cube"
+                <li class="add_object button" id="create_cube"
                     data-constructor="new Ayce.Geometry.Box(1, 1, 1)"
                     data-centered="false"
                     data-type="cube">Cube</li>
-                <li class="add_object button_inactive" id="create_sphere"
+                <li class="add_object button" id="create_sphere"
                     data-constructor="new Ayce.Geometry.Sphere(0.5)"
                     data-centered="true"
                     data-type="sphere">Sphere</li>
-                <li class="add_object button_inactive" id="create_ico"
+                <li class="add_object button" id="create_ico"
                     data-constructor="new Ayce.Geometry.Icosahedron(2)"
                     data-centered="true"
                     data-type="icosahedron">Icosahedron</li>
-                <li class="add_object button_inactive" id="import_obj" data-type="obj">
+                <li class="add_object button" id="import_obj" data-type="obj">
                     <i class="fa fa-plus-circle"></i>Import OBJ File</li>
             </ul>
         </div>
         <div>
             <h2><i class="fa fa-wrench"></i>Other</h2>
             <ul>
-                <li id="add_light" data-type="light"><i class="fa fa-lightbulb-o"></i>Light</li>
-                <li id="add_camera" data-type="camera"><i class="fa fa-video-camera"></i>Camera</li>
+                <li id="add_light" class="button" data-type="light"><i class="fa fa-lightbulb-o"></i>Light</li>
+                <li id="add_camera" class="button" data-type="camera"><i class="fa fa-video-camera"></i>Camera</li>
             </ul>
         </div>
         <div id="objects_in_scene_div">
