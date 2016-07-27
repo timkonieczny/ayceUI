@@ -7,6 +7,8 @@
     <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=PT+Sans" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="sidebar.css">
+    <link rel="stylesheet" href="modal.css">
     <link rel="stylesheet" href="loading.css">
 
     <script type="text/javascript" src="lib/allyoucaneatVR.js"></script>
@@ -131,23 +133,23 @@
         <div>
             <h2><i class="fa fa-cube"></i>Geometries</h2>
             <ul>
-                <li class="add_object button_inactive add_object_left_column" id="create_plane"
+                <li class="add_object button_inactive" id="create_plane"
                     data-constructor="new Ayce.Geometry.Plane(1, 1, 2, 2, false)"
                     data-centered="true"
                     data-type="plane">Plane</li>
-                <li class="add_object button_inactive add_object_right_column" id="create_cube"
+                <li class="add_object button_inactive" id="create_cube"
                     data-constructor="new Ayce.Geometry.Box(1, 1, 1)"
                     data-centered="false"
                     data-type="cube">Cube</li>
-                <li class="add_object button_inactive add_object_left_column" id="create_sphere"
+                <li class="add_object button_inactive" id="create_sphere"
                     data-constructor="new Ayce.Geometry.Sphere(0.5)"
                     data-centered="true"
                     data-type="sphere">Sphere</li>
-                <li class="add_object button_inactive add_object_right_column" id="create_ico"
+                <li class="add_object button_inactive" id="create_ico"
                     data-constructor="new Ayce.Geometry.Icosahedron(2)"
                     data-centered="true"
                     data-type="icosahedron">Icosahedron</li>
-                <li class="add_object button_inactive add_object_left_column" id="import_obj" data-type="obj">
+                <li class="add_object button_inactive" id="import_obj" data-type="obj">
                     <i class="fa fa-plus-circle"></i>Import OBJ File</li>
             </ul>
         </div>

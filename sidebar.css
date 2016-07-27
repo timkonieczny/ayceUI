@@ -1,0 +1,112 @@
+#export_code{
+    display: inline-block;
+    background-color: #676767;
+    margin: 5px 0px 5px 0px;
+    padding: 5px;
+    border-radius: 3px
+}
+#main_menu{
+    width:100%;
+}
+h2{
+    margin-bottom: 0;
+    font-weight: normal;
+    font-size: 1.5em;
+    /*width: 100%;*/
+}
+ul{
+    padding: 0;
+    margin: 0;
+    overflow: hidden;
+}
+li{
+    list-style-type: none;
+    margin: 0px 0px 5px 0px;
+    padding: 5px;
+    border-radius: 3px;
+    background-color: #676767;
+}
+.button_active{
+    background-color: #0091ff;
+}
+.add_object, #add_light, #add_camera, #export_code, .object_in_scene{
+    cursor: pointer;
+}
+.add_object:hover, #add_light:hover, #add_camera:hover, #export_code:hover, .object_in_scene:hover{
+    /*background-color: #676767;*/
+    background-color: #7d7d7d;
+}
+.button_active:hover{
+    background-color: #16a7ff;
+
+}
+.add_object{
+    width: calc(50% - 5px - 5px - 2.5px);
+    float: left;
+}
+.add_object:nth-child(odd){
+    margin: 0px 2.5px 5px 0px;
+}
+.add_object:nth-child(even){
+    margin: 0px 0px 5px 2.5px;
+}
+#sidebar_left, #sidebar_right{
+    position: absolute;
+    z-index: 2;
+    background-color: rgba(62, 62, 62, 0.9);
+    width: 320px;
+    height: 100%;
+    overflow: auto;
+    padding: 0px 5px 0px 5px;
+}
+#sidebar_left{
+    left:0;
+}
+#sidebar_right{
+    right:0;
+    display: none;
+}
+#objects_in_scene_div {
+    margin-top: 40px;
+    padding: 0px 5px 5px 5px;
+    background-color: transparent;
+    border: 2px solid #676767;
+    border-radius: 3px;
+    box-shadow: 0px 8px 80px -13px rgba(0, 0, 0, 1);
+    display: none;
+}
+#objects_in_scene_div h2{
+    margin-top:0px;
+}
+#object_name{
+    font-size: 1.5em;
+    font-family: 'PT Sans', sans-serif;
+    display: inline-block;
+    background-color: transparent;
+    border: 2px solid transparent;
+    color: #ffffff;
+}
+#object_name:hover{
+    border: 2px solid #676767;
+}
+#object_name:focus{
+    border: 2px solid #ffffff;
+}
+#properties_icon{
+    font-size: 1.5em;
+    width: calc(1.2em - 2px);
+}
+#properties_header{
+    margin-top: 0.83em;
+    margin-bottom: 2px;
+}
+.property_input{
+    width: calc(33.33% - 4px);
+    margin:0;
+    /*overflow: scroll;*/
+}
+fieldset{
+    margin: 0;
+    border: 0;
+    padding: 0;
+}
