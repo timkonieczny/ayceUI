@@ -181,6 +181,11 @@ var showProperties = function(e) {
         document.getElementById("camera_rotation_y").value = eulerAngles[1];
         document.getElementById("camera_rotation_z").value = eulerAngles[2];
     }
+    if(uiFactory.camera){
+        document.getElementById("object_name").value = cameraPreview.screenName;
+    }else{
+        document.getElementById("object_name").value = objects[currentObjectId].screenName;
+    }
 };
 
 var hideProperties = function(){

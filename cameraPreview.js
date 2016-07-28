@@ -5,6 +5,7 @@ var CameraPreview = function() {
     this.objects = [];
     this.modifier.position.y = .5;
     this.scene.getCamera().getManager().modifiers.push(this.modifier);
+    this.screenName = "camera";
 
     this.update = function() {
         this.scene.updateScene();

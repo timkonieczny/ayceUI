@@ -66,11 +66,13 @@ for(i = 0; i < addObjectButtons.length; i++){
             objects[objects.length-1].position.z = -2;
             cameraPreview.objects[cameraPreview.objects.length-1].position.z = -2;
 
+            objects[objects.length-1].screenName = this.dataset.type;
+
             scene.addToScene(objects[objects.length-1]);
             cameraPreview.scene.addToScene(cameraPreview.objects[cameraPreview.objects.length-1]);
 
             var child = document.createElement('li');
-            child.innerHTML = this.innerText;
+            child.innerHTML = objects[objects.length-1].screenName;
             child.dataset.id = (objects.length-1);
             child.dataset.type = (this.dataset.type);
             child.className = "object_in_scene button";
@@ -78,9 +80,7 @@ for(i = 0; i < addObjectButtons.length; i++){
 
             document.getElementById("objects_in_scene").appendChild(child);
 
-            var temp = {};
-            temp.srcElement = this;
-            child.onclick(temp);
+            child.onclick({srcElement: this});
         }
     }
 }
@@ -89,26 +89,29 @@ document.getElementById("add_light").onclick = function(){
     document.getElementById("objects_in_scene_div").style.display = "block";
     objects.push(new Ayce.Light());
     cameraPreview.objects.push(new Ayce.Light());
+    objects[objects.length-1].screenName = this.dataset.type;
     scene.addToScene(objects[objects.length-1]);
     cameraPreview.scene.addToScene(cameraPreview.objects[cameraPreview.objects.length-1]);
     var child = document.createElement('li');
-    child.innerHTML = "Light";
+    child.innerHTML = objects[objects.length-1].screenName;
     child.dataset.id = (objects.length-1);
     child.dataset.type = (this.dataset.type);
     child.className = "object_in_scene button";
     child.onclick = showProperties;
     document.getElementById("objects_in_scene").appendChild(child);
+    child.onclick({srcElement: this});
 };
 
 document.getElementById("add_camera").onclick = function(){
     document.getElementById("objects_in_scene_div").style.display = "block";
     document.getElementById("camera_preview_wrapper").style.display = "block";
     var child = document.createElement('li');
-    child.innerHTML = "Camera";
+    child.innerHTML = cameraPreview.screenName;
     child.dataset.type = (this.dataset.type);
     child.className = "object_in_scene button";
     child.onclick = showProperties;
     document.getElementById("objects_in_scene").appendChild(child);
+    child.onclick({srcElement: this});
 };
 
 var openModal = function(type){
