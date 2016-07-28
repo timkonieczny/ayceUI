@@ -26,6 +26,7 @@ var quaternion_to_euler = function(q){   // TODO: move to ayceVR
     ]
 };
 var addClass = function(element, className){
+    console.log(element);
     element.className += " "+className;
 };
 

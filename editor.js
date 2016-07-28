@@ -77,6 +77,10 @@ for(i = 0; i < addObjectButtons.length; i++){
             child.onclick = showProperties;
 
             document.getElementById("objects_in_scene").appendChild(child);
+
+            var temp = {};
+            temp.srcElement = this;
+            child.onclick(temp);
         }
     }
 }
