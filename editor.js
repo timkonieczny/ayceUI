@@ -73,7 +73,8 @@ for(i = 0; i < addObjectButtons.length; i++){
 
             var child = document.createElement('li');
             child.innerHTML = objects[objects.length-1].screenName;
-            child.dataset.id = (objects.length-1);
+            child.dataset.id = (objects.length-1);          //TODO: eliminate data-id
+            child.id = objects.length-1;
             child.dataset.type = (this.dataset.type);
             child.className = "object_in_scene button";
             child.onclick = showProperties;
@@ -95,6 +96,7 @@ document.getElementById("add_light").onclick = function(){
     var child = document.createElement('li');
     child.innerHTML = objects[objects.length-1].screenName;
     child.dataset.id = (objects.length-1);
+    child.id = objects.length-1;
     child.dataset.type = (this.dataset.type);
     child.className = "object_in_scene button";
     child.onclick = showProperties;
@@ -108,6 +110,7 @@ document.getElementById("add_camera").onclick = function(){
     var child = document.createElement('li');
     child.innerHTML = cameraPreview.screenName;
     child.dataset.type = (this.dataset.type);
+    child.id = "camera";
     child.className = "object_in_scene button";
     child.onclick = showProperties;
     document.getElementById("objects_in_scene").appendChild(child);

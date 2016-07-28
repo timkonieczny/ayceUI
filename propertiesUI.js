@@ -106,6 +106,15 @@ var setEventListeners = function() {
             updateProperties(e)
         };
     }
+    document.getElementById("object_name").addEventListener("input", function(e){   // TODO: camera?
+        if(currentObjectId == undefined){
+            cameraPreview.screenName = e.srcElement.value;
+            document.getElementById("camera").innerHTML = e.srcElement.value;
+        }else{
+            objects[currentObjectId].screenName = e.srcElement.value;
+            document.getElementById(currentObjectId).innerHTML = e.srcElement.value;
+        }
+    });
 };
 
 var uiFactory = new UIFactory();
