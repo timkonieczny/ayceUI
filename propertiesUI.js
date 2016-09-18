@@ -107,14 +107,21 @@ var setEventListeners = function() {
         };
     }
     document.getElementById("object_name").addEventListener("input", function(e){   //TODO: prevent duplicates and ""
-        if(currentObjectId == undefined){
+        if(currentObjectId == undefined){                           // if object is camera
             cameraPreview.screenName = e.srcElement.value;
             document.getElementById("camera").innerHTML = e.srcElement.value;
-        }else{
+        }else{                                                      // if regular object
             objects[currentObjectId].screenName = e.srcElement.value;
             document.getElementById(currentObjectId).innerHTML = e.srcElement.value;
         }
     });
+    document.getElementById("object_name").addEventListener("focusout", function(e){
+        if(e.srcElement.value == ""){
+            alert("Enter a name!"); //TODO: show notification
+            e.srcElement.focus();
+        }
+    });
+    // event listener on lose focus. If "", add focus again, display error
 };
 
 var uiFactory = new UIFactory();
