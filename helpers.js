@@ -32,3 +32,15 @@ var addClass = function(element, className){
 var removeClass = function(element, className2){
     element.className = element.className.replace(new RegExp(className2, 'g'), "");
 };
+
+var showNotification = function(text, icon){
+    var oldNotification = document.getElementById("notification");  // remove and re-add element to re-run CSS animation
+    var notification = oldNotification.cloneNode(true);
+    oldNotification.parentNode.replaceChild(notification, oldNotification);
+
+    var notificationText = document.getElementById("notification_text");
+    var notificationIcon = document.getElementById("notification_icon");
+    notification.style.display = "block";
+    notificationText.innerHTML = text;
+    notificationIcon.className = "fa " + icon;
+};

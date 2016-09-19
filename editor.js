@@ -173,69 +173,54 @@ document.getElementById("export_code").addEventListener('click', function(){
 });
 
 document.getElementById("obj_drop").addEventListener("dragover", function(e){
-    //e.stopPropagation();
     e.preventDefault();
     e.dataTransfer.dropEffect = 'copy';
-    console.log("drag");
 }, false);
 
 document.getElementById("mtl_drop").addEventListener("dragover", function(e){
-    //e.stopPropagation();
     e.preventDefault();
     e.dataTransfer.dropEffect = 'copy';
-    console.log("drag");
 }, false);
 
 var objString = null;
 var mtlString = null;
 
 document.getElementById("obj_drop").addEventListener("drop", function(e){       // TODO: include Ayce in long form
+    fileToGeometry(e, "obj");
+}, false);
+
+document.getElementById("mtl_drop").addEventListener("drop", function(e){
+    fileToGeometry(e, "mtl")
+}, false);
+
+var fileToGeometry = function(e, type){
     e.stopPropagation();
     e.preventDefault();
 
-    document.getElementById("obj_drop").style.display = "none";
-    document.getElementById("obj_drop_loading").style.display = "flex";
-
     var file = e.dataTransfer.files[0];
-    var reader = new FileReader();
-    reader.onload = function (e) {
-        console.log(e.currentTarget.result);
-        objString = e.currentTarget.result;
-        document.getElementById("obj_drop_loading").style.display = "none";
-        document.getElementById("obj_drop_done").style.display = "flex";
-        if(mtlString){
-            document.getElementById("obj_drop_done").style.display = "none";
-            document.getElementById("mtl_drop_done").style.display = "none";
-            document.getElementById("import_processing").style.display = "flex";
-            createGeometry(objString, mtlString)
-        }
-    };
-    reader.readAsText(file);     // TODO: enable direct data passing to OBJLoader
-}, false);
 
-document.getElementById("mtl_drop").addEventListener("drop", function(e){       // TODO: include Ayce in long form
-    e.stopPropagation();
-    e.preventDefault();
+    if(/(?:\.([^.]+))?$/.exec(file.name)[1] == type) {          // check if correct file was dropped in correct field
+        document.getElementById(type + "_drop").style.display = "none";
+        document.getElementById(type + "_drop_loading").style.display = "flex";
 
-    document.getElementById("mtl_drop").style.display = "none";
-    document.getElementById("mtl_drop_loading").style.display = "flex";
-
-    var file = e.dataTransfer.files[0];
-    var reader = new FileReader();
-    reader.onload = function (e) {
-        console.log(e.currentTarget.result);
-        mtlString = e.currentTarget.result;
-        document.getElementById("mtl_drop_loading").style.display = "none";
-        document.getElementById("mtl_drop_done").style.display = "flex";
-        if(objString){
-            document.getElementById("obj_drop_done").style.display = "none";
-            document.getElementById("mtl_drop_done").style.display = "none";
-            document.getElementById("import_processing").style.display = "flex";
-            createGeometry(objString, mtlString)
-        }
-    };
-    reader.readAsText(file);
-}, false);
+        var reader = new FileReader();
+        reader.onload = function (e) {
+            if(type == "mtl") mtlString = e.currentTarget.result;
+            else if(type == "obj") objString = e.currentTarget.result;
+            document.getElementById(type + "_drop_loading").style.display = "none";
+            document.getElementById(type + "_drop_done").style.display = "flex";
+            if (objString && mtlString) {
+                document.getElementById("obj_drop_done").style.display = "none";
+                document.getElementById("mtl_drop_done").style.display = "none";
+                document.getElementById("import_processing").style.display = "flex";
+                createGeometry(objString, mtlString)
+            }
+        };
+        reader.readAsText(file);    // TODO: enable direct data passing to OBJLoader
+    }else{
+        showNotification("Please provide a valid ." + type + " file.", "fa-exclamation-circle");
+    }
+};
 
 var createGeometry = function(obj, mtl){
 
