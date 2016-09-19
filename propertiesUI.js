@@ -117,11 +117,28 @@ var setEventListeners = function() {
     });
     document.getElementById("object_name").addEventListener("focusout", function(e){
         if(e.srcElement.value == ""){
-            alert("Enter a name!"); //TODO: show notification
+            /*
+            var notification = document.getElementById("notification");
+            var notificationText = document.getElementById("notification_text");
+            var notificationIcon = document.getElementById("notification_icon");
+            notification.display = "block";
+            notificationText.innerHTML = "Please enter an object name.";
+            notificationIcon.className = "fa fa-bell-o";*/
+            showNotification("Please enter an object name.", "fa-bell-o");
             e.srcElement.focus();
         }
     });
-    // event listener on lose focus. If "", add focus again, display error
+    var showNotification = function(text, icon){
+        var oldNotification = document.getElementById("notification");  // remove and re-add element to re-run CSS animation
+        var notification = oldNotification.cloneNode(true);
+        oldNotification.parentNode.replaceChild(notification, oldNotification);
+
+        var notificationText = document.getElementById("notification_text");
+        var notificationIcon = document.getElementById("notification_icon");
+        notification.style.display = "block";
+        notificationText.innerHTML = text;
+        notificationIcon.className = "fa " + icon;
+    };
 };
 
 var uiFactory = new UIFactory();

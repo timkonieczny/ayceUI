@@ -24,6 +24,7 @@ ul{
 }
 .button_active{
     background-color: #0091ff;
+    min-height: calc(1em + 5px);    /* height if text is empty: 1 line + 5px margin-bottom*/
 }
 li{
     list-style-type: none;
