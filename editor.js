@@ -245,12 +245,14 @@ var createGeometry = function(obj, mtl){
     objects[objects.length-1].position.z = -2;
     cameraPreview.objects[cameraPreview.objects.length-1].position.z = -2;
 
+    objects[objects.length-1].screenName = "imported object";
+
     scene.addToScene(objects[objects.length-1]);
     cameraPreview.scene.addToScene(cameraPreview.objects[cameraPreview.objects.length-1]);
 
     document.getElementById("objects_in_scene_div").style.display = "block";
     var child = document.createElement('li');
-    child.innerHTML = "Imported Object";
+    child.innerHTML = "imported object";
     child.dataset.id = (objects.length-1);
     child.dataset.type = "obj";
     child.className = "object_in_scene button";
