@@ -106,7 +106,7 @@ var setEventListeners = function() {
             updateProperties(e)
         };
     }
-    document.getElementById("object_name").addEventListener("input", function(e){   //TODO: prevent duplicates and ""
+    document.getElementById("object_name").addEventListener("input", function(e){
         if(currentObjectId == undefined){                           // if object is camera
             cameraPreview.screenName = e.srcElement.value;
             document.getElementById("camera").innerHTML = e.srcElement.value;
@@ -117,14 +117,7 @@ var setEventListeners = function() {
     });
     document.getElementById("object_name").addEventListener("focusout", function(e){
         if(e.srcElement.value == ""){
-            /*
-            var notification = document.getElementById("notification");
-            var notificationText = document.getElementById("notification_text");
-            var notificationIcon = document.getElementById("notification_icon");
-            notification.display = "block";
-            notificationText.innerHTML = "Please enter an object name.";
-            notificationIcon.className = "fa fa-bell-o";*/
-            showNotification("Please enter an object name.", "fa-bell-o");
+            showNotification("Please enter an object name.", "fa-exclamation-circle");
             e.srcElement.focus();
         }
     });
