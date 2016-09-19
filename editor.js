@@ -224,26 +224,37 @@ var fileToGeometry = function(e, type){
 
 var createGeometry = function(obj, mtl){
 
-    objects.push(new Ayce.OBJLoader(obj, mtl, true)[0]);                // TODO: more efficient solution for copying the O3D
-    cameraPreview.objects.push(new Ayce.OBJLoader(obj, mtl, true)[0]);
+    var object = new Ayce.OBJLoader(obj, mtl, true)[0];
+    if(object.vertices) {
 
-    objects[objects.length-1].position.z = -2;
-    cameraPreview.objects[cameraPreview.objects.length-1].position.z = -2;
+        objects.push(object);                // TODO: more efficient solution for copying the O3D
+        cameraPreview.objects.push(new Ayce.OBJLoader(obj, mtl, true)[0]);
 
-    objects[objects.length-1].screenName = "imported object";
+        objects[objects.length - 1].position.z = -2;
+        cameraPreview.objects[cameraPreview.objects.length - 1].position.z = -2;
 
-    scene.addToScene(objects[objects.length-1]);
-    cameraPreview.scene.addToScene(cameraPreview.objects[cameraPreview.objects.length-1]);
+        objects[objects.length - 1].screenName = "imported object";
 
-    document.getElementById("objects_in_scene_div").style.display = "block";
-    var child = document.createElement('li');
-    child.innerHTML = "imported object";
-    child.dataset.id = (objects.length-1);
-    child.dataset.type = "obj";
-    child.className = "object_in_scene button";
-    child.onclick = showProperties;
+        console.log(objects[objects.length - 1]);
+        console.log("scene.addToScene()");
+        scene.addToScene(objects[objects.length - 1]);
+        cameraPreview.scene.addToScene(cameraPreview.objects[cameraPreview.objects.length - 1]);
+        console.log("done");
 
-    document.getElementById("objects_in_scene").appendChild(child);
+        document.getElementById("objects_in_scene_div").style.display = "block";
+        var child = document.createElement('li');
+        child.innerHTML = "imported object";
+        child.dataset.id = (objects.length - 1);
+        child.dataset.type = "obj";
+        child.className = "object_in_scene button";
+        child.onclick = showProperties;
 
-    closeModal();
+        document.getElementById("objects_in_scene").appendChild(child);
+
+        closeModal();
+    }else{
+        showNotification("At least one of the provided files is invalid. The object wasn't created.", "fa-exclamation-circle");
+        closeModal();
+        openModal("obj");
+    }
 };
