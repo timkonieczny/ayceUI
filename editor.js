@@ -123,10 +123,17 @@ var openModal = function(type){
         document.getElementById("obj_drop").style.display = "flex";
         document.getElementById("mtl_drop").style.display = "flex";
     }else if(type == "code"){
-        var output = "";
-        for(var i = 0; i < objects.length; i++){
-            output+="object"+i+JSON.stringify(objects[i], null, "\t")+";\n";      // TODO: assign object name
+        var output = "var objects = [\n";   // TODO: hinter jedes \n ein \t
+        for(var i=0; i<objects.length; i++){
+            var objectString = JSON.stringify(objects[i], null, "\t")+",";
+            objectString = formatJSONProperty(objectString, "vertices");
+            objectString = formatJSONProperty(objectString, "normals");
+            objectString = formatJSONProperty(objectString, "indices");
+            objectString = objectString.replace(/(\n)/g, "\n\t");
+            output += "\t"+objectString;
         }
+        output += "\n];";
+
         document.getElementById("modal").style.display = "block";
         document.getElementById("export_code_textarea").style.display = "block";
         document.getElementById("export_code_textarea").value = output;
@@ -150,6 +157,11 @@ document.getElementById("import_obj").addEventListener('click', function(){
     openModal("obj");
 });
 
+var formatJSONProperty = function(JSONString, propertyName){
+    // /("propertyName": \[[^\]]*)/
+    var substring = JSONString.match(new RegExp('("'+propertyName+'": \\[[^\\]]*)'))[0];  // get "propertyName": [ ... ] substring
+    return JSONString.replace(substring, substring.replace(/(\t)+/g, " ").replace(/\n/g, ""));  // replace \t and \n and reinsert substring
+};
 
 var renderPreview = true;
 
