@@ -147,7 +147,8 @@ document.getElementById("import_obj").addEventListener('click', function(){
 });
 
 var buildCodeString = function(){
-    var output = "var objects = [\n";
+    var output = 'var scene = new Ayce.Scene(document.getElementById("ayce_canvas"));\n' +
+    "var objects = [\n";
     for(var i=0; i<objects.length; i++){
         var objectString = JSON.stringify(objects[i], null, "\t")+",";
         objectString = formatJSONProperty(objectString, "vertices");
@@ -156,7 +157,16 @@ var buildCodeString = function(){
         objectString = objectString.replace(/(\n)/g, "\n\t");
         output += "\t"+objectString+"\n";
     }
-    output += "\n];";
+    output += "\n];\n" +
+        "for(var i = 0; i < objects.length; i++){\n" +
+        "\tscene.addToScene(objects[i]);\n" +
+        "};\n" +
+        "var update = function(){\n" +
+        "\tAyce.requestAnimFrame(update);\n" +
+        "\tscene.updateScene();\n" +
+        "\tscene.drawScene();\n" +
+        "};\n" +
+        "update();";
     return output;
 };
 
