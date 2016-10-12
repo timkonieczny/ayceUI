@@ -123,20 +123,9 @@ var openModal = function(type){
         document.getElementById("obj_drop").style.display = "flex";
         document.getElementById("mtl_drop").style.display = "flex";
     }else if(type == "code"){
-        var output = "var objects = [\n";   // TODO: hinter jedes \n ein \t
-        for(var i=0; i<objects.length; i++){
-            var objectString = JSON.stringify(objects[i], null, "\t")+",";
-            objectString = formatJSONProperty(objectString, "vertices");
-            objectString = formatJSONProperty(objectString, "normals");
-            objectString = formatJSONProperty(objectString, "indices");
-            objectString = objectString.replace(/(\n)/g, "\n\t");
-            output += "\t"+objectString;
-        }
-        output += "\n];";
-
         document.getElementById("modal").style.display = "block";
         document.getElementById("export_code_textarea").style.display = "block";
-        document.getElementById("export_code_textarea").value = output;
+        document.getElementById("export_code_textarea").value = buildCodeString();
     }
     document.getElementById("modal_close").onclick = closeModal;
 };
@@ -156,6 +145,20 @@ var closeModal = function(){
 document.getElementById("import_obj").addEventListener('click', function(){
     openModal("obj");
 });
+
+var buildCodeString = function(){
+    var output = "var objects = [\n";
+    for(var i=0; i<objects.length; i++){
+        var objectString = JSON.stringify(objects[i], null, "\t")+",";
+        objectString = formatJSONProperty(objectString, "vertices");
+        objectString = formatJSONProperty(objectString, "normals");
+        objectString = formatJSONProperty(objectString, "indices");
+        objectString = objectString.replace(/(\n)/g, "\n\t");
+        output += "\t"+objectString+"\n";
+    }
+    output += "\n];";
+    return output;
+};
 
 var formatJSONProperty = function(JSONString, propertyName){
     // /("propertyName": \[[^\]]*)/
