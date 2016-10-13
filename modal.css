@@ -39,6 +39,7 @@
     resize: none;
     padding: 0;
     border: 0;
+    tab-size: 4;
 }
 #file_upload_wrapper{
     width:100%;
