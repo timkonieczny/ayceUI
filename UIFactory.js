@@ -7,6 +7,7 @@ var UIFactory = function(){
     this.lighting = false;
     this.visibility = false;
     this.camera = false;
+    this.editScript = false;
 
     this.resetAttributes = function(){
         this.position = false;
@@ -17,6 +18,7 @@ var UIFactory = function(){
         this.lighting = false;
         this.visibility = false;
         this.camera = false;
+        this.editScript = false;
     };
 
     this.buildUI = function(){
@@ -66,6 +68,11 @@ var UIFactory = function(){
         if(this.lighting){
             ui+='<li>Visible:<br>' +
                 '<input class="property_input" id="visible" type="checkbox" title="visible"/>' +
+                '</li>';
+        }
+        if(this.editScript){
+            ui+='<li>Scripts:<br>' +
+                '<a id="edit_script" class="button"><i class="fa fa-code"></i>Edit script</a>' +
                 '</li>';
         }
         if(this.camera){

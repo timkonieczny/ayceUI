@@ -106,6 +106,9 @@ var setEventListeners = function() {
             updateProperties(e)
         };
     }
+    document.getElementById("edit_script").addEventListener("click", function(e){
+        openModal("code");  // TODO: Create new modal for scripts
+    });
     document.getElementById("object_name").addEventListener("input", function(e){
         if(currentObjectId == undefined){                           // if object is camera
             cameraPreview.screenName = e.srcElement.value;
@@ -142,11 +145,14 @@ var showProperties = function(e) {
         uiFactory.twoFaceTransparency = true;
         uiFactory.lighting = true;
         uiFactory.visibility = true;
+        uiFactory.editScript = true;
     }else if(e.srcElement.dataset.type == "light"){
         uiFactory.position = true;
+        uiFactory.editScript = true;
     }else if(e.srcElement.dataset.type == "camera"){
         uiFactory.camera = true;
         // TODO: assemble ui
+        // TODO: add editScript
     }
     document.getElementById("properties_list").innerHTML = uiFactory.buildUI();
     setEventListeners();
