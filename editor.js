@@ -120,12 +120,19 @@ document.getElementById("add_camera").onclick = function(){
 var openModal = function(type){
     if(type == "obj"){
         document.getElementById("modal").style.display = "block";
+        document.getElementById("file_upload_wrapper").style.display = "block";
         document.getElementById("obj_drop").style.display = "flex";
         document.getElementById("mtl_drop").style.display = "flex";
     }else if(type == "code"){
         document.getElementById("modal").style.display = "block";
         document.getElementById("export_code_textarea").style.display = "block";
         document.getElementById("export_code_textarea").value = buildCodeString();
+    }else if(type == "script"){
+        document.getElementById("modal").style.display = "block";
+        document.getElementById("edit_script_wrapper").style.display = "block";
+        document.getElementById("edit_script_textarea").style.display = "block";
+
+        //document.getElementById("export_code_textarea").value = buildCodeString();
     }
     document.getElementById("modal_close").onclick = closeModal;
 };
@@ -135,8 +142,11 @@ var closeModal = function(){
     document.getElementById("obj_drop_done").style.display = "none";
     document.getElementById("mtl_drop").style.display = "none";
     document.getElementById("mtl_drop_done").style.display = "none";
+    document.getElementById("file_upload_wrapper").style.display = "none";
     document.getElementById("import_processing").style.display = "none";
     document.getElementById("export_code_textarea").style.display = "none";
+    document.getElementById("edit_script_textarea").style.display = "none";
+    document.getElementById("edit_script_wrapper").style.display = "none";
     document.getElementById("modal").style.display = "none";
     objString = null;
     mtlString = null;
@@ -210,7 +220,7 @@ document.getElementById("mtl_drop").addEventListener("dragover", function(e){
 var objString = null;
 var mtlString = null;
 
-document.getElementById("obj_drop").addEventListener("drop", function(e){       // TODO: include Ayce in long form
+document.getElementById("obj_drop").addEventListener("drop", function(e){
     fileToGeometry(e, "obj");
 }, false);
 
