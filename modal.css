@@ -56,11 +56,22 @@
 #edit_script_textarea{
     border-radius: 3px;
     width:100%;
-    height: calc(100% - (1em + 10px));
+    height: calc(100% - 21px - 10px - 10px);   /* 21px is 1em of a <p></p>. Textarea has a different em*/
     resize: none;
     padding: 0;
     border: 0;
     tab-size: 4;
+}
+.button_modal{
+    display: inline-block;
+    float: right;
+    margin: 5px 5px 5px 0px;
+}
+#save_script{ /*TODO: hover*/
+    background-color: #00d682;
+}
+#reset_script{
+
 }
 .modal_top_half, .modal_bottom_half{
     height: calc(50% - 9px - 4px);
