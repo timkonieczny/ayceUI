@@ -68,6 +68,8 @@ for(i = 0; i < addObjectButtons.length; i++){
 
             objects[objects.length-1].screenName = this.dataset.type;
 
+            objects[objects.length-1].script = function(){};
+
             scene.addToScene(objects[objects.length-1]);
             cameraPreview.scene.addToScene(cameraPreview.objects[cameraPreview.objects.length-1]);
 
@@ -117,7 +119,7 @@ document.getElementById("add_camera").onclick = function(){
     child.onclick({srcElement: this});
 };
 
-var openModal = function(type){
+var openModal = function(type, param){
     if(type == "obj"){
         document.getElementById("modal").style.display = "block";
         document.getElementById("file_upload_wrapper").style.display = "block";
@@ -131,8 +133,7 @@ var openModal = function(type){
         document.getElementById("modal").style.display = "block";
         document.getElementById("edit_script_wrapper").style.display = "block";
         document.getElementById("edit_script_textarea").style.display = "block";
-
-        //document.getElementById("export_code_textarea").value = buildCodeString();
+        document.getElementById("edit_script_textarea").value = param;
     }
     document.getElementById("modal_close").onclick = closeModal;
 };
