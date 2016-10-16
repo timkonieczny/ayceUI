@@ -67,8 +67,11 @@
     float: right;
     margin: 5px 5px 5px 0px;
 }
-#save_script{ /*TODO: hover*/
+#save_script{
     background-color: #00d682;
+}
+#save_script:hover{
+    background-color: #00ed90;
 }
 #reset_script{
 
