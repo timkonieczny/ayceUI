@@ -164,6 +164,8 @@ var buildCodeString = function(){
         objectString = formatJSONProperty(objectString, "vertices");
         objectString = formatJSONProperty(objectString, "normals");
         objectString = formatJSONProperty(objectString, "indices");
+        objectString = formatJSONProperty(objectString, "tetureCoords");
+        objectString = formatJSONProperty(objectString, "tetureIndices");
         objectString = objectString.replace(/(\n)/g, "\n\t");
         output += "\t"+objectString+"\n";
     }

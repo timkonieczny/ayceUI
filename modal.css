@@ -73,9 +73,6 @@
 #save_script:hover{
     background-color: #00ed90;
 }
-#reset_script{
-
-}
 .modal_top_half, .modal_bottom_half{
     height: calc(50% - 9px - 4px);
     width: calc(100% - 12px - 4px);
