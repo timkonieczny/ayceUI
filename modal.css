@@ -62,15 +62,28 @@
     border: 0;
     tab-size: 4;
 }
-.button_modal{
+.button_light {
+    cursor: pointer;
+    padding: 3px;
+    border-radius: 3px;
+    border: 2px solid #b4b4b4;
+    background-color: #ffffff;
+    color: #b4b4b4;
     display: inline-block;
     float: right;
     margin: 5px 5px 5px 0px;
 }
+.button_light:hover {
+    background-color: #b4b4b4;
+    color: #ffffff;
+}
 #save_script{
+    border: 2px solid #00d682;
     background-color: #00d682;
+    color: #ffffff;
 }
 #save_script:hover{
+    border: 2px solid #00ed90;
     background-color: #00ed90;
 }
 .modal_top_half, .modal_bottom_half{

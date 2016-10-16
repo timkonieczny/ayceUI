@@ -72,7 +72,7 @@ var UIFactory = function(){
         }
         if(this.editScript){
             ui+='<li>Scripts:<br>' +
-                '<a id="edit_script" class="button"><i class="fa fa-code"></i>Edit script</a>' +
+                '<a id="edit_script" class="button_dark"><i class="fa fa-code"></i>Edit script</a>' +
                 '</li>';
         }
         if(this.camera){
