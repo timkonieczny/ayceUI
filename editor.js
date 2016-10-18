@@ -199,24 +199,6 @@ var formatJSONProperty = function(JSONString, propertyName){
     return JSONString.replace(substring, substring.replace(/(\t)+/g, " ").replace(/\n/g, ""));  // replace \t and \n and reinsert substring
 };
 
-
-function update() {
-    /*if(cursor.down){
-        console.log(cursor.x + " " + cursor.y);
-    }*/
-
-    for(var i=0; i < objects.length; i++) if(objects[i].runScriptInPreview) objects[i].script();
-
-    Ayce.requestAnimFrame(update);
-    scene.updateScene();
-    scene.drawScene();
-
-    if(cameraPreview.renderPreview)
-        cameraPreview.update();
-}
-
-update();
-
 document.getElementById("export_code").addEventListener('click', function(){
     openModal("code");
 });
