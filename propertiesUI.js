@@ -106,7 +106,7 @@ var setEventListeners = function() {
             updateProperties(e)
         };
     }
-    document.getElementById("edit_script").addEventListener("click", function(e){
+    document.getElementById("edit_script").addEventListener("click", function(){
         openModal("script", currentObjectId);
     });
     document.getElementById("object_name").addEventListener("input", function(e){

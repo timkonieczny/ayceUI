@@ -137,8 +137,8 @@ var openModal = function(type, currentObjectId){
         document.getElementById("edit_script_wrapper").style.display = "block";
         document.getElementById("edit_script_textarea").style.display = "block";
         resetScript();
-        document.getElementById("save_script").addEventListener("click", function(e){
-            objects[currentObjectId].script = document.getElementById("edit_script_textarea").value;
+        document.getElementById("save_script").addEventListener("click", function(){
+            eval("objects[currentObjectId].script = "+document.getElementById("edit_script_textarea").value);
             closeModal();
         });
         document.getElementById("reset_script").addEventListener("click", resetScript);
@@ -203,6 +203,10 @@ function update() {
     /*if(cursor.down){
         console.log(cursor.x + " " + cursor.y);
     }*/
+    // TODO: Checkbox that enables / disables script execution in edit mode
+    for(var i=0; i < objects.length; i++){
+        objects[i].script();
+    }
 
     Ayce.requestAnimFrame(update);
     scene.updateScene();
