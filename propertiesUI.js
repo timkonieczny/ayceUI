@@ -107,7 +107,7 @@ var setEventListeners = function() {
         };
     }
     document.getElementById("edit_script").addEventListener("click", function(e){
-        openModal("script", objects[currentObjectId].script);
+        openModal("script", currentObjectId);
     });
     document.getElementById("object_name").addEventListener("input", function(e){
         if(currentObjectId == undefined){                           // if object is camera

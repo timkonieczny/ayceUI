@@ -119,7 +119,7 @@ document.getElementById("add_camera").onclick = function(){
     child.onclick({srcElement: this});
 };
 
-var openModal = function(type, param){
+var openModal = function(type, currentObjectId){
     if(type == "obj"){
         document.getElementById("modal").style.display = "block";
         document.getElementById("file_upload_wrapper").style.display = "block";
@@ -130,12 +130,20 @@ var openModal = function(type, param){
         document.getElementById("export_code_textarea").style.display = "block";
         document.getElementById("export_code_textarea").value = buildCodeString();
     }else if(type == "script"){
+        var resetScript = function(){
+            document.getElementById("edit_script_textarea").value = objects[currentObjectId].script;
+        };
         document.getElementById("modal").style.display = "block";
         document.getElementById("edit_script_wrapper").style.display = "block";
         document.getElementById("edit_script_textarea").style.display = "block";
-        document.getElementById("edit_script_textarea").value = param;
+        resetScript();
+        document.getElementById("save_script").addEventListener("click", function(e){
+            objects[currentObjectId].script = document.getElementById("edit_script_textarea").value;
+            closeModal();
+        });
+        document.getElementById("reset_script").addEventListener("click", resetScript);
     }
-    document.getElementById("modal_close").onclick = closeModal;
+    document.getElementById("modal_close").addEventListener("click", closeModal);
 };
 
 var closeModal = function(){
