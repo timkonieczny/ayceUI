@@ -85,6 +85,11 @@ var setEventListeners = function() {
                 cameraPreview.modifier.position.y = Number(document.getElementById("camera_position_y").value);
                 cameraPreview.modifier.position.z = Number(document.getElementById("camera_position_z").value);
                 break;
+            case "run_script_in_preview":
+                if(e.type != "wheel") {
+                    objects[currentObjectId].runScriptInPreview = e.target.checked;
+                }
+                break;
             default:
                 var attribute = e.srcElement.id.split("_");
                 if(e.type == "wheel") {
@@ -106,8 +111,11 @@ var setEventListeners = function() {
             updateProperties(e)
         };
     }
-    document.getElementById("edit_script").addEventListener("click", function(){
+    document.getElementById("edit_script").addEventListener("click", function(){     // TODO: move to updateProperties
         openModal("script", currentObjectId);
+    });
+    document.getElementById("run_script_in_preview").addEventListener("click", function(e){ // TODO: move to updateProperties
+        objects[currentObjectId].runScriptInPreview = e.checked;
     });
     document.getElementById("object_name").addEventListener("input", function(e){
         if(currentObjectId == undefined){                           // if object is camera

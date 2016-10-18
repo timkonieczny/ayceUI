@@ -73,6 +73,8 @@ var UIFactory = function(){
         if(this.editScript){
             ui+='<li>Scripts:<br>' +
                 '<a id="edit_script" class="button_dark"><i class="fa fa-code"></i>Edit script</a>' +
+                '<input class="property_input" id="run_script_in_preview" type="checkbox"/>' +
+                '<label for="run_script_in_preview">Run script in preview</label>' +
                 '</li>';
         }
         if(this.camera){

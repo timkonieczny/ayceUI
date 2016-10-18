@@ -69,6 +69,7 @@ for(i = 0; i < addObjectButtons.length; i++){
             objects[objects.length-1].screenName = this.dataset.type;
 
             objects[objects.length-1].script = function(){};
+            objects[objects.length-1].runScriptInPreview = false;
 
             scene.addToScene(objects[objects.length-1]);
             cameraPreview.scene.addToScene(cameraPreview.objects[cameraPreview.objects.length-1]);
@@ -203,10 +204,8 @@ function update() {
     /*if(cursor.down){
         console.log(cursor.x + " " + cursor.y);
     }*/
-    // TODO: Checkbox that enables / disables script execution in edit mode
-    for(var i=0; i < objects.length; i++){
-        objects[i].script();
-    }
+
+    for(var i=0; i < objects.length; i++) if(objects[i].runScriptInPreview) objects[i].script();
 
     Ayce.requestAnimFrame(update);
     scene.updateScene();
