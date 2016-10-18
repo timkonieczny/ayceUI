@@ -118,6 +118,7 @@ document.getElementById("add_camera").onclick = function(){
     child.onclick = showProperties;
     document.getElementById("objects_in_scene").appendChild(child);
     child.onclick({srcElement: this});
+    cameraPreview.renderPreview = true;
 };
 
 var openModal = function(type, currentObjectId){
@@ -198,7 +199,6 @@ var formatJSONProperty = function(JSONString, propertyName){
     return JSONString.replace(substring, substring.replace(/(\t)+/g, " ").replace(/\n/g, ""));  // replace \t and \n and reinsert substring
 };
 
-var renderPreview = true;
 
 function update() {
     /*if(cursor.down){
@@ -211,7 +211,7 @@ function update() {
     scene.updateScene();
     scene.drawScene();
 
-    if(renderPreview)
+    if(cameraPreview.renderPreview)
         cameraPreview.update();
 }
 

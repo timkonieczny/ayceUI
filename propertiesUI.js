@@ -111,12 +111,14 @@ var setEventListeners = function() {
             updateProperties(e)
         };
     }
-    document.getElementById("edit_script").addEventListener("click", function(){     // TODO: move to updateProperties
-        openModal("script", currentObjectId);
-    });
-    document.getElementById("run_script_in_preview").addEventListener("click", function(e){ // TODO: move to updateProperties
-        objects[currentObjectId].runScriptInPreview = e.checked;
-    });
+    if(document.getElementById("edit_script")) {     // TODO: move into for loop
+        document.getElementById("edit_script").addEventListener("click", function () {
+            openModal("script", currentObjectId);
+        });
+        document.getElementById("run_script_in_preview").addEventListener("click", function (e) {
+            objects[currentObjectId].runScriptInPreview = e.checked;
+        });
+    }
     document.getElementById("object_name").addEventListener("input", function(e){
         if(currentObjectId == undefined){                           // if object is camera
             cameraPreview.screenName = e.srcElement.value;
