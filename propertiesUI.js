@@ -130,7 +130,7 @@ var uiFactory = new UIFactory();
 
 var showProperties = function(e) {
     document.getElementById("sidebar_right").style.display = "block";
-    addClass(this, "button_active");
+    addClass(this, "button_dark_active");
     currentObjectId = this.dataset.id;
     uiFactory.resetAttributes();
     if (e.srcElement.dataset.type == "plane"||
@@ -162,7 +162,7 @@ var showProperties = function(e) {
     if(activeObject!=null && activeObject != this){
         activeObject.removeEventListener("click", hideProperties);
         activeObject.addEventListener("click", showProperties, false);
-        removeClass(activeObject, "button_active");
+        removeClass(activeObject, "button_dark_active");
     }
     activeObject = this;
 
@@ -213,5 +213,5 @@ var hideProperties = function(){
     document.getElementById("sidebar_right").style.display = "none";
     this.removeEventListener("click", hideProperties);
     this.addEventListener("click", showProperties, false);
-    removeClass(activeObject, "button_active");
+    removeClass(activeObject, "button_dark_active");
 };
