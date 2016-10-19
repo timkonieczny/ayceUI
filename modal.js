@@ -140,20 +140,13 @@ var createGeometry = function(obj, mtl){
 
         objects[objects.length - 1].screenName = "imported object";
 
-        console.log(objects[objects.length - 1]);
-        console.log("scene.addToScene()");
         scene.addToScene(objects[objects.length - 1]);
         cameraPreview.scene.addToScene(cameraPreview.objects[cameraPreview.objects.length - 1]);
         console.log("done");
 
         document.getElementById("objects_in_scene_div").style.display = "block";
-        var child = document.createElement('li');
-        child.innerHTML = "imported object";
-        child.dataset.id = (objects.length - 1);
-        child.dataset.type = "obj";
-        child.className = "object_in_scene button_dark";
-        child.onclick = showProperties;
-        document.getElementById("objects_in_scene").appendChild(child);
+
+        var child = appendObjectInSceneChildElement("obj");
         closeModal();
         child.onclick({srcElement: {dataset: {type: "obj"}}});
     }else{

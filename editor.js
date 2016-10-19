@@ -74,14 +74,7 @@ for(i = 0; i < addObjectButtons.length; i++){
             scene.addToScene(objects[objects.length-1]);
             cameraPreview.scene.addToScene(cameraPreview.objects[cameraPreview.objects.length-1]);
 
-            var child = document.createElement('li');
-            child.innerHTML = objects[objects.length-1].screenName;
-            child.dataset.id = (objects.length-1);          //TODO: eliminate data-id
-            child.id = objects.length-1;
-            child.dataset.type = (this.dataset.type);
-            child.className = "object_in_scene button_dark";
-            child.onclick = showProperties;
-            document.getElementById("objects_in_scene").appendChild(child);
+            var child = appendObjectInSceneChildElement(this.dataset.type);
             child.onclick({srcElement: this});
         }
     }
@@ -94,29 +87,28 @@ document.getElementById("add_light").onclick = function(){
     objects[objects.length-1].screenName = this.dataset.type;
     scene.addToScene(objects[objects.length-1]);
     cameraPreview.scene.addToScene(cameraPreview.objects[cameraPreview.objects.length-1]);
-    var child = document.createElement('li');
-    child.innerHTML = objects[objects.length-1].screenName;
-    child.dataset.id = (objects.length-1);
-    child.id = objects.length-1;
-    child.dataset.type = (this.dataset.type);
-    child.className = "object_in_scene button_dark";
-    child.onclick = showProperties;
-    document.getElementById("objects_in_scene").appendChild(child);
+    var child = appendObjectInSceneChildElement(this.dataset.type);
     child.onclick({srcElement: this});
 };
 
 document.getElementById("add_camera").onclick = function(){
     document.getElementById("objects_in_scene_div").style.display = "block";
     document.getElementById("camera_preview_wrapper").style.display = "block";
+    var child = appendObjectInSceneChildElement(this.dataset.type);
+    child.onclick({srcElement: this});
+    cameraPreview.renderPreview = true;
+};
+
+var appendObjectInSceneChildElement = function(type){
     var child = document.createElement('li');
-    child.innerHTML = cameraPreview.screenName;
-    child.dataset.type = (this.dataset.type);
-    child.id = "camera";
+    child.innerHTML = objects[objects.length-1].screenName;
+    child.dataset.id = (objects.length-1);          //TODO: eliminate data-id
+    child.id = objects.length-1;
+    child.dataset.type = type;
     child.className = "object_in_scene button_dark";
     child.onclick = showProperties;
     document.getElementById("objects_in_scene").appendChild(child);
-    child.onclick({srcElement: this});
-    cameraPreview.renderPreview = true;
+    return child;
 };
 
 document.getElementById("import_obj").addEventListener('click', function(){
