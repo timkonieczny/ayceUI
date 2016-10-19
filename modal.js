@@ -46,6 +46,7 @@ var buildCodeString = function(){
     for(var i=0; i<objects.length; i++){
         var objectString = JSON.stringify(objects[i], null, "\t")+",";
         objectString = formatJSONProperty(objectString, "vertices");
+        objectString = formatJSONProperty(objectString, "colors");
         objectString = formatJSONProperty(objectString, "normals");
         objectString = formatJSONProperty(objectString, "indices");
         objectString = formatJSONProperty(objectString, "textureCoords");
@@ -150,7 +151,7 @@ var createGeometry = function(obj, mtl){
         child.innerHTML = "imported object";
         child.dataset.id = (objects.length - 1);
         child.dataset.type = "obj";
-        child.className = "object_in_scene button";
+        child.className = "object_in_scene button_dark";
         child.onclick = showProperties;
 
         document.getElementById("objects_in_scene").appendChild(child);
