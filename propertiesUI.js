@@ -85,6 +85,25 @@ var setEventListeners = function() {
                 cameraPreview.modifier.position.y = Number(document.getElementById("camera_position_y").value);
                 cameraPreview.modifier.position.z = Number(document.getElementById("camera_position_z").value);
                 break;
+            case "camera_rotation_x":
+            case "camera_rotation_y":
+            case "camera_rotation_z":
+                if(e.type == "wheel") {
+                    e.target.value = Number(e.target.value) + factor * 0.1;
+                }
+
+                var orientation = (new Ayce.Quaternion()).fromEulerAngles(
+                    document.getElementById("camera_rotation_x").value,
+                    document.getElementById("camera_rotation_y").value,
+                    document.getElementById("camera_rotation_z").value
+                );
+
+                cameraPreview.modifier.orientation.x = orientation.x;
+                cameraPreview.modifier.orientation.y = orientation.y;
+                cameraPreview.modifier.orientation.z = orientation.z;
+                cameraPreview.modifier.orientation.w = orientation.w;
+
+                break;
             case "run_script_in_preview":
                 if(e.type != "wheel") {
                     objects[currentObjectId].runScriptInPreview = e.target.checked;
@@ -183,7 +202,7 @@ var showProperties = function(e) {
     }
     if(uiFactory.rotation) {
         var eulerAngles = quaternion_to_euler(objects[currentObjectId].rotation);
-        document.getElementById("rotation_x").value = eulerAngles[0];    // TODO: quaternion to euler angle
+        document.getElementById("rotation_x").value = eulerAngles[0];
         document.getElementById("rotation_y").value = eulerAngles[1];
         document.getElementById("rotation_z").value = eulerAngles[2];
     }
