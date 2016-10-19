@@ -153,10 +153,9 @@ var createGeometry = function(obj, mtl){
         child.dataset.type = "obj";
         child.className = "object_in_scene button_dark";
         child.onclick = showProperties;
-
         document.getElementById("objects_in_scene").appendChild(child);
-
         closeModal();
+        child.onclick({srcElement: {dataset: {type: "obj"}}});
     }else{
         showNotification("At least one of the provided files is invalid. The object wasn't created.", "fa-exclamation-circle");
         closeModal();

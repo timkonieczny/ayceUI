@@ -81,9 +81,7 @@ for(i = 0; i < addObjectButtons.length; i++){
             child.dataset.type = (this.dataset.type);
             child.className = "object_in_scene button_dark";
             child.onclick = showProperties;
-
             document.getElementById("objects_in_scene").appendChild(child);
-
             child.onclick({srcElement: this});
         }
     }
