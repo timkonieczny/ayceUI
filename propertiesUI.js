@@ -111,7 +111,7 @@ var setEventListeners = function() {
             updateProperties(e)
         };
     }
-    if(document.getElementById("edit_script")) {     // TODO: move into for loop
+    if(document.getElementById("edit_script")) {     // TODO: enable scripting with every object
         document.getElementById("edit_script").addEventListener("click", function () {
             openModal("script", currentObjectId);
         });
