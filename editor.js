@@ -41,7 +41,7 @@ var objects = [];
 var cameraPreview = new CameraPreview();
 document.getElementById("camera_preview_wrapper").style.display = "none";
 var currentObjectId;
-var activeObject = null;
+var activeElement = null;
 
 var i;
 var addObjectButtons = document.getElementsByClassName("add_object");
