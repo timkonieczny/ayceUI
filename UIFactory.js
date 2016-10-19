@@ -3,6 +3,8 @@ var UIFactory = function(){
     this.rotation = false;
     this.scale = false;                     // TODO: move propertiesUI here. Set onwheel, onchange in buildUI
     this.color = false;
+    this.lightColor = false;
+    this.lightSpecularColor = false;
     this.twoFaceTransparency = false;
     this.lighting = false;
     this.visibility = false;
@@ -14,6 +16,8 @@ var UIFactory = function(){
         this.rotation = false;
         this.scale = false;
         this.color = false;
+        this.lightColor = false;
+        this.lightSpecularColor = false;
         this.twoFaceTransparency = false;
         this.lighting = false;
         this.visibility = false;
@@ -50,6 +54,20 @@ var UIFactory = function(){
                 '<input class="property_input" id="colors_g" title="colors_g"/>' +
                 '<input class="property_input" id="colors_b" title="colors_b"/>' +
                 '<input class="property_input" id="colors_a" title="colors_a"/>' +
+                '</li>';
+        }
+        if(this.lightColor){
+            ui+='<li>Color:<br>' +
+                '<input class="property_input" id="light_color_r" title="light_color_r"/>' +
+                '<input class="property_input" id="light_color_g" title="light_color_g"/>' +
+                '<input class="property_input" id="light_color_b" title="light_color_b"/>' +
+                '</li>';
+        }
+        if(this.lightSpecularColor){
+            ui+='<li>Specular Color:<br>' +
+                '<input class="property_input" id="light_specular_color_r" title="light_specular_color_r"/>' +
+                '<input class="property_input" id="light_specular_color_g" title="light_specular_color_g"/>' +
+                '<input class="property_input" id="light_specular_color_b" title="light_specular_color_b"/>' +
                 '</li>';
         }
         if(this.twoFaceTransparency){
