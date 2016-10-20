@@ -114,3 +114,16 @@ li{
 .button_dark_active:hover{
     background-color: #16a7ff;
 }
+.object_in_scene_screen_name{
+    display: inline-block;
+    width:95%;
+}
+.delete_object_from_scene{
+    color: #eeeeee;
+    display: inline-block;
+    text-align: center;
+    width:5%;
+}
+.delete_object_from_scene:hover{
+    color: #ffffff;
+}

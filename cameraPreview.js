@@ -9,6 +9,9 @@ var CameraPreview = function() {
     this.renderPreview = false;
 
     this.update = function() {
+
+        for(var i=0; i < this.objects.length; i++) if(this.objects[i]) this.objects[i].script();
+
         this.scene.updateScene();
         this.scene.drawScene();
     }

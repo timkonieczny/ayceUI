@@ -101,14 +101,26 @@ document.getElementById("add_camera").onclick = function(){
 
 var appendObjectInSceneChildElement = function(type){
     var child = document.createElement('li');
-    child.innerHTML = objects[objects.length-1].screenName;
+    child.innerHTML = "<div class='object_in_scene_screen_name'>"+objects[objects.length-1].screenName+"</div><a class='delete_object_from_scene' id='delete_"+(objects.length-1)+"' data-id='"+(objects.length-1)+"'>&#215</a>";
     child.dataset.id = (objects.length-1);          //TODO: eliminate data-id
     child.id = objects.length-1;
     child.dataset.type = type;
     child.className = "object_in_scene button_dark";
     child.onclick = showProperties;
     document.getElementById("objects_in_scene").appendChild(child);
+    document.getElementById("delete_"+child.id).addEventListener("click", function(e){
+        e.stopPropagation();
+        deleteObject(child);
+    });
     return child;
+};
+
+var deleteObject = function(child){
+    scene.removeFromScene(objects[child.id]);
+    objects[child.id] = null;
+    cameraPreview.scene.removeFromScene(cameraPreview.objects[child.id]);
+    cameraPreview.objects[child.id] = null;
+    document.getElementById("objects_in_scene").removeChild(child);
 };
 
 document.getElementById("import_obj").addEventListener('click', function(){
