@@ -47,7 +47,7 @@ var i;
 var addObjectButtons = document.getElementsByClassName("add_object");
 for(i = 0; i < addObjectButtons.length; i++){
     addObjectButtons[i].onclick = function(){
-        if(this.id != "import_obj"){
+        if(this.id != "import_obj" && this.id != "import_csv"){
             document.getElementById("objects_in_scene_div").style.display = "block";
             objects.push(eval(this.dataset.constructor));
             if(!eval(this.dataset.centered)) {
@@ -101,7 +101,8 @@ document.getElementById("add_camera").onclick = function(){
 
 var appendObjectInSceneChildElement = function(type){
     var child = document.createElement('li');
-    child.innerHTML = "<div class='object_in_scene_screen_name'>"+objects[objects.length-1].screenName+"</div><a class='delete_object_from_scene' id='delete_"+(objects.length-1)+"' data-id='"+(objects.length-1)+"'>&#215</a>";
+    child.innerHTML = "<div class='object_in_scene_screen_name'>"+objects[objects.length-1].screenName+"</div>" +
+        "<a class='delete_object_from_scene' id='delete_"+(objects.length-1)+"' data-id='"+(objects.length-1)+"'>&#215</a>";
     child.dataset.id = (objects.length-1);          //TODO: eliminate data-id
     child.id = objects.length-1;
     child.dataset.type = type;
@@ -125,6 +126,10 @@ var deleteObject = function(child){
 
 document.getElementById("import_obj").addEventListener('click', function(){
     openModal("obj");
+});
+
+document.getElementById("import_csv").addEventListener('click', function(){
+    openModal("csv");
 });
 
 document.getElementById("export_code").addEventListener('click', function(){

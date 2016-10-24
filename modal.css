@@ -141,3 +141,18 @@
     align-items: center;
     cursor: default;
 }
+#csv_drop{
+    color: #676767;
+    text-align: center;
+    font-size: 1.7em;
+    margin: 6px;
+    width: calc(100% - 12px - 4px);
+    height: calc(100% - 12px - 4px);
+    border-radius: 3px;
+    border: 2px solid #dddddd;
+}
+#csv_upload_wrapper{
+    display: none;
+    width: 100%;
+    height: 100%;
+}

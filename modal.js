@@ -21,6 +21,9 @@ var openModal = function(type, currentObjectId){
             closeModal();
         });
         document.getElementById("reset_script").addEventListener("click", resetScript);
+    }else if(type == "csv"){
+        document.getElementById("modal").style.display = "block";
+        document.getElementById("csv_upload_wrapper").style.display = "block";
     }
     document.getElementById("modal_close").addEventListener("click", closeModal);
 };
@@ -36,6 +39,7 @@ var closeModal = function(){
     document.getElementById("edit_script_textarea").style.display = "none";
     document.getElementById("edit_script_wrapper").style.display = "none";
     document.getElementById("modal").style.display = "none";
+    document.getElementById("csv_upload_wrapper").style.display = "none";
     objString = null;
     mtlString = null;
 };
@@ -155,3 +159,29 @@ var createGeometry = function(obj, mtl){
         openModal("obj");
     }
 };
+
+document.getElementById("csv_drop").addEventListener("dragover", function(e){
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'copy';
+}, false);
+
+document.getElementById("csv_drop").addEventListener("drop", function(e){
+    e.stopPropagation();
+    e.preventDefault();
+
+    var file = e.dataTransfer.files[0];
+
+    if(/(?:\.([^.]+))?$/.exec(file.name)[1] == "csv") {          // check if correct file was dropped in correct field
+
+        document.getElementById("csv_drop").style.display = "none";
+        document.getElementById("csv_drop_loading").style.display = "flex";
+
+        var reader = new FileReader();
+        reader.onload = function (e) {
+            console.log(e.currentTarget.result);
+        };
+        reader.readAsText(file);
+    }else{
+        showNotification("Please provide a valid .csv file.", "fa-exclamation-circle");
+    }
+}, false);
