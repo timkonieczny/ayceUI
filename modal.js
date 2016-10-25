@@ -233,12 +233,13 @@ var handleCSV = function(e){
         for(j = 0; j < data[i].length-1; j++) {
             object.vertices.push(
                 data[i][j].x, 0, data[i][j].y,
-                data[i][j].x, 0.2, data[i][j].y,
-                data[i][j + 1].x, 0, data[i][j + 1].y,
-                data[i][j + 1].x, 0.2, data[i][j + 1].y
+                data[i][j].x, i*0.2+0.2, data[i][j].y,
+                data[i][j + 1].x, i*0.2+0.2, data[i][j + 1].y,
+                data[i][j + 1].x, i*0.2+0, data[i][j + 1].y
             );
             object.indices.push(
-                j * 2 + 2, j * 2 + 1, j * 2 + 0, j * 2 + 2, j * 2 + 3
+                j * 2 + 0, j * 2 + 1, j * 2 + 2,
+                j * 2 + 0, j * 2 + 2, j * 2 + 3
             );
             object.colors.push(
                 0.8, 0.8, 0.8, 1.0,
@@ -251,6 +252,11 @@ var handleCSV = function(e){
     }
 
     console.log(objects);
+
+    for(i = 0; i < objects.length; i++){
+        scene.addToScene(objects[i]);
+    }
+
 
     document.getElementById("csv_drop_loading").style.display = "none";
 };
