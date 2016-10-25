@@ -69,6 +69,7 @@ for(i = 0; i < addObjectButtons.length; i++){
             objects[objects.length-1].screenName = this.dataset.type;
 
             objects[objects.length-1].script = function(){};
+            cameraPreview.objects[objects.length-1].script = function(){};
             objects[objects.length-1].runScriptInPreview = false;
 
             scene.addToScene(objects[objects.length-1]);
@@ -85,6 +86,8 @@ document.getElementById("add_light").onclick = function(){
     objects.push(new Ayce.Light());
     cameraPreview.objects.push(new Ayce.Light());
     objects[objects.length-1].screenName = this.dataset.type;
+    objects[objects.length-1].script = function(){};
+    cameraPreview.objects[objects.length-1].script = function(){};
     scene.addToScene(objects[objects.length-1]);
     cameraPreview.scene.addToScene(cameraPreview.objects[cameraPreview.objects.length-1]);
     var child = appendObjectInSceneChildElement(this.dataset.type);
@@ -101,18 +104,27 @@ document.getElementById("add_camera").onclick = function(){
 
 var appendObjectInSceneChildElement = function(type){
     var child = document.createElement('li');
-    child.innerHTML = "<div class='object_in_scene_screen_name'>"+objects[objects.length-1].screenName+"</div>" +
-        "<a class='delete_object_from_scene' id='delete_"+(objects.length-1)+"' data-id='"+(objects.length-1)+"'>&#215</a>";
-    child.dataset.id = (objects.length-1);          //TODO: eliminate data-id
-    child.id = objects.length-1;
+    if(type=="camera"){
+        child.innerHTML = cameraPreview.screenName;
+        // TODO: camera deletion
+        //child.dataset.id = type;
+        //child.id = type;
+    }else{
+        child.innerHTML = objects[objects.length-1].screenName+"</div>" +
+            "<a class='delete_object_from_scene' id='delete_"+(objects.length-1)+"' data-id='"+(objects.length-1)+"'>&#215</a>";
+        child.dataset.id = (objects.length-1);          //TODO: eliminate data-id
+        child.id = objects.length-1;
+    }
     child.dataset.type = type;
     child.className = "object_in_scene button_dark";
     child.onclick = showProperties;
     document.getElementById("objects_in_scene").appendChild(child);
-    document.getElementById("delete_"+child.id).addEventListener("click", function(e){
-        e.stopPropagation();
-        deleteObject(child);
-    });
+    if(type!=="camera") {
+        document.getElementById("delete_" + child.id).addEventListener("click", function (e) {
+            e.stopPropagation();
+            deleteObject(child);
+        });
+    }
     return child;
 };
 
