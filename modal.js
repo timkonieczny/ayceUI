@@ -194,10 +194,20 @@ var handleCSV = function(e){
     csv = csv.replace("trID,trN,pIdx,X,Y,time,SPEED,COURSE,SPEED_C,ACCELERATION_C,COURSE_C,TURN_C\n", "");
     csv = csv.split("\n");
     var point;
+    var prevTrID;
+    var j = -1;
 
     for(var i = 0; i < csv.length; i++){
         point = csv[i].split(",");
-        data.push({
+
+        var trID = point[0]!="" ? Number(point[0]) : null;
+        if(trID != prevTrID){
+            data.push([]);
+            j++;
+        }
+        prevTrID = trID;
+
+        data[j].push({
            trID: point[0]!="" ? Number(point[0]) : null,
            trN: point[1]!="" ? Number(point[1]) : null,
            pIdx: point[2]!="" ? Number(point[2]) : null,
@@ -212,6 +222,31 @@ var handleCSV = function(e){
            turnC: point[11]!="" ? Number(point[11]) : null
         });
     }
+
+    /*var objects = [];
+
+    var object = new Ayce.Object3D();
+    object.vertices = [];
+
+    for(i = 0; i < data.length; i++){
+        object.vertices.push(
+            data[i].x, 0, data[i].y,
+            data[i].x, 0.2, data[i].y,
+            data[i+1].x, 0, data[i+1].y,
+            data[i+1].x, 0.2, data[i+1].y
+        );
+        object.indices.push(
+            i*2+2, i*2+1, i*2+0, i*2+2, i*2+3
+        );
+        object.colors.push(
+            0.8, 0.8, 0.8, 1.0,
+            0.8, 0.8, 0.8, 1.0,
+            0.8, 0.8, 0.8, 1.0,
+            0.8, 0.8, 0.8, 1.0
+        );
+    }
+
+    console.log(object);*/
 
     console.log(data);
 
