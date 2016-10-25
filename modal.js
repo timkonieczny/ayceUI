@@ -223,32 +223,34 @@ var handleCSV = function(e){
         });
     }
 
-    /*var objects = [];
-
-    var object = new Ayce.Object3D();
-    object.vertices = [];
+    var objects = [];
 
     for(i = 0; i < data.length; i++){
-        object.vertices.push(
-            data[i].x, 0, data[i].y,
-            data[i].x, 0.2, data[i].y,
-            data[i+1].x, 0, data[i+1].y,
-            data[i+1].x, 0.2, data[i+1].y
-        );
-        object.indices.push(
-            i*2+2, i*2+1, i*2+0, i*2+2, i*2+3
-        );
-        object.colors.push(
-            0.8, 0.8, 0.8, 1.0,
-            0.8, 0.8, 0.8, 1.0,
-            0.8, 0.8, 0.8, 1.0,
-            0.8, 0.8, 0.8, 1.0
-        );
+        var object = new Ayce.Object3D();
+        object.vertices = [];
+        object.indices = [];
+        object.colors = [];
+        for(j = 0; j < data[i].length-1; j++) {
+            object.vertices.push(
+                data[i][j].x, 0, data[i][j].y,
+                data[i][j].x, 0.2, data[i][j].y,
+                data[i][j + 1].x, 0, data[i][j + 1].y,
+                data[i][j + 1].x, 0.2, data[i][j + 1].y
+            );
+            object.indices.push(
+                j * 2 + 2, j * 2 + 1, j * 2 + 0, j * 2 + 2, j * 2 + 3
+            );
+            object.colors.push(
+                0.8, 0.8, 0.8, 1.0,
+                0.8, 0.8, 0.8, 1.0,
+                0.8, 0.8, 0.8, 1.0,
+                0.8, 0.8, 0.8, 1.0
+            );
+        }
+        objects.push(object);
     }
 
-    console.log(object);*/
-
-    console.log(data);
+    console.log(objects);
 
     document.getElementById("csv_drop_loading").style.display = "none";
 };
