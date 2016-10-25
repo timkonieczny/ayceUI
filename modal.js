@@ -40,6 +40,7 @@ var closeModal = function(){
     document.getElementById("edit_script_wrapper").style.display = "none";
     document.getElementById("modal").style.display = "none";
     document.getElementById("csv_upload_wrapper").style.display = "none";
+    document.getElementById("csv_drop_loading").style.display = "none";
     objString = null;
     mtlString = null;
 };
@@ -178,10 +179,41 @@ document.getElementById("csv_drop").addEventListener("drop", function(e){
 
         var reader = new FileReader();
         reader.onload = function (e) {
-            console.log(e.currentTarget.result);
+            handleCSV(e);
+            document.getElementById("csv_drop_loading").style.display = "flex";
         };
         reader.readAsText(file);
     }else{
         showNotification("Please provide a valid .csv file.", "fa-exclamation-circle");
     }
 }, false);
+
+var handleCSV = function(e){
+    var data = [];
+    var csv = e.currentTarget.result;
+    csv = csv.replace("trID,trN,pIdx,X,Y,time,SPEED,COURSE,SPEED_C,ACCELERATION_C,COURSE_C,TURN_C\n", "");
+    csv = csv.split("\n");
+    var point;
+
+    for(var i = 0; i < csv.length; i++){
+        point = csv[i].split(",");
+        data.push({
+           trID: point[0]!="" ? Number(point[0]) : null,
+           trN: point[1]!="" ? Number(point[1]) : null,
+           pIdx: point[2]!="" ? Number(point[2]) : null,
+           x: point[3]!="" ? Number(point[3]) : null,
+           y: point[4]!="" ? Number(point[4]) : null,
+           time: point[5],
+           speed: point[6]!="" ? Number(point[6]) : null,
+           course: point[7]!="" ? Number(point[7]) : null,
+           speedC: point[8]!="" ? Number(point[8]) : null,
+           accelerationC: point[9]!="" ? Number(point[9]) : null,
+           courseC: point[10]!="" ? Number(point[10]) : null,
+           turnC: point[11]!="" ? Number(point[11]) : null
+        });
+    }
+
+    console.log(data);
+
+    document.getElementById("csv_drop_loading").style.display = "none";
+};
