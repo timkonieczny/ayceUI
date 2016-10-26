@@ -253,26 +253,18 @@ var handleCSV = function(e){
     }
 
     for(i = 0; i < csvObjects.length; i++){
-
         objects.push(csvObjects[i]);
         cameraPreview.objects.push(csvObjects[i]);
-
         objects[objects.length - 1].position.z = -2;
         cameraPreview.objects[cameraPreview.objects.length - 1].position.z = -2;
-
-        objects[objects.length - 1].screenName = "csv object";
-
+        objects[objects.length - 1].screenName = "imported object (csv)";
         objects[objects.length-1].script = function(){};
         cameraPreview.objects[objects.length-1].script = function(){};
         objects[objects.length-1].runScriptInPreview = false;
-
         scene.addToScene(objects[objects.length - 1]);
         cameraPreview.scene.addToScene(cameraPreview.objects[cameraPreview.objects.length-1]);
-
-        var child = appendObjectInSceneChildElement("csv"); // TODO: This doesn't work. Add code for CSV generated objects
+        var child = appendObjectInSceneChildElement("csv");
         child.onclick({srcElement: {dataset: {type: "csv"}}});
-
-        console.log(objects);
     }
 
     closeModal();
