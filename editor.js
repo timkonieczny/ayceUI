@@ -48,7 +48,6 @@ var addObjectButtons = document.getElementsByClassName("add_object");
 for(i = 0; i < addObjectButtons.length; i++){
     addObjectButtons[i].onclick = function(){
         if(this.id != "import_obj"){
-            document.getElementById("objects_in_scene_div").style.display = "block";
             objects.push(eval(this.dataset.constructor));
             if(!eval(this.dataset.centered)) {
                 objects[objects.length - 1].offset.set(
@@ -82,7 +81,6 @@ for(i = 0; i < addObjectButtons.length; i++){
 }
 
 document.getElementById("add_light").onclick = function(){
-    document.getElementById("objects_in_scene_div").style.display = "block";
     objects.push(new Ayce.Light());
     cameraPreview.objects.push(new Ayce.Light());
     objects[objects.length-1].screenName = this.dataset.type;
@@ -95,7 +93,6 @@ document.getElementById("add_light").onclick = function(){
 };
 
 document.getElementById("add_camera").onclick = function(){
-    document.getElementById("objects_in_scene_div").style.display = "block";
     document.getElementById("camera_preview_wrapper").style.display = "block";
     var child = appendObjectInSceneChildElement(this.dataset.type);
     child.onclick({srcElement: this});
@@ -118,6 +115,7 @@ var appendObjectInSceneChildElement = function(type){
     child.dataset.type = type;
     child.className = "object_in_scene button_dark";
     child.onclick = showProperties;
+    document.getElementById("objects_in_scene_div").style.display = "block";
     document.getElementById("objects_in_scene").appendChild(child);
     if(type!=="camera") {
         document.getElementById("delete_" + child.id).addEventListener("click", function (e) {
