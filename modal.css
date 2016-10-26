@@ -148,12 +148,6 @@
     height: calc(100% - 12px - 4px);
     width: calc(100% - 12px - 4px);
 }
-#csv_drop p{
-    color: #676767;
-    width: 100%;
-    text-align: center;
-    font-size: 1.7em;
-}
 #csv_drop_loading{
     text-align: center;
     font-size: 1.7em;
