@@ -180,7 +180,7 @@ document.getElementById("csv_drop").addEventListener("drop", function(e){
         var reader = new FileReader();
         reader.onload = function (e) {
             handleCSV(e);
-            document.getElementById("csv_drop_loading").style.display = "flex";
+            document.getElementById("csv_drop_loading").style.display = "none";
         };
         reader.readAsText(file);
     }else{
@@ -271,12 +271,12 @@ var handleCSV = function(e){
         scene.addToScene(objects[objects.length - 1]);
         cameraPreview.scene.addToScene(cameraPreview.objects[cameraPreview.objects.length-1]);
 
-        var child = appendObjectInSceneChildElement("obj"); // TODO: This doesn't work. Add code for CSV generated objects
-        closeModal();
-        child.onclick({srcElement: {dataset: {type: "obj"}}});
+        var child = appendObjectInSceneChildElement("csv"); // TODO: This doesn't work. Add code for CSV generated objects
+        child.onclick({srcElement: {dataset: {type: "csv"}}});
 
         console.log(objects);
     }
-    console.log("done");
-    document.getElementById("csv_drop_loading").style.display = "none";
+
+    closeModal();
+
 };
