@@ -86,15 +86,17 @@
     border: 2px solid #00ed90;
     background-color: #00ed90;
 }
-.modal_top_half, .modal_bottom_half{
-    height: calc(50% - 9px - 4px);
-    width: calc(100% - 12px - 4px);
+.modal_file_drop {
     margin: 6px;
     border-radius: 3px;
     border: 2px solid #dddddd;
-    display: none;
     align-items: center;
     cursor: default;
+}
+.modal_top_half, .modal_bottom_half{
+    height: calc(50% - 9px - 4px);
+    width: calc(100% - 12px - 4px);
+    display: none;
 }
 .modal_top_half{
     margin-bottom: 3px;
