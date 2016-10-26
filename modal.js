@@ -149,8 +149,6 @@ var createGeometry = function(obj, mtl){
         cameraPreview.scene.addToScene(cameraPreview.objects[cameraPreview.objects.length - 1]);
         console.log("done");
 
-        document.getElementById("objects_in_scene_div").style.display = "block";
-
         var child = appendObjectInSceneChildElement("obj");
         closeModal();
         child.onclick({srcElement: {dataset: {type: "obj"}}});
