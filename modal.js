@@ -223,40 +223,60 @@ var handleCSV = function(e){
         });
     }
 
-    var objects = [];
+    var csvObjects = [];
+    var factor = 0.01;
 
     for(i = 0; i < data.length; i++){
-        var object = new Ayce.Object3D();
-        object.vertices = [];
-        object.indices = [];
-        object.colors = [];
+        var object2 = new Ayce.Object3D();
+        object2.vertices = [];
+        object2.indices = [];
+        object2.colors = [];
         for(j = 0; j < data[i].length-1; j++) {
-            object.vertices.push(
-                data[i][j].x, 0, data[i][j].y,
-                data[i][j].x, i*0.2+0.2, data[i][j].y,
-                data[i][j + 1].x, i*0.2+0.2, data[i][j + 1].y,
-                data[i][j + 1].x, i*0.2+0, data[i][j + 1].y
+            object2.vertices.push(
+                factor*data[i][j].x, 0, factor*data[i][j].y,
+                factor*data[i][j].x, i*0.2+0.2, factor*data[i][j].y,
+                factor*data[i][j + 1].x, i*0.2+0.2, factor*data[i][j + 1].y,
+                factor*data[i][j + 1].x, i*0.2+0, factor*data[i][j + 1].y
             );
-            object.indices.push(
+            object2.indices.push(
                 j * 2 + 0, j * 2 + 1, j * 2 + 2,
                 j * 2 + 0, j * 2 + 2, j * 2 + 3
             );
-            object.colors.push(
+            object2.colors.push(
                 0.8, 0.8, 0.8, 1.0,
                 0.8, 0.8, 0.8, 1.0,
                 0.8, 0.8, 0.8, 1.0,
                 0.8, 0.8, 0.8, 1.0
             );
+            object2.indices = object2.indices.reverse();
         }
-        objects.push(object);
+        csvObjects.push(object2);
+        console.log(Math.min.apply( Math, object2.vertices )+" "+Math.max.apply( Math, object2.vertices ));
     }
 
-    console.log(objects);
+    for(i = 0; i < csvObjects.length; i++){
 
-    for(i = 0; i < objects.length; i++){
-        scene.addToScene(objects[i]);
+        objects.push(csvObjects[i]);
+        cameraPreview.objects.push(csvObjects[i]);
+
+        objects[objects.length - 1].position.z = -2;
+        cameraPreview.objects[cameraPreview.objects.length - 1].position.z = -2;
+
+        objects[objects.length - 1].screenName = "csv object";
+
+        objects[objects.length-1].script = function(){};
+        cameraPreview.objects[objects.length-1].script = function(){};
+        objects[objects.length-1].runScriptInPreview = false;
+
+        scene.addToScene(objects[objects.length - 1]);
+        cameraPreview.scene.addToScene(cameraPreview.objects[cameraPreview.objects.length-1]);
+
+        var child = appendObjectInSceneChildElement("obj"); // TODO: This doesn't work. Add code for CSV generated objects
+        closeModal();
+        child.onclick({srcElement: {dataset: {type: "obj"}}});
+
+        console.log(objects);
     }
-
-
+    console.log("done");
     document.getElementById("csv_drop_loading").style.display = "none";
 };
