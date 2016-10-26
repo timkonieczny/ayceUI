@@ -145,21 +145,14 @@
 }
 #csv_drop{
     display: flex;
-    position: absolute;
-    color: #676767;
-    text-align: center;
-    font-size: 1.7em;
-
     height: calc(100% - 12px - 4px);
     width: calc(100% - 12px - 4px);
-    margin: 6px;
-    border-radius: 3px;
-    border: 2px solid #dddddd;
-    align-items: center;
-    cursor: default;
 }
 #csv_drop p{
+    color: #676767;
     width: 100%;
+    text-align: center;
+    font-size: 1.7em;
 }
 #csv_drop_loading{
     text-align: center;
