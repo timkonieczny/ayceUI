@@ -192,7 +192,7 @@ var handleCSV = function(e){
     csv = csv.replace("trID,trN,pIdx,X,Y,time,SPEED,COURSE,SPEED_C,ACCELERATION_C,COURSE_C,TURN_C\n", "");
     csv = csv.split("\n");
     var point;
-    var prevTrID;
+    var prevTrID = null;
     var j = -1;
 
     for(var i = 0; i < csv.length; i++){
@@ -224,53 +224,56 @@ var handleCSV = function(e){
     console.log(data);
 
     var csvObjects = [];
-    //var factor = 0.01;
     var factor = 10;
-    var subtractX = 7;  // TODO: calculate dynamically based on statistic of whole dataset
+    var subtractX = 7;  // TODO: calculate dynamically based on statistic of whole data set
     var subtractY = 50;
     var offsetX = -2;
     var offsetY = -6.5;
 
     for(i = 0; i < data.length; i++){
-        var object2 = new Ayce.Object3D();
-        object2.vertices = [];
-        object2.indices = [];
-        object2.colors = [];
+        var object = new Ayce.Object3D();
+        object.vertices = [];
+        object.indices = [];
+        object.colors = [];
         for(j = 0; j < data[i].length-1; j++) {
-            object2.vertices.push(
+            object.vertices.push(
                 factor*(data[i][j].x-subtractX)+offsetX,        i*0.2+0,        factor*(data[i][j].y-subtractY)+offsetY,
                 factor*(data[i][j].x-subtractX)+offsetX,        i*0.2+0.2,      factor*(data[i][j].y-subtractY)+offsetY
             );
-            object2.colors.push(
+            object.colors.push(
                 0.8, 0.8, 0.8, 1.0,
                 0.8, 0.8, 0.8, 1.0
             );
         }
-        for(j = 0; j < object2.vertices.length/3; j+=2){
-            object2.indices.push(
-                j % (object2.vertices.length/3),        // inside indices
-                (j + 1) % (object2.vertices.length/3),
-                (j + 3) % (object2.vertices.length/3),
-                j % (object2.vertices.length/3),
-                (j + 3) % (object2.vertices.length/3),
-                (j + 2) % (object2.vertices.length/3),
+        for(j = 0; j < object.vertices.length/3; j+=2){
+            object.indices.push(
+                j % (object.vertices.length/3),        // inside indices
+                (j + 1) % (object.vertices.length/3),
+                (j + 3) % (object.vertices.length/3),
+                j % (object.vertices.length/3),
+                (j + 3) % (object.vertices.length/3),
+                (j + 2) % (object.vertices.length/3),
 
-                (j + 3) % (object2.vertices.length/3),  // outside indices
-                (j + 1) % (object2.vertices.length/3),
-                j % (object2.vertices.length/3),
-                (j + 2) % (object2.vertices.length/3),
-                (j + 3) % (object2.vertices.length/3),
-                j % (object2.vertices.length/3)
+                (j + 3) % (object.vertices.length/3),  // outside indices
+                (j + 1) % (object.vertices.length/3),
+                j % (object.vertices.length/3),
+                (j + 2) % (object.vertices.length/3),
+                (j + 3) % (object.vertices.length/3),
+                j % (object.vertices.length/3)
             );
         }
-        csvObjects.push(object2);
+        csvObjects.push(object);
     }
 
-    console.log(csvObjects);
+    var csvObjects2 = [];
+
+    for(i = 0; i < csvObjects.length; i++) {
+        csvObjects2[i] = cloneO3D(csvObjects[i]);
+    }
 
     for(i = 0; i < csvObjects.length; i++){
         objects.push(csvObjects[i]);
-        cameraPreview.objects.push(csvObjects[i]);
+        cameraPreview.objects.push(csvObjects2[i]);
         objects[objects.length - 1].position.z = -2;
         cameraPreview.objects[cameraPreview.objects.length - 1].position.z = -2;
         objects[objects.length - 1].screenName = "imported object (csv)";

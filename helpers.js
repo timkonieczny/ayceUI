@@ -45,6 +45,14 @@ var showNotification = function(text, icon){
     notificationIcon.className = "fa " + icon;
 };
 
+var cloneO3D = function(object) {   // creates a deep copy of an Ayce.Object3D
+    var copy = new Ayce.Object3D();
+    for (var attr in object) {
+        if (object.hasOwnProperty(attr)) copy[attr] = object[attr];
+    }
+    return copy;
+};
+
 // Enables \t indenting in textareas
 var textareas = document.getElementsByTagName('textarea');
 var count = textareas.length;
