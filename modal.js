@@ -221,8 +221,15 @@ var handleCSV = function(e){
         });
     }
 
+    console.log(data);
+
     var csvObjects = [];
-    var factor = 0.01;
+    //var factor = 0.01;
+    var factor = 10;
+    var subtractX = 7;  // TODO: calculate dynamically based on statistic of whole dataset
+    var subtractY = 50;
+    var offsetX = -2;
+    var offsetY = -6.5;
 
     for(i = 0; i < data.length; i++){
         var object2 = new Ayce.Object3D();
@@ -231,26 +238,35 @@ var handleCSV = function(e){
         object2.colors = [];
         for(j = 0; j < data[i].length-1; j++) {
             object2.vertices.push(
-                factor*data[i][j].x, 0, factor*data[i][j].y,
-                factor*data[i][j].x, i*0.2+0.2, factor*data[i][j].y,
-                factor*data[i][j + 1].x, i*0.2+0.2, factor*data[i][j + 1].y,
-                factor*data[i][j + 1].x, i*0.2+0, factor*data[i][j + 1].y
-            );
-            object2.indices.push(
-                j * 2 + 0, j * 2 + 1, j * 2 + 2,
-                j * 2 + 0, j * 2 + 2, j * 2 + 3
+                factor*(data[i][j].x-subtractX)+offsetX,        i*0.2+0,        factor*(data[i][j].y-subtractY)+offsetY,
+                factor*(data[i][j].x-subtractX)+offsetX,        i*0.2+0.2,      factor*(data[i][j].y-subtractY)+offsetY
             );
             object2.colors.push(
                 0.8, 0.8, 0.8, 1.0,
-                0.8, 0.8, 0.8, 1.0,
-                0.8, 0.8, 0.8, 1.0,
                 0.8, 0.8, 0.8, 1.0
             );
-            object2.indices = object2.indices.reverse();
+        }
+        for(j = 0; j < object2.vertices.length/3; j+=2){
+            object2.indices.push(
+                j % (object2.vertices.length/3),        // inside indices
+                (j + 1) % (object2.vertices.length/3),
+                (j + 3) % (object2.vertices.length/3),
+                j % (object2.vertices.length/3),
+                (j + 3) % (object2.vertices.length/3),
+                (j + 2) % (object2.vertices.length/3),
+
+                (j + 3) % (object2.vertices.length/3),  // outside indices
+                (j + 1) % (object2.vertices.length/3),
+                j % (object2.vertices.length/3),
+                (j + 2) % (object2.vertices.length/3),
+                (j + 3) % (object2.vertices.length/3),
+                j % (object2.vertices.length/3)
+            );
         }
         csvObjects.push(object2);
-        console.log(Math.min.apply( Math, object2.vertices )+" "+Math.max.apply( Math, object2.vertices ));
     }
+
+    console.log(csvObjects);
 
     for(i = 0; i < csvObjects.length; i++){
         objects.push(csvObjects[i]);

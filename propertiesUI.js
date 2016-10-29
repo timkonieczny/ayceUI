@@ -9,6 +9,7 @@ var showProperties = function(e) {
         e.srcElement.dataset.type == "cube"||
         e.srcElement.dataset.type == "sphere"||
         e.srcElement.dataset.type == "icosahedron"||
+        e.srcElement.dataset.type == "csv"||
         e.srcElement.dataset.type == "obj"){
         uiFactory.position = true;
         uiFactory.rotation = true;
