@@ -164,6 +164,8 @@ document.getElementById("csv_drop").addEventListener("dragover", function(e){
     e.dataTransfer.dropEffect = 'copy';
 }, false);
 
+var csvTimer;
+
 document.getElementById("csv_drop").addEventListener("drop", function(e){
     e.stopPropagation();
     e.preventDefault();
@@ -175,8 +177,11 @@ document.getElementById("csv_drop").addEventListener("drop", function(e){
         document.getElementById("csv_drop").style.display = "none";
         document.getElementById("csv_drop_loading").style.display = "flex";
 
+        csvTimer = Date.now();
+        console.log("reading file");
         var reader = new FileReader();
         reader.onload = function (e) {
+            console.log("done (" + (Date.now()-csvTimer) + "ms)");
             handleCSV(e);
             document.getElementById("csv_drop_loading").style.display = "none";
         };
@@ -189,12 +194,17 @@ document.getElementById("csv_drop").addEventListener("drop", function(e){
 var handleCSV = function(e){
     var data = [];
     var csv = e.currentTarget.result;
+    csv = csv.replace(/^\s+|\s+$/g, "");    // remove \n from start and end of string
     csv = csv.replace("trID,trN,pIdx,X,Y,time,SPEED,COURSE,SPEED_C,ACCELERATION_C,COURSE_C,TURN_C\n", "");
     csv = csv.split("\n");
     var point;
     var prevTrID = null;
     var j = -1;
 
+    var maxSpeed = 0;
+
+    csvTimer = Date.now();
+    console.log("extracting data");
     for(var i = 0; i < csv.length; i++){
         point = csv[i].split(",");
 
@@ -219,9 +229,10 @@ var handleCSV = function(e){
            courseC: point[10]!="" ? Number(point[10]) : null,
            turnC: point[11]!="" ? Number(point[11]) : null
         });
+        if(data[j][data[j].length-1].speed!=null) maxSpeed = Math.max(maxSpeed, data[j][data[j].length-1].speed);
     }
 
-    console.log(data);
+    console.log("done (" + (Date.now()-csvTimer) + "ms)");
 
     var csvObjects = [];
     var factor = 10;
@@ -229,6 +240,10 @@ var handleCSV = function(e){
     var subtractY = 50;
     var offsetX = -2;
     var offsetY = -6.5;
+    var yHeight = 0.02;
+
+    csvTimer = Date.now();
+    console.log("building Ayce.Object3Ds");
 
     for(i = 0; i < data.length; i++){
         var object = new Ayce.Object3D();
@@ -237,12 +252,12 @@ var handleCSV = function(e){
         object.colors = [];
         for(j = 0; j < data[i].length-1; j++) {
             object.vertices.push(
-                factor*(data[i][j].x-subtractX)+offsetX,        i*0.2+0,        factor*(data[i][j].y-subtractY)+offsetY,
-                factor*(data[i][j].x-subtractX)+offsetX,        i*0.2+0.2,      factor*(data[i][j].y-subtractY)+offsetY
+                factor*(data[i][j].x-subtractX)+offsetX,        i*yHeight+0,        factor*(data[i][j].y-subtractY)+offsetY,
+                factor*(data[i][j].x-subtractX)+offsetX,        i*yHeight+yHeight,  factor*(data[i][j].y-subtractY)+offsetY
             );
             object.colors.push(
-                0.8, 0.8, 0.8, 1.0,
-                0.8, 0.8, 0.8, 1.0
+                data[i][j].speed/maxSpeed, data[i][j].speed/maxSpeed, data[i][j].speed/maxSpeed, 1.0,
+                data[i][j].speed/maxSpeed, data[i][j].speed/maxSpeed, data[i][j].speed/maxSpeed, 1.0
             );
         }
         for(j = 0; j < object.vertices.length/3; j+=2){
@@ -285,6 +300,8 @@ var handleCSV = function(e){
         var child = appendObjectInSceneChildElement("csv");
         child.onclick({srcElement: {dataset: {type: "csv"}}});
     }
+
+    console.log("ms done (" + (Date.now()-csvTimer) + "ms)");
 
     closeModal();
 
