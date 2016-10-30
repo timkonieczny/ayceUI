@@ -253,28 +253,36 @@ var handleCSV = function(e){
         for(j = 0; j < data[i].length-1; j++) {
             object.vertices.push(
                 factor*(data[i][j].x-subtractX)+offsetX,        i*yHeight+0,        factor*(data[i][j].y-subtractY)+offsetY,
+                factor*(data[i][j].x-subtractX)+offsetX,        i*yHeight+yHeight,  factor*(data[i][j].y-subtractY)+offsetY,
+                factor*(data[i][j].x-subtractX)+offsetX,        i*yHeight+0,        factor*(data[i][j].y-subtractY)+offsetY,
                 factor*(data[i][j].x-subtractX)+offsetX,        i*yHeight+yHeight,  factor*(data[i][j].y-subtractY)+offsetY
             );
+
             object.colors.push(
+                data[i][j].speed/maxSpeed, data[i][j].speed/maxSpeed, data[i][j].speed/maxSpeed, 1.0,
+                data[i][j].speed/maxSpeed, data[i][j].speed/maxSpeed, data[i][j].speed/maxSpeed, 1.0,
                 data[i][j].speed/maxSpeed, data[i][j].speed/maxSpeed, data[i][j].speed/maxSpeed, 1.0,
                 data[i][j].speed/maxSpeed, data[i][j].speed/maxSpeed, data[i][j].speed/maxSpeed, 1.0
             );
         }
-        for(j = 0; j < object.vertices.length/3; j+=2){
-            object.indices.push(
-                j % (object.vertices.length/3),        // inside indices
-                (j + 1) % (object.vertices.length/3),
-                (j + 3) % (object.vertices.length/3),
-                j % (object.vertices.length/3),
-                (j + 3) % (object.vertices.length/3),
-                (j + 2) % (object.vertices.length/3),
 
-                (j + 3) % (object.vertices.length/3),  // outside indices
-                (j + 1) % (object.vertices.length/3),
-                j % (object.vertices.length/3),
-                (j + 2) % (object.vertices.length/3),
-                (j + 3) % (object.vertices.length/3),
-                j % (object.vertices.length/3)
+        var numberOfPoints = object.vertices.length/6;
+
+        for(j = 0; j < numberOfPoints; j+=2){
+            object.indices.push(
+                (j + 0) % (numberOfPoints),         // inside indices
+                (j + 1) % (numberOfPoints),
+                (j + 5) % (numberOfPoints),
+                (j + 2) % (numberOfPoints),
+                (j + 7) % (numberOfPoints),
+                (j + 6) % (numberOfPoints),
+
+                (j + 5) % (numberOfPoints),         // outside indices
+                (j + 1) % (numberOfPoints),
+                (j + 0) % (numberOfPoints),
+                (j + 6) % (numberOfPoints),
+                (j + 7) % (numberOfPoints),
+                (j + 2) % (numberOfPoints)
             );
         }
         csvObjects.push(object);
