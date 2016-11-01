@@ -250,7 +250,8 @@ var handleCSV = function(e){
         object.vertices = [];
         object.indices = [];
         object.colors = [];
-        for(j = 0; j < data[i].length-1; j++) {
+        //for(j = 0; j < data[i].length-1; j++) {
+        for(j = 0; j < data[i].length; j++) {
             object.vertices.push(
                 factor*(data[i][j].x-subtractX)+offsetX,        i*yHeight+0,        factor*(data[i][j].y-subtractY)+offsetY,
                 factor*(data[i][j].x-subtractX)+offsetX,        i*yHeight+yHeight,  factor*(data[i][j].y-subtractY)+offsetY,
@@ -258,19 +259,100 @@ var handleCSV = function(e){
                 factor*(data[i][j].x-subtractX)+offsetX,        i*yHeight+yHeight,  factor*(data[i][j].y-subtractY)+offsetY
             );
 
-            object.colors.push(
+            /*
+            *           xxxx      xxxx
+            *
+            *
+            *
+            *           xxxx      xxxx
+            *
+            * */
+
+
+
+            /*object.colors.push(
                 data[i][j].speed/maxSpeed, data[i][j].speed/maxSpeed, data[i][j].speed/maxSpeed, 1.0,
                 data[i][j].speed/maxSpeed, data[i][j].speed/maxSpeed, data[i][j].speed/maxSpeed, 1.0,
                 data[i][j].speed/maxSpeed, data[i][j].speed/maxSpeed, data[i][j].speed/maxSpeed, 1.0,
                 data[i][j].speed/maxSpeed, data[i][j].speed/maxSpeed, data[i][j].speed/maxSpeed, 1.0
+            );*/
+
+            object.colors.push(
+                0.5, 0.5, 0.5, 1.0,
+                0.5, 0.5, 0.5, 1.0,
+                0.5, 0.5, 0.5, 1.0,
+                0.5, 0.5, 0.5, 1.0
+            );
+
+            var numberOfVertices = data[i].length*4;
+
+            object.indices.push(
+                (j*4+2)%numberOfVertices, (j*4+3)%numberOfVertices, (j*4+5)%numberOfVertices,
+                (j*4+2)%numberOfVertices, (j*4+5)%numberOfVertices, (j*4+4)%numberOfVertices,
+                (j*4+5)%numberOfVertices, (j*4+3)%numberOfVertices, (j*4+2)%numberOfVertices,
+                (j*4+4)%numberOfVertices, (j*4+5)%numberOfVertices, (j*4+2)%numberOfVertices
             );
         }
 
-        var numberOfPoints = object.vertices.length/6;
+        /*var modulo = object.vertices.length/3;
 
-        for(j = 0; j < numberOfPoints; j+=2){
+         for(j = 0; j < data[i].length; j++) {
             object.indices.push(
+                (j*4+2)%modulo, (j*4+3)%modulo, (j*4+5)%modulo,
+                (j*4+2)%modulo, (j*4+5)%modulo, (j*4+4)%modulo,
+                (j*4+5)%modulo, (j*4+3)%modulo, (j*4+2)%modulo,
+                (j*4+4)%modulo, (j*4+5)%modulo, (j*4+2)%modulo
+            );
+        }*/
+
+        /*for(j = 0; j < object.indices.length; j+=12){
+            console.log(object.vertices[object.indices[j*2]*3]==object.vertices[object.indices[j*2+1]*3]);
+        }
+
+        console.log("-------");*/
+
+        //console.log(object.vertices);
+/*
+        var numberOfPoints = object.vertices/3;
+
+        for(j = 2; j < object.vertices.length/3; j+=4){
+            object.indices.push(
+                /*(j + 0) % (numberOfPoints),         // inside indices
+                 (j + 1) % (numberOfPoints),
+                 (j + 5) % (numberOfPoints),
+                 (j + 2) % (numberOfPoints),
+                 (j + 7) % (numberOfPoints),
+                 (j + 6) % (numberOfPoints),
+
+                 (j + 5) % (numberOfPoints),         // outside indices
+                 (j + 1) % (numberOfPoints),
+                 (j + 0) % (numberOfPoints),
+                 (j + 6) % (numberOfPoints),
+                 (j + 7) % (numberOfPoints),
+                 (j + 2) % (numberOfPoints)
+
                 (j + 0) % (numberOfPoints),         // inside indices
+                (j + 1) % (numberOfPoints),
+                (j + 3) % (numberOfPoints),
+                (j + 0) % (numberOfPoints),
+                (j + 3) % (numberOfPoints),
+                (j + 2) % (numberOfPoints),
+
+                (j + 3) % (numberOfPoints),         // outside indices
+                (j + 1) % (numberOfPoints),
+                (j + 0) % (numberOfPoints),
+                (j + 2) % (numberOfPoints),
+                (j + 3) % (numberOfPoints),
+                (j + 0) % (numberOfPoints)
+            );
+        }
+        */
+
+        /*var numberOfPoints = object.vertices.length/6;
+
+        for(j = 0; j < numberOfPoints; j+=4){
+            object.indices.push(
+                /*(j + 0) % (numberOfPoints),         // inside indices
                 (j + 1) % (numberOfPoints),
                 (j + 5) % (numberOfPoints),
                 (j + 2) % (numberOfPoints),
@@ -283,8 +365,126 @@ var handleCSV = function(e){
                 (j + 6) % (numberOfPoints),
                 (j + 7) % (numberOfPoints),
                 (j + 2) % (numberOfPoints)
+
+                (j + 2) % (numberOfPoints),         // inside indices
+                (j + 3) % (numberOfPoints),
+                (j + 5) % (numberOfPoints),
+                (j + 2) % (numberOfPoints),
+                (j + 5) % (numberOfPoints),
+                (j + 4) % (numberOfPoints),
+
+                (j + 5) % (numberOfPoints),         // outside indices
+                (j + 3) % (numberOfPoints),
+                (j + 2) % (numberOfPoints),
+                (j + 4) % (numberOfPoints),
+                (j + 5) % (numberOfPoints),
+                (j + 2) % (numberOfPoints)
             );
+        }*/
+
+        //console.log(object.indices);
+
+        object.normals = [];
+
+        for(j = 0; j < object.indices.length; j+=12){
+            // 0 bottom left
+            // 1 top left
+            // 2 top right
+
+            // 3 bottom left
+            // 4 top right
+            // 5 bottom right
+
+            // 6 top right
+            // 7 top left
+            // 8 bottom left
+
+            // 9 bottom right
+            // 10 top right
+            // 11 bottom left
+
+            /*
+            object.vertices[object.indices[j*12+0]]
+            object.vertices[object.indices[j*12+3]]
+            object.vertices[object.indices[j*12+8]]
+            object.vertices[object.indices[j*12+11]]
+            */
+
+            /*object.vertices[object.indices[j*12+0]*3]
+            object.vertices[object.indices[j*12+1]*3]
+            object.vertices[object.indices[j*12+2]*3]
+
+            console.log(
+                object.vertices[object.indices[j*12+0]*3] + "\t" +
+                object.vertices[object.indices[j*12+3]*3] + "\t" +
+                object.vertices[object.indices[j*12+8]*3] + "\t" +
+                object.vertices[object.indices[j*12+11]*3]
+            );*/
+
+            var x1 = object.vertices[object.indices[j+0]*3];
+            var y1 = object.vertices[object.indices[j+0]*3+1];
+            var z1 = object.vertices[object.indices[j+0]*3+2];
+
+            var x2 = object.vertices[object.indices[j+1]*3];
+            var y2 = object.vertices[object.indices[j+1]*3+1];
+            var z2 = object.vertices[object.indices[j+1]*3+2];
+
+            var x3 = object.vertices[object.indices[j+2]*3];
+            var y3 = object.vertices[object.indices[j+2]*3+1];
+            var z3 = object.vertices[object.indices[j+2]*3+2];
+
+            /*console.log(
+                x1 + "(" + object.indices[j+0]*3 + ")\t" + y1 + "(" + (object.indices[j+0]*3+1) + ")\t" + z1 + "(" + (object.indices[j+0]*3+2) + ")\n" +
+                x2 + "(" + object.indices[j+1]*3 + ")\t" + y3 + "(" + (object.indices[j+1]*3+1) + ")\t" + z2 + "(" + (object.indices[j+1]*3+2) + ")\n" +
+                x3 + "(" + object.indices[j+2]*3 + ")\t" + y2 + "(" + (object.indices[j+2]*3+1) + ")\t" + z3 + "(" + (object.indices[j+2]*3+2) + ")"
+            );*/
+
+            //console.log(object.indices[j+0] + "\t" + object.indices[j+1] + "\t" + object.indices[j+2]);
+
+            /*
+            p1 = x1, y1, z1
+            p2 = x2, y2, z2
+            p3 = x3, y3, z3
+            */
+            var nx = (y2 - y1)*(z3 - z1) - (z2 - z1)*(y3 - y1);
+            var ny = (z2 - z1)*(x3 - x1) - (x2 - x1)*(z3 - z1);
+            var nz = (x2 - x1)*(y3 - y1) - (y2 - y1)*(x3 - x1);
+
+            console.log(nx+"\t"+ny+"\t"+nz);
+
+            for(var k = 0; k < 12; k++){    // outside normals
+                object.normals[object.indices[j+k]*3] = -nx;
+                object.normals[object.indices[j+k]*3+1] = -ny;
+                object.normals[object.indices[j+k]*3+2] = -nz;
+            }
+
+            //object.normals[object.indices[j+0]*3] = nx;
+            //object.normals[object.indices[j+0]*3+1] = ny;
+            //object.normals[object.indices[j+0]*3+2] = nz;
+
+            /*console.log(
+                object.vertices[object.indices[j*12+0]]+"\t"+
+                object.vertices[object.indices[j*12+3]]+"\t"+
+                object.vertices[object.indices[j*12+8]]+"\t"+
+                object.vertices[object.indices[j*12+11]]
+                //object.vertices[object.indices[j*12+0]] == object.vertices[object.indices[j*12+3]]
+            );*/
+            /*console.log(
+                object.vertices[object.indices[j*12+0]]==
+                object.vertices[object.indices[j*12+3]]==
+                object.vertices[object.indices[j*12+8]]==
+                object.vertices[object.indices[j*12+11]]
+            );*/
+            //console.log(object.vertices[object.indices[j*12+0]]==object.vertices[object.indices[j*12+3]]);
+            //console.log(object.vertices[object.indices[j*12+3]]==object.vertices[object.indices[j*12+8]]);
+            //console.log(object.vertices[object.indices[j*12+8]]==object.vertices[object.indices[j*12+11]]);
+            //console.log("----------");
         }
+        //console.log(object.vertices.length==object.normals.length);
+        //object.normals = undefined;
+
+        // TODO: draw inside faces as separate polygon with inverted normals
+
         csvObjects.push(object);
     }
 
@@ -309,7 +509,7 @@ var handleCSV = function(e){
         child.onclick({srcElement: {dataset: {type: "csv"}}});
     }
 
-    console.log("ms done (" + (Date.now()-csvTimer) + "ms)");
+    console.log("done (" + (Date.now()-csvTimer) + "ms)");
 
     closeModal();
 
