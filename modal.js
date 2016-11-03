@@ -256,8 +256,23 @@ var handleCSV = function(e){
                 factor*(data[i][j].x-subtractX)+offsetX,        i*yHeight+0,        factor*(data[i][j].y-subtractY)+offsetY,
                 factor*(data[i][j].x-subtractX)+offsetX,        i*yHeight+yHeight,  factor*(data[i][j].y-subtractY)+offsetY,
                 factor*(data[i][j].x-subtractX)+offsetX,        i*yHeight+0,        factor*(data[i][j].y-subtractY)+offsetY,
+                factor*(data[i][j].x-subtractX)+offsetX,        i*yHeight+yHeight,  factor*(data[i][j].y-subtractY)+offsetY,
+                factor*(data[i][j].x-subtractX)+offsetX,        i*yHeight+0,        factor*(data[i][j].y-subtractY)+offsetY,
+                factor*(data[i][j].x-subtractX)+offsetX,        i*yHeight+yHeight,  factor*(data[i][j].y-subtractY)+offsetY,
+                factor*(data[i][j].x-subtractX)+offsetX,        i*yHeight+0,        factor*(data[i][j].y-subtractY)+offsetY,
                 factor*(data[i][j].x-subtractX)+offsetX,        i*yHeight+yHeight,  factor*(data[i][j].y-subtractY)+offsetY
             );
+
+            /*
+            * foreign front bottom
+            * foreign front top
+            * foreign back bottom
+            * foreign back top
+            * front bottom
+            * front top
+            * back bottom
+            * back top
+            * */
 
             /*
             *           xxxx      xxxx
@@ -281,17 +296,28 @@ var handleCSV = function(e){
                 0.5, 0.5, 0.5, 1.0,
                 0.5, 0.5, 0.5, 1.0,
                 0.5, 0.5, 0.5, 1.0,
+                0.5, 0.5, 0.5, 1.0,
+                0.5, 0.5, 0.5, 1.0,
+                0.5, 0.5, 0.5, 1.0,
+                0.5, 0.5, 0.5, 1.0,
                 0.5, 0.5, 0.5, 1.0
             );
 
-            var numberOfVertices = data[i].length*4;
+            var numberOfVertices = data[i].length*8;
 
             object.indices.push(
-                (j*4+2)%numberOfVertices, (j*4+3)%numberOfVertices, (j*4+5)%numberOfVertices,
-                (j*4+2)%numberOfVertices, (j*4+5)%numberOfVertices, (j*4+4)%numberOfVertices,
-                (j*4+5)%numberOfVertices, (j*4+3)%numberOfVertices, (j*4+2)%numberOfVertices,
-                (j*4+4)%numberOfVertices, (j*4+5)%numberOfVertices, (j*4+2)%numberOfVertices
+                (j*8+4)%numberOfVertices, (j*8+5)%numberOfVertices, (j*8+9)%numberOfVertices,   // front 1
+                (j*8+4)%numberOfVertices, (j*8+9)%numberOfVertices, (j*8+8)%numberOfVertices,   // front 2
+                (j*8+11)%numberOfVertices, (j*8+7)%numberOfVertices, (j*8+6)%numberOfVertices,  // back 1
+                (j*8+10)%numberOfVertices, (j*8+11)%numberOfVertices, (j*8+6)%numberOfVertices  // back 2
             );
+
+            /*object.indices.push(
+                (j*8+2)%numberOfVertices, (j*8+3)%numberOfVertices, (j*8+5)%numberOfVertices,
+                (j*8+2)%numberOfVertices, (j*8+5)%numberOfVertices, (j*8+4)%numberOfVertices,
+                (j*8+5)%numberOfVertices, (j*8+3)%numberOfVertices, (j*8+2)%numberOfVertices,   //replace with new vertex positions
+                (j*8+4)%numberOfVertices, (j*8+5)%numberOfVertices, (j*8+2)%numberOfVertices    //replace with new vertex positions
+            );*/
         }
 
         /*var modulo = object.vertices.length/3;
@@ -386,7 +412,7 @@ var handleCSV = function(e){
 
         object.normals = [];
 
-        for(j = 0; j < object.indices.length; j+=12){
+        for(j = 0; j < object.indices.length; j+=12){       //TODO: indices are set correctly. Invert normals for inside faces.
             // 0 bottom left
             // 1 top left
             // 2 top right
@@ -449,14 +475,108 @@ var handleCSV = function(e){
             var nx = (y2 - y1)*(z3 - z1) - (z2 - z1)*(y3 - y1);
             var ny = (z2 - z1)*(x3 - x1) - (x2 - x1)*(z3 - z1);
             var nz = (x2 - x1)*(y3 - y1) - (y2 - y1)*(x3 - x1);
+            nx /= Math.sqrt(nx*nx+ny*ny+nz*nz);
+            ny /= Math.sqrt(nx*nx+ny*ny+nz*nz);
+            nz /= Math.sqrt(nx*nx+ny*ny+nz*nz);
 
-            console.log(nx+"\t"+ny+"\t"+nz);
+            //console.log(nx+"\t"+ny+"\t"+nz);
+            console.log("Length: "+Math.sqrt(nx*nx+ny*ny+nz*nz));
 
-            for(var k = 0; k < 12; k++){    // outside normals
+            /*
+             * left front bottom
+             * left front top
+             * left back bottom
+             * left back top
+             * right front bottom
+             * right front top
+             * right back bottom
+             * right back top
+             * */
+
+            // TODO: normals inserted in wrong order?
+            console.log(
+                "object "+ j/12 + "\n" +
+                "front 0\n" +
+                object.vertices[object.indices[j]*3] + "\t" + object.vertices[object.indices[j]*3+1] + "\t" + object.vertices[object.indices[j]*3+2] + "\n" +
+                object.vertices[object.indices[j+1]*3] + "\t" + object.vertices[object.indices[j+1]*3+1] + "\t" + object.vertices[object.indices[j+1]*3+2] + "\n" +
+                object.vertices[object.indices[j+2]*3] + "\t" + object.vertices[object.indices[j+2]*3+1] + "\t" + object.vertices[object.indices[j+2]*3+2]
+            );
+            object.normals[object.indices[j]*3] = nx;
+            object.normals[object.indices[j]*3+1] = ny;
+            object.normals[object.indices[j]*3+2] = -nz;
+
+            object.normals[object.indices[j+1]*3] = nx;
+            object.normals[object.indices[j+1]*3+1] = ny;
+            object.normals[object.indices[j+1]*3+2] = nz;
+
+            object.normals[object.indices[j+2]*3] = nx;
+            object.normals[object.indices[j+2]*3+1] = ny;
+            object.normals[object.indices[j+2]*3+2] = nz;
+
+            console.log(
+                "front 1\n" +
+                object.vertices[object.indices[j+3]*3] + "\t" + object.vertices[object.indices[j+3]*3+1] + "\t" + object.vertices[object.indices[j+3]*3+2] + "\n" +
+                object.vertices[object.indices[j+4]*3] + "\t" + object.vertices[object.indices[j+4]*3+1] + "\t" + object.vertices[object.indices[j+4]*3+2] + "\n" +
+                object.vertices[object.indices[j+5]*3] + "\t" + object.vertices[object.indices[j+5]*3+1] + "\t" + object.vertices[object.indices[j+5]*3+2]
+            );
+            object.normals[object.indices[j+3]*3] = nx;
+            object.normals[object.indices[j+3]*3+1] = ny;
+            object.normals[object.indices[j+3]*3+2] = nz;
+
+            object.normals[object.indices[j+4]*3] = nx;
+            object.normals[object.indices[j+4]*3+1] = ny;
+            object.normals[object.indices[j+4]*3+2] = nz;
+
+            object.normals[object.indices[j+5]*3] = nx;
+            object.normals[object.indices[j+5]*3+1] = ny;
+            object.normals[object.indices[j+5]*3+2] = nz;
+
+            console.log(
+                "back 0\n" +
+                object.vertices[object.indices[j+6]*3] + "\t" + object.vertices[object.indices[j+6]*3+1] + "\t" + object.vertices[object.indices[j+6]*3+2] + "\n" +
+                object.vertices[object.indices[j+7]*3] + "\t" + object.vertices[object.indices[j+7]*3+1] + "\t" + object.vertices[object.indices[j+7]*3+2] + "\n" +
+                object.vertices[object.indices[j+8]*3] + "\t" + object.vertices[object.indices[j+8]*3+1] + "\t" + object.vertices[object.indices[j+8]*3+2]
+            );
+            object.normals[object.indices[j+6]*3] = -nx;
+            object.normals[object.indices[j+6]*3+1] = -ny;
+            object.normals[object.indices[j+6]*3+2] = -nz;
+
+            object.normals[object.indices[j+7]*3] = -nx;
+            object.normals[object.indices[j+7]*3+1] = -ny;
+            object.normals[object.indices[j+7]*3+2] = -nz;
+
+            object.normals[object.indices[j+8]*3] = -nx;
+            object.normals[object.indices[j+8]*3+1] = -ny;
+            object.normals[object.indices[j+8]*3+2] = -nz;
+
+            console.log(
+                "back 1\n" +
+                object.vertices[object.indices[j+9]*3] + "\t" + object.vertices[object.indices[j+9]*3+1] + "\t" + object.vertices[object.indices[j+9]*3+2] + "\n" +
+                object.vertices[object.indices[j+10]*3] + "\t" + object.vertices[object.indices[j+10]*3+1] + "\t" + object.vertices[object.indices[j+10]*3+2] + "\n" +
+                object.vertices[object.indices[j+11]*3] + "\t" + object.vertices[object.indices[j+11]*3+1] + "\t" + object.vertices[object.indices[j+11]*3+2]
+            );
+            object.normals[object.indices[j+9]*3] = -nx;
+            object.normals[object.indices[j+9]*3+1] = -ny;
+            object.normals[object.indices[j+9]*3+2] = -nz;
+
+            object.normals[object.indices[j+10]*3] = -nx;
+            object.normals[object.indices[j+10]*3+1] = -ny;
+            object.normals[object.indices[j+10]*3+2] = -nz;
+
+            object.normals[object.indices[j+11]*3] = -nx;
+            object.normals[object.indices[j+11]*3+1] = -ny;
+            object.normals[object.indices[j+11]*3+2] = -nz;
+
+            /*for(var k = 0; k < 6; k++){    // outside normals
                 object.normals[object.indices[j+k]*3] = -nx;
                 object.normals[object.indices[j+k]*3+1] = -ny;
                 object.normals[object.indices[j+k]*3+2] = -nz;
             }
+            for(var k = 5; k < 12; k++){    // outside normals
+                object.normals[object.indices[j+k]*3] = nx;
+                object.normals[object.indices[j+k]*3+1] = ny;
+                object.normals[object.indices[j+k]*3+2] = nz;
+            }*/
 
             //object.normals[object.indices[j+0]*3] = nx;
             //object.normals[object.indices[j+0]*3+1] = ny;
@@ -480,7 +600,7 @@ var handleCSV = function(e){
             //console.log(object.vertices[object.indices[j*12+8]]==object.vertices[object.indices[j*12+11]]);
             //console.log("----------");
         }
-        //console.log(object.vertices.length==object.normals.length);
+        console.log(object.vertices.length+" == "+object.normals.length);
         //object.normals = undefined;
 
         // TODO: draw inside faces as separate polygon with inverted normals
