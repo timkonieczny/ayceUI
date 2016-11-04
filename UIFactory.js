@@ -21,7 +21,7 @@ var UIFactory = function(){
         if(this.parent){
             ui+='<li>Parent:<br>' +
                 '<div class="property_input property_drop" id="parent_drop" title="parent">' +
-                'drop parent object here' +
+                '<span>drag and drop parent object here</span>' +
                 '</div>' +
                 '</li>';
         }
@@ -315,7 +315,7 @@ var UIFactory = function(){
                 showNotification("Cannot make the active object the active object's parent", "fa-exclamation-circle");
             }else{
                 var parentObject = objects[Number(e.dataTransfer.getData("text/html"))];
-                this.innerHTML = parentObject.screenName;
+                this.innerHTML = "<div id='parent_dropped'>" + parentObject.screenName + "</div>";
                 objects[currentObjectId].parent = parentObject;
             }
             return false;
