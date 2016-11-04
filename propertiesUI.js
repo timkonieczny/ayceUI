@@ -10,6 +10,7 @@ var showProperties = function(e) {
         e.srcElement.dataset.type == "sphere"||
         e.srcElement.dataset.type == "icosahedron"||
         e.srcElement.dataset.type == "obj"){
+        uiFactory.parent = true;
         uiFactory.position = true;
         uiFactory.rotation = true;
         uiFactory.scale = true;

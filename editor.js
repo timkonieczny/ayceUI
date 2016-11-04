@@ -115,6 +115,13 @@ var appendObjectInSceneChildElement = function(type){
     child.dataset.type = type;
     child.className = "object_in_scene button_dark";
     child.onclick = showProperties;
+    child.draggable = true;
+    child.addEventListener("dragstart", function(e){
+        e.dataTransfer.effectAllowed = "link";
+        e.dataTransfer.setData('text/html', this.dataset.id);
+        console.log(e.dataTransfer.getData('text/html'));
+        console.log("dragstart");
+    });
     document.getElementById("objects_in_scene_div").style.display = "block";
     document.getElementById("objects_in_scene").appendChild(child);
     if(type!=="camera") {
