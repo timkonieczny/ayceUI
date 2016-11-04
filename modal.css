@@ -151,8 +151,8 @@
 #csv_drop_loading{
     text-align: center;
     font-size: 1.7em;
-    width: 100%;
-    height: 100%;
+    height: calc(100% - 12px - 4px);
+    width: calc(100% - 12px - 4px);
     display: none;
 }
 #csv_upload_wrapper{

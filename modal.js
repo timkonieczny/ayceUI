@@ -184,6 +184,7 @@ document.getElementById("csv_drop").addEventListener("drop", function(e){
             console.log("done (" + (Date.now()-csvTimer) + "ms)");
             handleCSV(e);
             document.getElementById("csv_drop_loading").style.display = "none";
+            closeModal();
         };
         reader.readAsText(file);
     }else{
@@ -253,13 +254,13 @@ var handleCSV = function(e){
         //for(j = 0; j < data[i].length-1; j++) {
         for(j = 0; j < data[i].length; j++) {
             object.vertices.push(
-                factor*(data[i][j].x-subtractX)+offsetX,        i*yHeight+0,        factor*(data[i][j].y-subtractY)+offsetY,    // foreign front bottom
+                factor*(data[i][j].x-subtractX)+offsetX,        i*yHeight,        factor*(data[i][j].y-subtractY)+offsetY,    // foreign front bottom
                 factor*(data[i][j].x-subtractX)+offsetX,        i*yHeight+yHeight,  factor*(data[i][j].y-subtractY)+offsetY,    // foreign front top
-                factor*(data[i][j].x-subtractX)+offsetX,        i*yHeight+0,        factor*(data[i][j].y-subtractY)+offsetY,    // foreign back bottom
+                factor*(data[i][j].x-subtractX)+offsetX,        i*yHeight,        factor*(data[i][j].y-subtractY)+offsetY,    // foreign back bottom
                 factor*(data[i][j].x-subtractX)+offsetX,        i*yHeight+yHeight,  factor*(data[i][j].y-subtractY)+offsetY,    // foreign back top
-                factor*(data[i][j].x-subtractX)+offsetX,        i*yHeight+0,        factor*(data[i][j].y-subtractY)+offsetY,    // front bottom
+                factor*(data[i][j].x-subtractX)+offsetX,        i*yHeight,        factor*(data[i][j].y-subtractY)+offsetY,    // front bottom
                 factor*(data[i][j].x-subtractX)+offsetX,        i*yHeight+yHeight,  factor*(data[i][j].y-subtractY)+offsetY,    // front top
-                factor*(data[i][j].x-subtractX)+offsetX,        i*yHeight+0,        factor*(data[i][j].y-subtractY)+offsetY,    // back bottom
+                factor*(data[i][j].x-subtractX)+offsetX,        i*yHeight,        factor*(data[i][j].y-subtractY)+offsetY,    // back bottom
                 factor*(data[i][j].x-subtractX)+offsetX,        i*yHeight+yHeight,  factor*(data[i][j].y-subtractY)+offsetY     // back top
             );
             object.colors.push(
@@ -357,7 +358,4 @@ var handleCSV = function(e){
     }
 
     console.log("done (" + (Date.now()-csvTimer) + "ms)");
-
-    closeModal();
-
 };
