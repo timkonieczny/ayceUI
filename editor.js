@@ -122,6 +122,26 @@ var appendObjectInSceneChildElement = function(type){
         console.log(e.dataTransfer.getData('text/html'));
         console.log("dragstart");
     });
+    child.addEventListener("dragover", function(e){
+        console.log("dragover");
+        e.preventDefault();
+        e.dataTransfer.dropEffect = 'link';
+    });
+    child.addEventListener("drop", function(e){
+        console.log(this);
+        var wrapper = document.createElement("div");
+        var copy = this.cloneNode(true);
+        copy.style.marginLeft = "0px";  // TODO: event listeners need to be added again for new elements
+        copy.addEventListener("dragover", function(e){console.log("dragover2")});
+        console.log(copy);
+        wrapper.appendChild(copy);
+        wrapper.style.marginLeft = this.style.marginLeft;
+        this.parentNode.replaceChild(wrapper, this);
+        wrapper.appendChild(document.getElementById(e.dataTransfer.getData("text/html")));
+
+        document.getElementById(e.dataTransfer.getData("text/html")).style.marginLeft = "10px";
+        console.log("drop");
+    });
     document.getElementById("objects_in_scene_div").style.display = "block";
     document.getElementById("objects_in_scene").appendChild(child);
     if(type!=="camera") {
