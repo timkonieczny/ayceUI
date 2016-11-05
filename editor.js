@@ -123,25 +123,30 @@ var appendObjectInSceneChildElement = function(type){
         console.log("dragstart");
     });
     child.addEventListener("dragover", function(e){
+        handleDragover(e);
+    });
+    child.addEventListener("drop", function(e){
+        handleDrop(e, this);
+    });
+    var handleDragover = function(e){
         console.log("dragover");
         e.preventDefault();
         e.dataTransfer.dropEffect = 'link';
-    });
-    child.addEventListener("drop", function(e){
-        console.log(this);
+    };
+    var handleDrop = function(e, passiveElement){
         var wrapper = document.createElement("div");
-        var copy = this.cloneNode(true);
-        copy.style.marginLeft = "0px";  // TODO: event listeners need to be added again for new elements
-        copy.addEventListener("dragover", function(e){console.log("dragover2")});
-        console.log(copy);
+        var copy = passiveElement.cloneNode(true);
+        copy.style.marginLeft = "0px";
+        copy.addEventListener("dragover", function(e){handleDragover(e)});
+        copy.addEventListener("drop", function(e){handleDrop(e, this)});
         wrapper.appendChild(copy);
-        wrapper.style.marginLeft = this.style.marginLeft;
-        this.parentNode.replaceChild(wrapper, this);
+        wrapper.style.marginLeft = passiveElement.style.marginLeft;
+        passiveElement.parentNode.replaceChild(wrapper, passiveElement);
         wrapper.appendChild(document.getElementById(e.dataTransfer.getData("text/html")));
 
         document.getElementById(e.dataTransfer.getData("text/html")).style.marginLeft = "10px";
         console.log("drop");
-    });
+    };
     document.getElementById("objects_in_scene_div").style.display = "block";
     document.getElementById("objects_in_scene").appendChild(child);
     if(type!=="camera") {
