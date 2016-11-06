@@ -119,7 +119,7 @@ var appendObjectInSceneChildElement = function(type){
     child.addEventListener("dragstart", function(e){
         e.dataTransfer.effectAllowed = "link";
         e.dataTransfer.setData('text/html', this.dataset.id);
-        console.log(e.dataTransfer.getData('text/html'));
+        console.log(e.dataTransfer.getData("text/html"));
         console.log("dragstart");
     });
     child.addEventListener("dragover", function(e){
@@ -134,17 +134,22 @@ var appendObjectInSceneChildElement = function(type){
         e.dataTransfer.dropEffect = 'link';
     };
     var handleDrop = function(e, passiveElement){
-        var wrapper = document.createElement("div");
-        var copy = passiveElement.cloneNode(true);
-        copy.style.marginLeft = "0px";
-        copy.addEventListener("dragover", function(e){handleDragover(e)});
-        copy.addEventListener("drop", function(e){handleDrop(e, this)});
-        wrapper.appendChild(copy);
-        wrapper.style.marginLeft = passiveElement.style.marginLeft;
-        passiveElement.parentNode.replaceChild(wrapper, passiveElement);
-        wrapper.appendChild(document.getElementById(e.dataTransfer.getData("text/html")));
+        if(e.dataTransfer.getData("text/html")!=passiveElement.id){
+            var wrapper = document.createElement("div");
+            var copy = passiveElement.cloneNode(true);
+            copy.style.marginLeft = "0px";
+            copy.addEventListener("dragover", function(e){handleDragover(e)});
+            copy.addEventListener("drop", function(e){handleDrop(e, this)});
+            wrapper.appendChild(copy);
+            wrapper.style.marginLeft = passiveElement.style.marginLeft;
+            passiveElement.parentNode.replaceChild(wrapper, passiveElement);
+            wrapper.appendChild(document.getElementById(e.dataTransfer.getData("text/html")));
 
-        document.getElementById(e.dataTransfer.getData("text/html")).style.marginLeft = "10px";
+            document.getElementById(e.dataTransfer.getData("text/html")).style.marginLeft = "10px";
+        }else{
+            showNotification("Cannot make the active object the active object's parent", "fa-exclamation-circle");
+        }
+
         console.log("drop");
     };
     document.getElementById("objects_in_scene_div").style.display = "block";
