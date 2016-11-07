@@ -99,6 +99,74 @@ document.getElementById("add_camera").onclick = function(){
     cameraPreview.renderPreview = true;
 };
 
+// TODO: handle moving a parent with its children
+
+var handleChildParentDragstart = function(e, draggedElement){
+    e.dataTransfer.effectAllowed = "link";
+    e.dataTransfer.setData('text/html', draggedElement.dataset.id);
+    console.log("dragstart");
+    if(draggedElement.parentNode.id!="objects_in_scene")
+    document.getElementById("parent_actions").style.display = "block";
+};
+var handleDragover = function(e){
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'link';
+};
+var handleChildParentDrop = function(e, passiveElement){
+    if(e.dataTransfer.getData("text/html")!=passiveElement.id &&                                // not the same element
+        (passiveElement.parentNode.id=="objects_in_scene" ||                                    // not a root element
+        !hasChildNodeWithId(passiveElement.parentNode, e.dataTransfer.getData("text/html")))){  // not already a child
+        var wrapper = document.createElement("div");
+        var copy = passiveElement.cloneNode(true);
+        copy.style.marginLeft = "0px";
+        copy.addEventListener("dragstart", function (e) {
+            handleDragover(e, this)
+        });
+        copy.addEventListener("dragover", function (e) {
+            handleDragover(e)
+        });
+        copy.addEventListener("drop", function (e) {
+            handleChildParentDrop(e, this)
+        });
+        wrapper.appendChild(copy);
+        wrapper.style.marginLeft = passiveElement.style.marginLeft;
+        passiveElement.parentNode.replaceChild(wrapper, passiveElement);
+        wrapper.appendChild(document.getElementById(e.dataTransfer.getData("text/html")));
+
+        document.getElementById(e.dataTransfer.getData("text/html")).style.marginLeft = "10px";
+    }else{
+        showNotification("Cannot make the active object the active object's parent", "fa-exclamation-circle");
+    }
+
+    console.log("drop");
+};
+document.getElementById("parent_actions_unlink").addEventListener("dragover", function(e){
+    handleDragover(e);
+});
+document.getElementById("parent_actions_unlink").addEventListener("drop", function(e){
+    var element = document.getElementById(e.dataTransfer.getData("text/html"));
+    var parent = element.parentNode;
+    var currentScene = document.getElementById("objects_in_scene");
+    element.style.marginLeft = "0px";
+    currentScene.appendChild(element);
+
+    if(parent.childNodes.length==1){    // if only first (former parent) element is left, remove the div wrapper
+        var copy = parent.firstChild.cloneNode(true);
+        currentScene.replaceChild(copy, parent);
+        copy.addEventListener("dragover", function(e){
+            handleDragover(e);
+        });
+        copy.addEventListener("drop", function(e){
+            handleChildParentDrop(e, this);
+        });
+    }
+});
+
+document.getElementById("parent_actions_cancel").addEventListener("dragover", function(e){
+    handleDragover(e);
+});
+document.getElementById("parent_actions_cancel").addEventListener("drop", function(e){});   // do nothing on cancel
+
 var appendObjectInSceneChildElement = function(type){
     var child = document.createElement('li');
     if(type=="camera"){
@@ -117,41 +185,17 @@ var appendObjectInSceneChildElement = function(type){
     child.onclick = showProperties;
     child.draggable = true;
     child.addEventListener("dragstart", function(e){
-        e.dataTransfer.effectAllowed = "link";
-        e.dataTransfer.setData('text/html', this.dataset.id);
-        console.log(e.dataTransfer.getData("text/html"));
-        console.log("dragstart");
+        handleChildParentDragstart(e, this);
     });
     child.addEventListener("dragover", function(e){
         handleDragover(e);
     });
     child.addEventListener("drop", function(e){
-        handleDrop(e, this);
+        handleChildParentDrop(e, this);
     });
-    var handleDragover = function(e){
-        console.log("dragover");
-        e.preventDefault();
-        e.dataTransfer.dropEffect = 'link';
-    };
-    var handleDrop = function(e, passiveElement){
-        if(e.dataTransfer.getData("text/html")!=passiveElement.id){
-            var wrapper = document.createElement("div");
-            var copy = passiveElement.cloneNode(true);
-            copy.style.marginLeft = "0px";
-            copy.addEventListener("dragover", function(e){handleDragover(e)});
-            copy.addEventListener("drop", function(e){handleDrop(e, this)});
-            wrapper.appendChild(copy);
-            wrapper.style.marginLeft = passiveElement.style.marginLeft;
-            passiveElement.parentNode.replaceChild(wrapper, passiveElement);
-            wrapper.appendChild(document.getElementById(e.dataTransfer.getData("text/html")));
-
-            document.getElementById(e.dataTransfer.getData("text/html")).style.marginLeft = "10px";
-        }else{
-            showNotification("Cannot make the active object the active object's parent", "fa-exclamation-circle");
-        }
-
-        console.log("drop");
-    };
+    child.addEventListener("dragend", function(e){
+        document.getElementById("parent_actions").style.display = "none";
+    });
     document.getElementById("objects_in_scene_div").style.display = "block";
     document.getElementById("objects_in_scene").appendChild(child);
     if(type!=="camera") {
