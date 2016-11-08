@@ -111,33 +111,36 @@ var handleDragover = function(e){
     e.dataTransfer.dropEffect = 'link';
 };
 var handleChildParentDrop = function(e, passiveElement){
-                                                                // TODO: don't create new wrappers if parent is already wrapped
     if(e.dataTransfer.getData("text/html")!=passiveElement.id &&                                // not the same element
         (passiveElement.parentNode.id=="objects_in_scene" ||                                    // not a root element
         !hasChildNodeWithId(passiveElement.parentNode, e.dataTransfer.getData("text/html")))){  // not already a child
-        var wrapper = document.createElement("div");
-        var copy = passiveElement.cloneNode(true);
         var element = document.getElementById(e.dataTransfer.getData("text/html"));
-        copy.style.marginLeft = "0px";
-        copy.addEventListener("dragover", function (e) {
-            handleDragover(e)
-        });
-        copy.addEventListener("drop", function (e) {
-            handleChildParentDrop(e, this)
-        });
-        wrapper.appendChild(copy);
-        wrapper.appendChild(element);
+        if(passiveElement.parentNode.id == "wrapper_of_"+passiveElement.id){
+            passiveElement.parentNode.appendChild(element);
+            element.style.marginLeft = "10px";
+        }else {
+            var wrapper = document.createElement("div");
+            var copy = passiveElement.cloneNode(true);      // need copy to replace the original with the wrapper + copy later
+            copy.style.marginLeft = "0px";
+            copy.addEventListener("dragover", function (e) {
+                handleDragover(e)
+            });
+            copy.addEventListener("drop", function (e) {
+                handleChildParentDrop(e, this)
+            });
+            wrapper.appendChild(copy);
+            wrapper.appendChild(element);
 
-        wrapper.style.marginLeft = passiveElement.style.marginLeft;
-        wrapper.id = "wrapper_of_"+copy.dataset.id;
-        wrapper.addEventListener("dragstart", function(e){              // enables moving parent with children
-            handleChildParentDragstart(e, this);
-        });
+            wrapper.style.marginLeft = passiveElement.style.marginLeft;
+            wrapper.id = "wrapper_of_" + copy.dataset.id;
+            wrapper.addEventListener("dragstart", function (e) {              // enables moving parent with children
+                handleChildParentDragstart(e, this);
+            });
 
-        passiveElement.parentNode.replaceChild(wrapper, passiveElement);
+            passiveElement.parentNode.replaceChild(wrapper, passiveElement);
 
-
-        element.style.marginLeft = "10px";
+            element.style.marginLeft = "10px"
+        }
     }else{
         showNotification("Cannot make the active object the active object's parent", "fa-exclamation-circle");
     }
