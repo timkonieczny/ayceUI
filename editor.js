@@ -48,7 +48,7 @@ var addObjectButtons = document.getElementsByClassName("add_object");
 for(i = 0; i < addObjectButtons.length; i++){
     addObjectButtons[i].onclick = function(){
         if(this.id != "import_obj"){
-            objects.push(eval(this.dataset.constructor));
+            objects.push(eval(this.dataset.constructor));   // TODO: rename data-constructor (causes issues in Edge)
             if(!eval(this.dataset.centered)) {
                 objects[objects.length - 1].offset.set(
                     -objects[objects.length - 1].a / 2.0,
@@ -99,11 +99,10 @@ document.getElementById("add_camera").onclick = function(){
     cameraPreview.renderPreview = true;
 };
 
-// TODO: handle moving a parent with its children
-
 var handleChildParentDragstart = function(e, draggedElement){
     e.dataTransfer.effectAllowed = "link";
-    e.dataTransfer.setData('text/html', draggedElement.dataset.id);
+    e.dataTransfer.setData('text/html', draggedElement.id);
+    e.stopPropagation();
     if(draggedElement.parentNode.id!="objects_in_scene")
     document.getElementById("parent_actions").style.display = "block";
 };
@@ -112,6 +111,7 @@ var handleDragover = function(e){
     e.dataTransfer.dropEffect = 'link';
 };
 var handleChildParentDrop = function(e, passiveElement){
+                                                                // TODO: don't create new wrappers if parent is already wrapped
     if(e.dataTransfer.getData("text/html")!=passiveElement.id &&                                // not the same element
         (passiveElement.parentNode.id=="objects_in_scene" ||                                    // not a root element
         !hasChildNodeWithId(passiveElement.parentNode, e.dataTransfer.getData("text/html")))){  // not already a child
@@ -119,9 +119,6 @@ var handleChildParentDrop = function(e, passiveElement){
         var copy = passiveElement.cloneNode(true);
         var element = document.getElementById(e.dataTransfer.getData("text/html"));
         copy.style.marginLeft = "0px";
-        copy.addEventListener("dragstart", function (e) {
-            handleChildParentDragstart(e, this);
-        });
         copy.addEventListener("dragover", function (e) {
             handleDragover(e)
         });
@@ -132,6 +129,11 @@ var handleChildParentDrop = function(e, passiveElement){
         wrapper.appendChild(element);
 
         wrapper.style.marginLeft = passiveElement.style.marginLeft;
+        wrapper.id = "wrapper_of_"+copy.dataset.id;
+        wrapper.addEventListener("dragstart", function(e){              // enables moving parent with children
+            handleChildParentDragstart(e, this);
+        });
+
         passiveElement.parentNode.replaceChild(wrapper, passiveElement);
 
 
@@ -143,8 +145,6 @@ var handleChildParentDrop = function(e, passiveElement){
 document.getElementById("parent_actions_unlink").addEventListener("dragover", function(e){
     handleDragover(e);
 });
-
-// TODO: move parent with children. Missing eventlisteners still left?
 
 document.getElementById("parent_actions_unlink").addEventListener("drop", function(e){
     var element = document.getElementById(e.dataTransfer.getData("text/html")); // element that is being dropped
