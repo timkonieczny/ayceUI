@@ -120,12 +120,15 @@ var handleChildParentDrop = function(e, passiveElement){
         var copy = passiveElement.cloneNode(true);
         copy.style.marginLeft = "0px";
         copy.addEventListener("dragstart", function (e) {
+            console.log("dragstart");
             handleDragover(e, this)
         });
         copy.addEventListener("dragover", function (e) {
+            console.log("dragover");
             handleDragover(e)
         });
         copy.addEventListener("drop", function (e) {
+            console.log("drop");
             handleChildParentDrop(e, this)
         });
         wrapper.appendChild(copy);
@@ -144,15 +147,25 @@ document.getElementById("parent_actions_unlink").addEventListener("dragover", fu
     handleDragover(e);
 });
 document.getElementById("parent_actions_unlink").addEventListener("drop", function(e){
-    var element = document.getElementById(e.dataTransfer.getData("text/html"));
-    var parent = element.parentNode;
-    var currentScene = document.getElementById("objects_in_scene");
-    element.style.marginLeft = "0px";
+    var element = document.getElementById(e.dataTransfer.getData("text/html")); // element that is being dropped
+    var parent = element.parentNode;                                            // the element's div wrapper / #objects_in_scene
+    var currentScene = document.getElementById("objects_in_scene");             // #objects_in_scene
+    console.log("element");
+    console.log(element);
     currentScene.appendChild(element);
 
     if(parent.childNodes.length==1){    // if only first (former parent) element is left, remove the div wrapper
         var copy = parent.firstChild.cloneNode(true);
-        currentScene.replaceChild(copy, parent);
+
+        console.log("copy");
+        console.log(copy);
+
+        console.log("parent");
+        console.log(parent);
+       // con
+
+        parent.parentNode.replaceChild(copy, parent);
+        copy.style.marginLeft = element.style.marginLeft;
         copy.addEventListener("dragover", function(e){
             handleDragover(e);
         });
@@ -160,6 +173,7 @@ document.getElementById("parent_actions_unlink").addEventListener("drop", functi
             handleChildParentDrop(e, this);
         });
     }
+    element.style.marginLeft = "0px";
 });
 
 document.getElementById("parent_actions_cancel").addEventListener("dragover", function(e){
