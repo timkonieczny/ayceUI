@@ -104,7 +104,6 @@ document.getElementById("add_camera").onclick = function(){
 var handleChildParentDragstart = function(e, draggedElement){
     e.dataTransfer.effectAllowed = "link";
     e.dataTransfer.setData('text/html', draggedElement.dataset.id);
-    console.log("dragstart");
     if(draggedElement.parentNode.id!="objects_in_scene")
     document.getElementById("parent_actions").style.display = "block";
 };
@@ -118,54 +117,49 @@ var handleChildParentDrop = function(e, passiveElement){
         !hasChildNodeWithId(passiveElement.parentNode, e.dataTransfer.getData("text/html")))){  // not already a child
         var wrapper = document.createElement("div");
         var copy = passiveElement.cloneNode(true);
+        var element = document.getElementById(e.dataTransfer.getData("text/html"));
         copy.style.marginLeft = "0px";
         copy.addEventListener("dragstart", function (e) {
-            console.log("dragstart");
-            handleDragover(e, this)
+            handleChildParentDragstart(e, this);
         });
         copy.addEventListener("dragover", function (e) {
-            console.log("dragover");
             handleDragover(e)
         });
         copy.addEventListener("drop", function (e) {
-            console.log("drop");
             handleChildParentDrop(e, this)
         });
         wrapper.appendChild(copy);
+        wrapper.appendChild(element);
+
         wrapper.style.marginLeft = passiveElement.style.marginLeft;
         passiveElement.parentNode.replaceChild(wrapper, passiveElement);
-        wrapper.appendChild(document.getElementById(e.dataTransfer.getData("text/html")));
 
-        document.getElementById(e.dataTransfer.getData("text/html")).style.marginLeft = "10px";
+
+        element.style.marginLeft = "10px";
     }else{
         showNotification("Cannot make the active object the active object's parent", "fa-exclamation-circle");
     }
-
-    console.log("drop");
 };
 document.getElementById("parent_actions_unlink").addEventListener("dragover", function(e){
     handleDragover(e);
 });
+
+// TODO: move parent with children. Missing eventlisteners still left?
+
 document.getElementById("parent_actions_unlink").addEventListener("drop", function(e){
     var element = document.getElementById(e.dataTransfer.getData("text/html")); // element that is being dropped
     var parent = element.parentNode;                                            // the element's div wrapper / #objects_in_scene
     var currentScene = document.getElementById("objects_in_scene");             // #objects_in_scene
-    console.log("element");
-    console.log(element);
     currentScene.appendChild(element);
 
     if(parent.childNodes.length==1){    // if only first (former parent) element is left, remove the div wrapper
         var copy = parent.firstChild.cloneNode(true);
 
-        console.log("copy");
-        console.log(copy);
-
-        console.log("parent");
-        console.log(parent);
-       // con
-
         parent.parentNode.replaceChild(copy, parent);
-        copy.style.marginLeft = element.style.marginLeft;
+        copy.style.marginLeft = parent.style.marginLeft;
+        copy.addEventListener("dragstart", function(e){
+            handleChildParentDragstart(e, this);
+        });
         copy.addEventListener("dragover", function(e){
             handleDragover(e);
         });

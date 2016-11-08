@@ -48,7 +48,6 @@ var showNotification = function(text, icon){
 var hasChildNodeWithId = function(parent, childId){
     var childNodes = parent.childNodes;
     for(var i = 0; i < childNodes.length; i++){
-        console.log(childNodes[i].id+" == "+childId);
         if(childNodes[i].id == childId) return true;
     }
     return false;
