@@ -15,9 +15,18 @@ var handleChildParentDrop = function(e, passiveElement){
         // same element
     }else if(passiveElement.parentNode.id!="objects_in_scene" && hasChildNodeWithId(passiveElement.parentNode, e.dataTransfer.getData("text/html"))){
         showNotification("The object is already a child", "fa-exclamation-circle");
+        // TODO: parent with two children. make one child child of other child. bug
+        // TODO: implement removing parent
         // already a child
     }else{
         var element = document.getElementById(e.dataTransfer.getData("text/html"));
+
+        if(element.className == "parent_wrapper"){
+            objects[Number(element.firstChild.id)].parent = objects[Number(passiveElement.id)];
+        }else{
+            objects[Number(element.id)].parent = objects[Number(passiveElement.id)];
+        }
+
         if(passiveElement.parentNode.id == "wrapper_of_"+passiveElement.id){
             passiveElement.parentNode.appendChild(element);
             element.style.marginLeft = "10px";
@@ -31,18 +40,24 @@ var handleChildParentDrop = function(e, passiveElement){
             copy.addEventListener("drop", function (e) {
                 handleChildParentDrop(e, this)
             });
+            copy.onclick = showProperties;
             wrapper.appendChild(copy);
             wrapper.appendChild(element);
 
             wrapper.style.marginLeft = passiveElement.style.marginLeft;
             wrapper.id = "wrapper_of_" + copy.dataset.id;
-            wrapper.addEventListener("dragstart", function (e) {              // enables moving parent with children
+            wrapper.className = "parent_wrapper";
+            wrapper.addEventListener("dragstart", function (e) {            // enables moving parent with children
                 handleChildParentDragstart(e, this);
+            });
+            wrapper.addEventListener("dragend", function (e) {              // disables unlink buttons
+                handleChildParentDragend();
             });
 
             passiveElement.parentNode.replaceChild(wrapper, passiveElement);
 
             element.style.marginLeft = "10px";
+            element.onclick = showProperties;
         }
     }
 };
@@ -139,6 +154,7 @@ var handleDeletedObject = function(child){
 
     if(parent.id!="objects_in_scene"){
         parent.id = "wrapper_of_" + parent.firstChild.id;
+        parent.className = "parent_wrapper";
     }
 
     cleanUpObjectNode(parent);
