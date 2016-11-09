@@ -48,7 +48,8 @@ var addObjectButtons = document.getElementsByClassName("add_object");
 for(i = 0; i < addObjectButtons.length; i++){
     addObjectButtons[i].onclick = function(){
         if(this.id != "import_obj"){
-            objects.push(eval(this.dataset.constructor));   // TODO: rename data-constructor (causes issues in Edge)
+            console.log(this.dataset);
+            objects.push(eval(this.dataset.objectconstructor));
             if(!eval(this.dataset.centered)) {
                 objects[objects.length - 1].offset.set(
                     -objects[objects.length - 1].a / 2.0,
