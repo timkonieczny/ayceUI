@@ -354,7 +354,7 @@ var handleCSV = function(e){
         scene.addToScene(objects[objects.length - 1]);
         cameraPreview.scene.addToScene(cameraPreview.objects[cameraPreview.objects.length-1]);
         var child = appendObjectInSceneChildElement("csv");
-        child.onclick({srcElement: {dataset: {type: "csv"}}});
+        showProperties(child);
     }
 
     console.log("done (" + (Date.now()-csvTimer) + "ms)");

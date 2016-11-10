@@ -6,12 +6,12 @@ var showProperties = function(e) {
     addClass(e, "button_dark_active");
     currentObjectId = e.dataset.id;
     uiFactory.resetAttributes();
-    if (e.srcElement.dataset.type == "plane"||
-        e.srcElement.dataset.type == "cube"||
-        e.srcElement.dataset.type == "sphere"||
-        e.srcElement.dataset.type == "icosahedron"||
-        e.srcElement.dataset.type == "csv"||
-        e.srcElement.dataset.type == "obj"){
+    if (e.dataset.type == "plane"||
+        e.dataset.type == "cube"||
+        e.dataset.type == "sphere"||
+        e.dataset.type == "icosahedron"||
+        e.dataset.type == "csv"||
+        e.dataset.type == "obj"){
         uiFactory.parent = true;
         uiFactory.position = true;
         uiFactory.rotation = true;

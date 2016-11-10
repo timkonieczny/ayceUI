@@ -49,7 +49,7 @@ var handleClickOnObject = function(e){
 };
 for(i = 0; i < addObjectButtons.length; i++){
     addObjectButtons[i].onclick = function(){
-        if(this.id != "import_obj"){
+        if(this.id != "import_obj" && this.id != "import_csv"){
             objects.push(eval(this.dataset.objectconstructor));
             if(!eval(this.dataset.centered)) {
                 objects[objects.length - 1].offset.set(
