@@ -41,10 +41,12 @@ var objects = [];
 var cameraPreview = new CameraPreview();
 document.getElementById("camera_preview_wrapper").style.display = "none";
 var currentObjectId;
-var activeElement = null;
 
 var i;
 var addObjectButtons = document.getElementsByClassName("add_object");
+var handleClickOnObject = function(e){
+    showProperties(e.srcElement);
+};
 for(i = 0; i < addObjectButtons.length; i++){
     addObjectButtons[i].onclick = function(){
         if(this.id != "import_obj"){
@@ -75,7 +77,7 @@ for(i = 0; i < addObjectButtons.length; i++){
             cameraPreview.scene.addToScene(cameraPreview.objects[cameraPreview.objects.length-1]);
 
             var child = appendObjectInSceneChildElement(this.dataset.type);
-            child.onclick({srcElement: this});
+            showProperties(child);
         }
     }
 }
@@ -89,13 +91,13 @@ document.getElementById("add_light").onclick = function(){
     scene.addToScene(objects[objects.length-1]);
     cameraPreview.scene.addToScene(cameraPreview.objects[cameraPreview.objects.length-1]);
     var child = appendObjectInSceneChildElement(this.dataset.type);
-    child.onclick({srcElement: this});
+    child.addEventListener("click", handleClickOnObject);
 };
 
 document.getElementById("add_camera").onclick = function(){
     document.getElementById("camera_preview_wrapper").style.display = "block";
     var child = appendObjectInSceneChildElement(this.dataset.type);
-    child.onclick({srcElement: this});
+    child.addEventListener("click", handleClickOnObject);
     cameraPreview.renderPreview = true;
 };
 

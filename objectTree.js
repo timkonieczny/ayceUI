@@ -9,46 +9,46 @@ var handleDragover = function(e){
     e.preventDefault();
     e.dataTransfer.dropEffect = 'link';
 };
-var handleChildParentDrop = function(e, passiveElement){
-    if(e.dataTransfer.getData("text/html")==passiveElement.id){
+var handleChildParentDrop = function(e, newParent){
+    if(e.dataTransfer.getData("text/html")==newParent.id){
         showNotification("Cannot make the active object the active object's parent", "fa-exclamation-circle");
         // same element
-    }else if(passiveElement.parentNode.id!="objects_in_scene" &&
-        Array.prototype.indexOf.call(passiveElement.parentNode.childNodes, passiveElement)==0 &&
-        (hasChildNodeWithId(passiveElement.parentNode, e.dataTransfer.getData("text/html")))){
+    }else if(newParent.parentNode.id!="objects_in_scene" &&
+        Array.prototype.indexOf.call(newParent.parentNode.childNodes, newParent)==0 &&
+        (hasChildNodeWithId(newParent.parentNode, e.dataTransfer.getData("text/html")))){
         showNotification("The object is already a child", "fa-exclamation-circle");
         // TODO: implement removing parent
         // already a child
     }else{
-        var element = document.getElementById(e.dataTransfer.getData("text/html"));
+        var newChild = document.getElementById(e.dataTransfer.getData("text/html"));
 
-        if(element.className == "parent_wrapper"){
-            objects[Number(element.firstChild.id)].parent = objects[Number(passiveElement.id)];
-            cameraPreview.objects[Number(element.firstChild.id)].parent = cameraPreview.objects[Number(passiveElement.id)];
+        if(newChild.className == "parent_wrapper"){
+            objects[Number(newChild.firstChild.id)].parent = objects[Number(newParent.id)];
+            cameraPreview.objects[Number(newChild.firstChild.id)].parent = cameraPreview.objects[Number(newParent.id)];
         }else{
-            objects[Number(element.id)].parent = objects[Number(passiveElement.id)];
-            cameraPreview.objects[Number(element.id)].parent = cameraPreview.objects[Number(passiveElement.id)];
+            objects[Number(newChild.id)].parent = objects[Number(newParent.id)];
+            cameraPreview.objects[Number(newChild.id)].parent = cameraPreview.objects[Number(newParent.id)];
         }
 
-        if(passiveElement.parentNode.id == "wrapper_of_"+passiveElement.id){
-            passiveElement.parentNode.appendChild(element);
-            element.style.marginLeft = "10px";
+        if(newParent.parentNode.id == "wrapper_of_"+newParent.id){
+            newParent.parentNode.appendChild(newChild);
+            newChild.style.marginLeft = "10px";
         }else {
             var wrapper = document.createElement("div");
-            var copy = passiveElement.cloneNode(true);      // need copy to replace the original with the wrapper + copy later
-            copy.style.marginLeft = "0px";
-            copy.addEventListener("dragover", function (e) {
+            var newParentCopy = newParent.cloneNode(true);      // need copy to replace the original with the wrapper + copy later
+            newParentCopy.style.marginLeft = "0px";
+            newParentCopy.addEventListener("dragover", function (e) {
                 handleDragover(e)
             });
-            copy.addEventListener("drop", function (e) {
+            newParentCopy.addEventListener("drop", function (e) {
                 handleChildParentDrop(e, this)
             });
-            copy.onclick = showProperties;
-            wrapper.appendChild(copy);
-            wrapper.appendChild(element);
+            newParentCopy.addEventListener("click", handleClickOnObject);
+            wrapper.appendChild(newParentCopy);
+            wrapper.appendChild(newChild);
 
-            wrapper.style.marginLeft = passiveElement.style.marginLeft;
-            wrapper.id = "wrapper_of_" + copy.dataset.id;
+            wrapper.style.marginLeft = newParent.style.marginLeft;
+            wrapper.id = "wrapper_of_" + newParentCopy.dataset.id;
             wrapper.className = "parent_wrapper";
             wrapper.addEventListener("dragstart", function (e) {            // enables moving parent with children
                 handleChildParentDragstart(e, this);
@@ -57,10 +57,18 @@ var handleChildParentDrop = function(e, passiveElement){
                 handleChildParentDragend();
             });
 
-            passiveElement.parentNode.replaceChild(wrapper, passiveElement);
+            newParent.parentNode.replaceChild(wrapper, newParent);
 
-            element.style.marginLeft = "10px";
-            element.onclick = showProperties;
+            newChild.style.marginLeft = "10px";
+            newChild.addEventListener("click", handleClickOnObject);
+            document.getElementById("delete_"+newParentCopy.id).addEventListener("click", function (e) {
+                e.stopPropagation();
+                if(newParentCopy.parentNode.firstChild == newParentCopy){
+                    deleteParent(newParentCopy);
+                }else{
+                    deleteObject(newParentCopy);
+                }
+            });
         }
     }
 };
@@ -99,7 +107,7 @@ var cleanUpObjectNode = function(wrapper){     // removes unnecessary wrappers
         copy.addEventListener("drop", function(e){
             handleChildParentDrop(e, this);
         });
-        copy.onclick = showProperties;
+        copy.addEventListener("click", handleClickOnObject);
         document.getElementById("delete_"+copy.id).addEventListener("click", function (e) {
             e.stopPropagation();
             deleteObject(copy);
@@ -127,7 +135,8 @@ var appendObjectInSceneChildElement = function(type){
     }
     child.dataset.type = type;
     child.className = "object_in_scene button_dark";
-    child.onclick = showProperties;
+    //child.onclick = showProperties;
+    child.addEventListener("click", handleClickOnObject);
     child.draggable = true;
     child.addEventListener("dragstart", function(e){
         handleChildParentDragstart(e, this);
@@ -149,6 +158,7 @@ var appendObjectInSceneChildElement = function(type){
             deleteObject(child);
         });
     }
+    //console.log(child);
     return child;
 };
 
@@ -157,7 +167,7 @@ var handleDeletedObject = function(child){
 
     parent.removeChild(child);
 
-    if(parent.id!="objects_in_scene"){
+    if(parent.id!="objects_in_scene" && parent.childNodes.length > 0){
         parent.id = "wrapper_of_" + parent.firstChild.id;
         parent.className = "parent_wrapper";
     }
@@ -172,4 +182,15 @@ var deleteObject = function(child){
     cameraPreview.scene.removeFromScene(cameraPreview.objects[child.id]);
     cameraPreview.objects[child.id] = null;
     handleDeletedObject(child);
+};
+
+var deleteParent = function(child){
+    for(var i = child.parentNode.childNodes.length-1; i > 0; i--){             // delete all child nodex except for the first (parent object)
+        if(child.parentNode.childNodes[i].className == "parent_wrapper"){
+            deleteParent(child.parentNode.childNodes[i].firstChild);
+        }else{
+            deleteObject(child.parentNode.childNodes[i]);
+        }
+    }
+    deleteObject(document.getElementById(child.parentNode.firstChild.id));    // delete first node separately because it doesn't have a wrapper anymore
 };
