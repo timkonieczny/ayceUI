@@ -27,7 +27,7 @@ var showProperties = function(e) {
         uiFactory.editScript = true;
     }else if(e.dataset.type == "camera"){
         uiFactory.camera = true;
-        uiFactory.parent = true;
+        //uiFactory.parent = true;
         // TODO: add editScript
     }
     uiFactory.inflatePropertiesUI(document.getElementById("properties_list"));
