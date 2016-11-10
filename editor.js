@@ -48,7 +48,6 @@ var addObjectButtons = document.getElementsByClassName("add_object");
 for(i = 0; i < addObjectButtons.length; i++){
     addObjectButtons[i].onclick = function(){
         if(this.id != "import_obj"){
-            console.log(this.dataset);
             objects.push(eval(this.dataset.objectconstructor));
             if(!eval(this.dataset.centered)) {
                 objects[objects.length - 1].offset.set(

@@ -13,9 +13,10 @@ var handleChildParentDrop = function(e, passiveElement){
     if(e.dataTransfer.getData("text/html")==passiveElement.id){
         showNotification("Cannot make the active object the active object's parent", "fa-exclamation-circle");
         // same element
-    }else if(passiveElement.parentNode.id!="objects_in_scene" && hasChildNodeWithId(passiveElement.parentNode, e.dataTransfer.getData("text/html"))){
+    }else if(passiveElement.parentNode.id!="objects_in_scene" &&
+        Array.prototype.indexOf.call(passiveElement.parentNode.childNodes, passiveElement)==0 &&
+        (hasChildNodeWithId(passiveElement.parentNode, e.dataTransfer.getData("text/html")))){
         showNotification("The object is already a child", "fa-exclamation-circle");
-        // TODO: parent with two children. make one child child of other child. bug
         // TODO: implement removing parent
         // already a child
     }else{

@@ -1,7 +1,6 @@
 var uiFactory = new UIFactory();
 
 var showProperties = function(e) {
-    console.log("showProperties");
     document.getElementById("sidebar_right").style.display = "block";
     addClass(this, "button_dark_active");
     currentObjectId = this.dataset.id;
