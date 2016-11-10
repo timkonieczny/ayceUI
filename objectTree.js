@@ -24,8 +24,10 @@ var handleChildParentDrop = function(e, passiveElement){
 
         if(element.className == "parent_wrapper"){
             objects[Number(element.firstChild.id)].parent = objects[Number(passiveElement.id)];
+            cameraPreview.objects[Number(element.firstChild.id)].parent = cameraPreview.objects[Number(passiveElement.id)];
         }else{
             objects[Number(element.id)].parent = objects[Number(passiveElement.id)];
+            cameraPreview.objects[Number(element.id)].parent = cameraPreview.objects[Number(passiveElement.id)];
         }
 
         if(passiveElement.parentNode.id == "wrapper_of_"+passiveElement.id){
@@ -78,6 +80,8 @@ document.getElementById("parent_actions_unlink").addEventListener("drop", functi
     cleanUpObjectNode(parent);
 
     element.style.marginLeft = "0px";
+    objects[Number(element.id)].parent = null;
+    cameraPreview.objects[Number(element.id)].parent = null;
 });
 
 var cleanUpObjectNode = function(wrapper){     // removes unnecessary wrappers
