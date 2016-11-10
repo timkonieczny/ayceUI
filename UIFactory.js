@@ -296,32 +296,34 @@ var UIFactory = function(){
                 e.srcElement.focus();
             }
         });
-        document.getElementById("parent_drop").removeEventListener("change", updateProperties);
-        document.getElementById("parent_drop").removeEventListener("wheel", updateProperties);
+        if(scope.parent) {
+            document.getElementById("parent_drop").removeEventListener("change", updateProperties);
+            document.getElementById("parent_drop").removeEventListener("wheel", updateProperties);
 
-        document.getElementById("parent_drop").addEventListener("dragenter", function(e){
-            console.log("dragenter");
-        });
-        document.getElementById("parent_drop").addEventListener("dragover", function(e){
-            console.log("dragover");
-            e.preventDefault();
-            e.dataTransfer.dropEffect = 'link';
-        });
-        document.getElementById("parent_drop").addEventListener("dragleave", function(e){
-            console.log("dragleave");
-        });
-        document.getElementById("parent_drop").addEventListener("drop", function(e){
-            e.stopPropagation();
-            console.log("drop");
-            if(Number(e.dataTransfer.getData("text/html")) == currentObjectId){
-                showNotification("Cannot make the active object the active object's parent", "fa-exclamation-circle");
-            }else{
-                var parentObject = objects[Number(e.dataTransfer.getData("text/html"))];
-                this.innerHTML = "<div id='parent_dropped'>" + parentObject.screenName + "</div>";
-                objects[currentObjectId].parent = parentObject;
-            }
-            return false;
-        });
+            document.getElementById("parent_drop").addEventListener("dragenter", function (e) {
+                console.log("dragenter");
+            });
+            document.getElementById("parent_drop").addEventListener("dragover", function (e) {
+                console.log("dragover");
+                e.preventDefault();
+                e.dataTransfer.dropEffect = 'link';
+            });
+            document.getElementById("parent_drop").addEventListener("dragleave", function (e) {
+                console.log("dragleave");
+            });
+            document.getElementById("parent_drop").addEventListener("drop", function (e) {
+                e.stopPropagation();
+                console.log("drop");
+                if (Number(e.dataTransfer.getData("text/html")) == currentObjectId) {
+                    showNotification("Cannot make the active object the active object's parent", "fa-exclamation-circle");
+                } else {
+                    var parentObject = objects[Number(e.dataTransfer.getData("text/html"))];
+                    this.innerHTML = "<div id='parent_dropped'>" + parentObject.screenName + "</div>";
+                    objects[currentObjectId].parent = parentObject;
+                }
+                return false;
+            });
+        }
     };
     var setPropertyValues = function() {
         if (uiFactory.parent) {
