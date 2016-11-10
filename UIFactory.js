@@ -1,5 +1,7 @@
 var UIFactory = function(){
 
+    var scope = this;
+
     this.resetAttributes = function(){
         this.position = false;
         this.rotation = false;
@@ -322,6 +324,9 @@ var UIFactory = function(){
         });
     };
     var setPropertyValues = function() {
+        if (uiFactory.parent) {
+            scope.updateParentField();
+        }
         if (uiFactory.position) {
             document.getElementById("position_x").value = objects[currentObjectId].position.x;
             document.getElementById("position_y").value = objects[currentObjectId].position.y;
@@ -371,4 +376,8 @@ var UIFactory = function(){
             document.getElementById("object_name").value = objects[currentObjectId].screenName;
         }
     };
+    this.updateParentField = function(){
+        if(objects[currentObjectId].parent)
+            document.getElementById("parent_drop").innerHTML = "<div id='parent_dropped'>"+objects[currentObjectId].parent.screenName+"</div>";
+    }
 };

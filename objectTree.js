@@ -69,6 +69,7 @@ var handleChildParentDrop = function(e, newParent){
                     deleteObject(newParentCopy);
                 }
             });
+            uiFactory.updateParentField();
         }
     }
 };
