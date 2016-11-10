@@ -66,7 +66,7 @@
     <div id="modal">
         <div id="modal_window">
 
-            <a id="modal_close">&#215</a>
+            <a id="modal_close">&#215;</a>
             <textarea id="export_code_textarea" spellcheck="false" title="export_code_textarea"></textarea>
 
             <div id="file_upload_wrapper">
@@ -167,22 +167,22 @@
             <a id="export_code" class="button_dark"><i class="fa fa-hdd-o"></i>Export Code</a>
         </div>
         <div>
-            <h2><i class="fa fa-cube"></i>Geometries</h2>
+            <h2><i class="fa fa-cube header_icon"></i>Geometries</h2>
             <ul>
                 <li class="add_object button_dark" id="create_plane"
-                    data-constructor="new Ayce.Geometry.Plane(1, 1, 2, 2, false)"
+                    data-objectconstructor="new Ayce.Geometry.Plane(1, 1, 2, 2, false)"
                     data-centered="true"
                     data-type="plane">Plane</li>
                 <li class="add_object button_dark" id="create_cube"
-                    data-constructor="new Ayce.Geometry.Box(1, 1, 1)"
+                    data-objectconstructor="new Ayce.Geometry.Box(1, 1, 1)"
                     data-centered="false"
                     data-type="cube">Cube</li>
                 <li class="add_object button_dark" id="create_sphere"
-                    data-constructor="new Ayce.Geometry.Sphere(0.5)"
+                    data-objectconstructor="new Ayce.Geometry.Sphere(0.5)"
                     data-centered="true"
                     data-type="sphere">Sphere</li>
                 <li class="add_object button_dark" id="create_ico"
-                    data-constructor="new Ayce.Geometry.Icosahedron(2)"
+                    data-objectconstructor="new Ayce.Geometry.Icosahedron(2)"
                     data-centered="true"
                     data-type="icosahedron">Icosahedron</li>
                 <li class="add_object button_dark" id="import_obj" data-type="obj">
@@ -192,21 +192,29 @@
             </ul>
         </div>
         <div>
-            <h2><i class="fa fa-wrench"></i>Other</h2>
+            <h2><i class="fa fa-wrench header_icon"></i>Other</h2>
             <ul>
                 <li id="add_light" class="button_dark" data-type="light"><i class="fa fa-lightbulb-o"></i>Light</li>
                 <li id="add_camera" class="button_dark" data-type="camera"><i class="fa fa-video-camera"></i>Camera</li>
             </ul>
         </div>
         <div id="objects_in_scene_div">
-            <h2><i class="fa fa-globe"></i>Current Scene</h2>
+            <h2><i class="fa fa-globe header_icon"></i>Current Scene</h2>
             <ul id="objects_in_scene"></ul>
+        </div>
+    </div>
+    <div id="parent_actions">
+        <div id="parent_actions_unlink">
+            <p><i class="fa fa-chain-broken"></i><br>unlink parent</p>
+        </div>
+        <div id="parent_actions_cancel">
+            <p><i class="fa fa-ban"></i><br>cancel</p>
         </div>
     </div>
     <canvas id="main_canvas"></canvas>
     <div id="sidebar_right">
         <div id="properties_header">
-            <i class="fa fa-sliders" id="properties_icon"></i><input title="object_name" id="object_name" value="Properties"/>
+            <h2><i class="fa fa-sliders header_icon"></i><input title="object_name" id="object_name" value="Properties"/></h2>
         </div>
         <ul id="properties_list"></ul>
     </div>
@@ -217,6 +225,7 @@
     <script type="text/javascript" src="helpers.js"></script>
     <script type="text/javascript" src="UIFactory.js"></script>
     <script type="text/javascript" src="propertiesUI.js"></script>
+    <script type="text/javascript" src="objectTree.js"></script>
     <script type="text/javascript" src="editor.js"></script>
     <script type="text/javascript" src="modal.js"></script>
     <script type="text/javascript" src="loop.js"></script>

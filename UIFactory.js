@@ -1,5 +1,7 @@
 var UIFactory = function(){
 
+    var scope = this;
+
     this.resetAttributes = function(){
         this.position = false;
         this.rotation = false;
@@ -12,11 +14,19 @@ var UIFactory = function(){
         this.visibility = false;
         this.camera = false;
         this.editScript = false;
+        this.parent = false;
     };
     this.resetAttributes();
 
     this.inflatePropertiesUI = function(parent){
         var ui = "";
+        if(this.parent){
+            ui+='<li>Parent:<br>' +
+                '<div class="property_input property_drop" id="parent_drop" title="parent">' +
+                '<span>drag and drop parent object here</span>' +
+                '</div>' +
+                '</li>';
+        }
         if(this.position){
             ui+='<li>Position:<br>' +
                 '<input class="property_input" id="position_x" title="position_x"/>' +
@@ -256,9 +266,12 @@ var UIFactory = function(){
 
         var propertyInputs = document.getElementsByClassName("property_input");
         for (var i = 0; i < propertyInputs.length; i++) {
-            propertyInputs[i].onchange = propertyInputs[i].onwheel = function (e) {
+            propertyInputs[i].addEventListener("wheel", function (e) {
                 updateProperties(e)
-            };
+            });
+            propertyInputs[i].addEventListener("change", function (e) {
+                updateProperties(e)
+            });
         }
         if(document.getElementById("edit_script")) {     // TODO: enable scripting with every object
             document.getElementById("edit_script").addEventListener("click", function () {
@@ -283,8 +296,37 @@ var UIFactory = function(){
                 e.srcElement.focus();
             }
         });
+        document.getElementById("parent_drop").removeEventListener("change", updateProperties);
+        document.getElementById("parent_drop").removeEventListener("wheel", updateProperties);
+
+        document.getElementById("parent_drop").addEventListener("dragenter", function(e){
+            console.log("dragenter");
+        });
+        document.getElementById("parent_drop").addEventListener("dragover", function(e){
+            console.log("dragover");
+            e.preventDefault();
+            e.dataTransfer.dropEffect = 'link';
+        });
+        document.getElementById("parent_drop").addEventListener("dragleave", function(e){
+            console.log("dragleave");
+        });
+        document.getElementById("parent_drop").addEventListener("drop", function(e){
+            e.stopPropagation();
+            console.log("drop");
+            if(Number(e.dataTransfer.getData("text/html")) == currentObjectId){
+                showNotification("Cannot make the active object the active object's parent", "fa-exclamation-circle");
+            }else{
+                var parentObject = objects[Number(e.dataTransfer.getData("text/html"))];
+                this.innerHTML = "<div id='parent_dropped'>" + parentObject.screenName + "</div>";
+                objects[currentObjectId].parent = parentObject;
+            }
+            return false;
+        });
     };
     var setPropertyValues = function() {
+        if (uiFactory.parent) {
+            scope.updateParentField();
+        }
         if (uiFactory.position) {
             document.getElementById("position_x").value = objects[currentObjectId].position.x;
             document.getElementById("position_y").value = objects[currentObjectId].position.y;
@@ -334,4 +376,8 @@ var UIFactory = function(){
             document.getElementById("object_name").value = objects[currentObjectId].screenName;
         }
     };
+    this.updateParentField = function(){
+        if(objects[currentObjectId].parent)
+            document.getElementById("parent_drop").innerHTML = "<div id='parent_dropped'>"+objects[currentObjectId].parent.screenName+"</div>";
+    }
 };

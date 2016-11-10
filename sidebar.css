@@ -54,12 +54,13 @@ ul{
     margin-top:0;
 }
 #object_name{
-    font-size: 1.5em;
+    font-size: 1.0em;
     font-family: 'PT Sans', sans-serif;
     display: inline-block;
     background-color: transparent;
     border: 2px solid transparent;
     color: #ffffff;
+    width: calc(100% - 2px - 2px - 30px);
 }
 #object_name:hover{
     border: 2px solid #676767;
@@ -67,9 +68,8 @@ ul{
 #object_name:focus{
     border: 2px solid #ffffff;
 }
-#properties_icon{
-    font-size: 1.5em;
-    width: calc(1.2em - 2px);
+.header_icon{
+    width: 30px;
 }
 #properties_header{
     margin-top: 0.83em;
@@ -81,6 +81,51 @@ ul{
     border: 0;
     padding: 3px;
     background-color: #e1e1e1;
+}
+.property_drop{
+    color: #676767;
+    width: calc(100% - 5px - 5px);
+    padding: 5px;
+    height: calc(1em + 15px);
+    text-align: center;
+}
+.property_drop span{
+    margin: 5px;
+    display: block;
+}
+#parent_dropped{
+    color: #ffffff;
+    cursor: default;
+    margin: 0 0 0 0;
+    padding: 5px 5px 5px 5px;
+    border-radius: 3px;
+    background-color: #676767;
+    display: block;
+    text-align: left;
+}
+#parent_actions {
+    position: fixed;
+    left: 330px;    /*width of sidebar + padding*/
+    bottom: 0;
+    display: none;
+    z-index: 2;
+    width: 165px;
+}
+#parent_actions_unlink, #parent_actions_cancel{
+    display: flex;
+    width: 100%;
+    height: 3em;
+    border: 2px solid #7d7d7d;
+    border-radius:3px;
+    background-color: rgba(62, 62, 62, 0.9);
+    text-align: center;
+    align-items: center;
+    margin-bottom: 5px;
+    margin-left: 5px;
+}
+#parent_actions_unlink p, #parent_actions_cancel p{
+    text-align: center;
+    width: 100%;
 }
 input:not([type]).property_input:nth-child(2), input:not([type]).property_input:nth-child(3){
     margin:0 5px 0 0;

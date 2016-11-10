@@ -53,6 +53,14 @@ var cloneO3D = function(object) {   // creates a deep copy of an Ayce.Object3D
     return copy;
 };
 
+var hasChildNodeWithId = function(parent, childId){
+    var childNodes = parent.childNodes;
+    for(var i = 0; i < childNodes.length; i++){
+        if(childNodes[i].id == childId) return true;
+    }
+    return false;
+};
+
 // Enables \t indenting in textareas
 var textareas = document.getElementsByTagName('textarea');
 var count = textareas.length;

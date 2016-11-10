@@ -41,14 +41,16 @@ var objects = [];
 var cameraPreview = new CameraPreview();
 document.getElementById("camera_preview_wrapper").style.display = "none";
 var currentObjectId;
-var activeElement = null;
 
 var i;
 var addObjectButtons = document.getElementsByClassName("add_object");
+var handleClickOnObject = function(e){
+    showProperties(e.srcElement);
+};
 for(i = 0; i < addObjectButtons.length; i++){
     addObjectButtons[i].onclick = function(){
-        if(this.id != "import_obj" && this.id != "import_csv"){
-            objects.push(eval(this.dataset.constructor));
+        if(this.id != "import_obj"){
+            objects.push(eval(this.dataset.objectconstructor));
             if(!eval(this.dataset.centered)) {
                 objects[objects.length - 1].offset.set(
                     -objects[objects.length - 1].a / 2.0,
@@ -75,7 +77,7 @@ for(i = 0; i < addObjectButtons.length; i++){
             cameraPreview.scene.addToScene(cameraPreview.objects[cameraPreview.objects.length-1]);
 
             var child = appendObjectInSceneChildElement(this.dataset.type);
-            child.onclick({srcElement: this});
+            showProperties(child);
         }
     }
 }
@@ -89,49 +91,14 @@ document.getElementById("add_light").onclick = function(){
     scene.addToScene(objects[objects.length-1]);
     cameraPreview.scene.addToScene(cameraPreview.objects[cameraPreview.objects.length-1]);
     var child = appendObjectInSceneChildElement(this.dataset.type);
-    child.onclick({srcElement: this});
+    child.addEventListener("click", handleClickOnObject);
 };
 
 document.getElementById("add_camera").onclick = function(){
     document.getElementById("camera_preview_wrapper").style.display = "block";
     var child = appendObjectInSceneChildElement(this.dataset.type);
-    child.onclick({srcElement: this});
+    child.addEventListener("click", handleClickOnObject);
     cameraPreview.renderPreview = true;
-};
-
-var appendObjectInSceneChildElement = function(type){
-    var child = document.createElement('li');
-    if(type=="camera"){
-        child.innerHTML = cameraPreview.screenName;
-        // TODO: camera deletion
-        //child.dataset.id = type;
-        //child.id = type;
-    }else{
-        child.innerHTML = objects[objects.length-1].screenName+"</div>" +
-            "<a class='delete_object_from_scene' id='delete_"+(objects.length-1)+"' data-id='"+(objects.length-1)+"'>&#215</a>";
-        child.dataset.id = (objects.length-1);          //TODO: eliminate data-id
-        child.id = objects.length-1;
-    }
-    child.dataset.type = type;
-    child.className = "object_in_scene button_dark";
-    child.onclick = showProperties;
-    document.getElementById("objects_in_scene_div").style.display = "block";
-    document.getElementById("objects_in_scene").appendChild(child);
-    if(type!=="camera") {
-        document.getElementById("delete_" + child.id).addEventListener("click", function (e) {
-            e.stopPropagation();
-            deleteObject(child);
-        });
-    }
-    return child;
-};
-
-var deleteObject = function(child){
-    scene.removeFromScene(objects[child.id]);
-    objects[child.id] = null;
-    cameraPreview.scene.removeFromScene(cameraPreview.objects[child.id]);
-    cameraPreview.objects[child.id] = null;
-    document.getElementById("objects_in_scene").removeChild(child);
 };
 
 document.getElementById("import_obj").addEventListener('click', function(){
