@@ -35,7 +35,7 @@ basePlane.textureCoords = [
 basePlane.transparent = true;
 basePlane.colors = null;
 basePlane.imageSrc = "grid.png";
-scene.addToScene(basePlane);
+scene.addToScene(basePlane, false);
 
 var objects = [];
 var cameraPreview = new CameraPreview();
