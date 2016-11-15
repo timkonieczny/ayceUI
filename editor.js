@@ -1,27 +1,9 @@
-/* Code for direct object modification
-var cursor = {
-    x: 0,
-    y: 0,
-    down: false
-};
-
-canvas.addEventListener('mousemove', function(e) {
-    cursor.x = e.offsetX / canvas.width * 2 - 1;
-    cursor.y = ((canvas.height - e.offsetY) / canvas.height * 2 - 1);
-}, false);
-
-canvas.addEventListener("mousedown", function() {
-    cursor.down = true;
-});
-canvas.addEventListener("mouseup", function() {
-    cursor.down = false;
-});
-*/
-
-var scene = new Ayce.Scene(document.getElementById("main_canvas"));
+var mainCanvas = document.getElementById("main_canvas");
+var scene = new Ayce.Scene(mainCanvas);
 var modifier = new Ayce.CameraModifier();
 modifier.position.y = .5;
-scene.getCamera().getManager().modifiers.push(modifier);
+var mainCameraModifier = new MainCameraModifier(mainCanvas);
+scene.getCamera().getManager().modifiers.push(modifier, mainCameraModifier);
 
 var basePlane = (new Ayce.Geometry.Plane(10, 10, 2, 2, false)).getO3D();
 basePlane.position.x = -2.5;
@@ -113,7 +95,7 @@ document.getElementById("export_code").addEventListener('click', function(){
     openModal("code");
 });
 
-document.getElementById("main_canvas").addEventListener("click", function(e){
+mainCanvas.addEventListener("click", function(e){
     var identifier = scene.getPickedIdentifier(e.clientX, e.clientY);
     for(var i = 0; i < objects.length; i++){
         if(objects[i].identifier[0]==identifier[0] &&
