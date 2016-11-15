@@ -352,7 +352,7 @@ var handleCSV = function(e){
         cameraPreview.objects[objects.length-1].script = function(){};
         objects[objects.length-1].runScriptInPreview = false;
         scene.addToScene(objects[objects.length - 1]);
-        cameraPreview.scene.addToScene(cameraPreview.objects[cameraPreview.objects.length-1]);
+        cameraPreview.scene.addToScene(cameraPreview.objects[cameraPreview.objects.length-1], false);
         var child = appendObjectInSceneChildElement("csv");
         showProperties(child);
     }
