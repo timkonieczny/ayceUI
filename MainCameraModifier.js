@@ -1,6 +1,6 @@
 MainCameraModifier = function (canvas) {
 
-    var mouse = {                               // TODO: add alias with keyboard+mouse
+    var mouse = {
         isLeftDown: false,
         isRightDown: false,
         isMiddleDown: false,
@@ -9,7 +9,12 @@ MainCameraModifier = function (canvas) {
         lastPosition: new Ayce.Vector2(0, 0),
         isInitialized: false,
         movement: new Ayce.Vector2(0, 0),
-        wheel: 0
+        wheel: 0,
+        alias: {
+            isLeftDown: false,
+            isMiddleDown: false,
+            isRightDown: false
+        }
     };
 
     var moveSpeed = 0.01;
@@ -64,7 +69,9 @@ MainCameraModifier = function (canvas) {
     });
 
     canvas.addEventListener("mousemove", function (e) {
-        if(mouse.isLeftDown||mouse.isMiddleDown||mouse.isRightDown){
+        mouse.alias.isMiddleDown = Ayce.KeyboardHandler.isKeyDown("ctrl");
+        mouse.alias.isRightDown = Ayce.KeyboardHandler.isKeyDown("shift");
+        if(mouse.isMiddleDown||mouse.isRightDown||mouse.alias.isMiddleDown||mouse.alias.isRightDown){
             mouse.position.x = e.x;
             mouse.position.y = e.y;
         }
@@ -76,11 +83,11 @@ MainCameraModifier = function (canvas) {
     });
 
     this.update = function(orientation){
-        if(mouse.isLeftDown||mouse.isRightDown||mouse.isMiddleDown){
+        if(mouse.isMiddleDown||mouse.isRightDown||mouse.alias.isMiddleDown||mouse.alias.isRightDown){
             if(mouse.isInitialized){
                 mouse.movement.x = (-mouse.position.x + mouse.lastPosition.x);
                 mouse.movement.y = (mouse.position.y - mouse.lastPosition.y);
-                if(mouse.isLeftDown) {
+                if(mouse.isMiddleDown||mouse.alias.isMiddleDown) {
                     rotatedTranslation.x = mouse.movement.x;
                     rotatedTranslation.y = mouse.movement.y;
                     rotatedTranslation.z = 0;
@@ -90,7 +97,7 @@ MainCameraModifier = function (canvas) {
                         rotatedTranslation.y * moveSpeed,
                         rotatedTranslation.z * moveSpeed
                     );
-                }else if(mouse.isRightDown){
+                }else if(mouse.isRightDown||mouse.alias.isRightDown){
                     rotX += mouse.movement.x;       // mouse movement in x direction
                     rotY += -mouse.movement.y;      // mouse movement in y direction
                     //Cap rotation around x axis
