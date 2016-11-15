@@ -141,7 +141,7 @@ var createGeometry = function(obj, mtl){
         objects[objects.length - 1].screenName = "imported object";
 
         scene.addToScene(objects[objects.length - 1]);
-        cameraPreview.scene.addToScene(cameraPreview.objects[cameraPreview.objects.length - 1]);
+        cameraPreview.scene.addToScene(cameraPreview.objects[cameraPreview.objects.length - 1], false);
         console.log("done");
 
         var child = appendObjectInSceneChildElement("obj");
