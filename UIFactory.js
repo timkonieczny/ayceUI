@@ -129,7 +129,7 @@ var UIFactory = function(){
             objects[currentObjectId].transparent = cameraPreview.objects[currentObjectId].transparent = true;
         }
         scene.addToScene(objects[currentObjectId]);
-        cameraPreview.scene.addToScene(cameraPreview.objects[currentObjectId]);
+        cameraPreview.scene.addToScene(cameraPreview.objects[currentObjectId], false);
     };
 
     var setPropertyEventListeners = function() {
@@ -174,7 +174,7 @@ var UIFactory = function(){
                         objects[currentObjectId].useFragmentLighting =
                             cameraPreview.objects[currentObjectId].useFragmentLighting = e.target.checked;
                         scene.addToScene(objects[currentObjectId]);
-                        cameraPreview.scene.addToScene(cameraPreview.objects[currentObjectId]);
+                        cameraPreview.scene.addToScene(cameraPreview.objects[currentObjectId], false);
                     }
                     break;
                 case "use_specular_lighting":
@@ -300,7 +300,7 @@ var UIFactory = function(){
             document.getElementById("parent_drop").removeEventListener("change", updateProperties);
             document.getElementById("parent_drop").removeEventListener("wheel", updateProperties);
 
-            document.getElementById("parent_drop").addEventListener("dragenter", function (e) {
+            document.getElementById("parent_drop").addEventListener("dragenter", function () {
                 console.log("dragenter");
             });
             document.getElementById("parent_drop").addEventListener("dragover", function (e) {
@@ -308,7 +308,7 @@ var UIFactory = function(){
                 e.preventDefault();
                 e.dataTransfer.dropEffect = 'link';
             });
-            document.getElementById("parent_drop").addEventListener("dragleave", function (e) {
+            document.getElementById("parent_drop").addEventListener("dragleave", function () {
                 console.log("dragleave");
             });
             document.getElementById("parent_drop").addEventListener("drop", function (e) {

@@ -35,7 +35,7 @@ basePlane.textureCoords = [
 basePlane.transparent = true;
 basePlane.colors = null;
 basePlane.imageSrc = "grid.png";
-scene.addToScene(basePlane);
+scene.addToScene(basePlane, false);
 
 var objects = [];
 var cameraPreview = new CameraPreview();
@@ -74,7 +74,7 @@ for(i = 0; i < addObjectButtons.length; i++){
             objects[objects.length-1].runScriptInPreview = false;
 
             scene.addToScene(objects[objects.length-1]);
-            cameraPreview.scene.addToScene(cameraPreview.objects[cameraPreview.objects.length-1]);
+            cameraPreview.scene.addToScene(cameraPreview.objects[cameraPreview.objects.length-1], false);
 
             var child = appendObjectInSceneChildElement(this.dataset.type);
             showProperties(child);
@@ -89,7 +89,7 @@ document.getElementById("add_light").onclick = function(){
     objects[objects.length-1].script = function(){};
     cameraPreview.objects[objects.length-1].script = function(){};
     scene.addToScene(objects[objects.length-1]);
-    cameraPreview.scene.addToScene(cameraPreview.objects[cameraPreview.objects.length-1]);
+    cameraPreview.scene.addToScene(cameraPreview.objects[cameraPreview.objects.length-1], false);
     var child = appendObjectInSceneChildElement(this.dataset.type);
     child.addEventListener("click", handleClickOnObject);
 };
@@ -111,4 +111,16 @@ document.getElementById("import_csv").addEventListener('click', function(){
 
 document.getElementById("export_code").addEventListener('click', function(){
     openModal("code");
+});
+
+document.getElementById("main_canvas").addEventListener("click", function(e){
+    var identifier = scene.getPickedIdentifier(e.clientX, e.clientY);
+    for(var i = 0; i < objects.length; i++){
+        if(objects[i].identifier[0]==identifier[0] &&
+            objects[i].identifier[1]==identifier[1] &&
+            objects[i].identifier[2]==identifier[2] &&
+            objects[i].identifier[3]==identifier[3]){
+            handleClickOnObject({srcElement: document.getElementById(i.toString())});
+        }
+    }
 });
