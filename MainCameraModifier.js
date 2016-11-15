@@ -1,13 +1,15 @@
 MainCameraModifier = function (canvas) {
 
-    var mouse = {
+    var mouse = {                               // TODO: add alias with keyboard+mouse
         isLeftDown: false,
         isRightDown: false,
         isMiddleDown: false,
+        isWheelMoved: false,
         position: new Ayce.Vector2(0, 0),
         lastPosition: new Ayce.Vector2(0, 0),
         isInitialized: false,
-        movement: new Ayce.Vector2(0, 0)
+        movement: new Ayce.Vector2(0, 0),
+        wheel: 0
     };
 
     var moveSpeed = 0.01;
@@ -68,6 +70,11 @@ MainCameraModifier = function (canvas) {
         }
     });
 
+    canvas.addEventListener("wheel", function (e){
+        mouse.wheel = e.deltaY;
+        mouse.isWheelMoved = true;
+    });
+
     this.update = function(orientation){
         if(mouse.isLeftDown||mouse.isRightDown||mouse.isMiddleDown){
             if(mouse.isInitialized){
@@ -107,6 +114,18 @@ MainCameraModifier = function (canvas) {
             }
             mouse.lastPosition.x = mouse.position.x;
             mouse.lastPosition.y = mouse.position.y;
+        }
+        if(mouse.isWheelMoved){
+            rotatedTranslation.x = 0;
+            rotatedTranslation.y = 0;
+            rotatedTranslation.z = mouse.wheel;
+            rotatedTranslation = orientation.getRotatedPoint(rotatedTranslation);
+            position.add(
+                rotatedTranslation.x * moveSpeed,
+                rotatedTranslation.y * moveSpeed,
+                rotatedTranslation.z * moveSpeed
+            );
+            mouse.isWheelMoved = false;
         }
     };
 
