@@ -41,21 +41,56 @@ var closeModal = function(){
 };
 
 var buildCodeString = function(){
+    var referenceObject = new Ayce.Object3D();
     var output = 'var scene = new Ayce.Scene(document.getElementById("ayce_canvas"));\n' +
-        "var objects = [\n";
+        "var objects = [];\n";
     for(var i=0; i<objects.length; i++){
-        var objectString = JSON.stringify(objects[i], null, "\t")+",";
-        objectString = formatJSONProperty(objectString, "vertices");
-        objectString = formatJSONProperty(objectString, "colors");
-        objectString = formatJSONProperty(objectString, "normals");
-        objectString = formatJSONProperty(objectString, "indices");
-        objectString = formatJSONProperty(objectString, "textureCoords");
-        objectString = formatJSONProperty(objectString, "textureIndices");
-        objectString = objectString.replace(/(\n)/g, "\n\t");
-        output += "\t"+objectString+"\n";
+        output += "objects.push(new Ayce.Object3D);\n";
+        for (var property in objects[i]) {
+            if(objects[i].hasOwnProperty(property) && typeof objects[i][property] != "function" && objects[i][property]!=referenceObject[property]) {
+                switch (typeof objects[i][property]) {
+                    case "string":
+                        output += "objects[objects.length-1]." + property + " = \"" + objects[i][property] + "\";\n";
+                        break;
+                    case "boolean":
+                        output += "objects[objects.length-1]." + property + " = " + objects[i][property] + ";\n";
+                        break;
+                    case "object":
+                        if (Array.isArray(objects[i][property])) {
+                            output += "objects[objects.length-1]." + property + " = [";
+                            for (var element in objects[i][property]) {
+                                output += element + ", ";
+                            }
+                            output = output.replace(/[, ]+$/, "");  // remove trailing ", "
+                            output += "];\n";
+                        } else if (objects[i][property] == null) {
+                            output += "objects[objects.length-1]." + property + " = " + objects[i][property] + ";\n";
+                        } else {
+                            if (property == "parentPositionWeight" || property == "parentRotationWeight" ||
+                            property == "position" ||   // properties of type Ayce.Vector3
+                            property == "scale" ||
+                            property == "velocity") {
+                                if(objects[i][property].x != referenceObject[property].x ||     // property is different from default property
+                                    objects[i][property].y != referenceObject[property].y ||
+                                    objects[i][property].z != referenceObject[property].z) {
+                                    output += "objects[objects.length-1]." + property + " = new Ayce.Vector3(" + objects[i][property].x + ", " + objects[i][property].y + ", " + objects[i][property].z + ");\n";
+                                }
+                            } else if (property == "rotation") {    // properties of type Ayce.Quaternion
+                                if(objects[i][property].x != referenceObject[property].x ||     // property is different from default property
+                                    objects[i][property].y != referenceObject[property].y ||
+                                    objects[i][property].z != referenceObject[property].z ||
+                                    objects[i][property].w != referenceObject[property].w) {
+                                    output += "objects[objects.length-1]." + property + " = new Ayce.Quaternion(" + objects[i][property].x + ", " + objects[i][property].y + ", " + objects[i][property].z + ", " + objects[i][property].w + ");\n";
+                                }
+                            }
+                        }
+                        break;
+                }
+            }
+        }
     }
-    output += "\n];\n" +
-        "for(var i = 0; i < objects.length; i++){\n" +
+    // TODO: set parent, collideWith here because now all objects are added to objects array
+    output += "for(var i = 0; i < objects.length; i++){\n" +
         "\tscene.addToScene(objects[i]);\n" +
         "};\n" +
         "var update = function(){\n" +
@@ -65,16 +100,6 @@ var buildCodeString = function(){
         "};\n" +
         "update();";
     return output;
-};
-
-var formatJSONProperty = function(JSONString, propertyName){
-    // /("propertyName": \[[^\]]*)/
-    var substrings = JSONString.match(new RegExp('("'+propertyName+'": \\[[^\\]]*)'));
-    if(substrings){
-        return JSONString.replace(substrings[0], substrings[0].replace(/(\t)+/g, " ").replace(/\n/g, ""));  // replace \t and \n and reinsert substring
-    }else{
-        return JSONString;
-    }
 };
 
 document.getElementById("obj_drop").addEventListener("dragover", function(e){
