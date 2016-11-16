@@ -40,31 +40,31 @@ var closeModal = function(){
     mtlString = null;
 };
 
-var buildCodeString = function(){
+var buildCodeString = function(){               // TODO: lights are in objects array too. Additional / redundant properties?
     var referenceObject = new Ayce.Object3D();
     var output = 'var scene = new Ayce.Scene(document.getElementById("ayce_canvas"));\n' +
         "var objects = [];\n";
     for(var i=0; i<objects.length; i++){
-        output += "objects.push(new Ayce.Object3D);\n";
+        output += "objects["+i+"] = new Ayce.Object3D();\n";
         for (var property in objects[i]) {
             if(objects[i].hasOwnProperty(property) && typeof objects[i][property] != "function" && objects[i][property]!=referenceObject[property]) {
                 switch (typeof objects[i][property]) {
                     case "string":
-                        output += "objects[objects.length-1]." + property + " = \"" + objects[i][property] + "\";\n";
+                        output += "objects["+i+"]." + property + " = \"" + objects[i][property] + "\";\n";
                         break;
                     case "boolean":
-                        output += "objects[objects.length-1]." + property + " = " + objects[i][property] + ";\n";
+                        output += "objects["+i+"]." + property + " = " + objects[i][property] + ";\n";
                         break;
                     case "object":
-                        if (Array.isArray(objects[i][property])) {
-                            output += "objects[objects.length-1]." + property + " = [";
+                        if (Array.isArray(objects[i][property])&&property != "collideWith") {   // collideWith is handled after this loop
+                            output += "objects["+i+"]." + property + " = [";
                             for (var element in objects[i][property]) {
                                 output += element + ", ";
                             }
                             output = output.replace(/[, ]+$/, "");  // remove trailing ", "
                             output += "];\n";
                         } else if (objects[i][property] == null) {
-                            output += "objects[objects.length-1]." + property + " = " + objects[i][property] + ";\n";
+                            output += "objects["+i+"]." + property + " = " + objects[i][property] + ";\n";
                         } else {
                             if (property == "parentPositionWeight" || property == "parentRotationWeight" ||
                             property == "position" ||   // properties of type Ayce.Vector3
@@ -73,14 +73,21 @@ var buildCodeString = function(){
                                 if(objects[i][property].x != referenceObject[property].x ||     // property is different from default property
                                     objects[i][property].y != referenceObject[property].y ||
                                     objects[i][property].z != referenceObject[property].z) {
-                                    output += "objects[objects.length-1]." + property + " = new Ayce.Vector3(" + objects[i][property].x + ", " + objects[i][property].y + ", " + objects[i][property].z + ");\n";
+                                    output += "objects["+i+"]." + property + " = new Ayce.Vector3(" +
+                                        objects[i][property].x + ", " +
+                                        objects[i][property].y + ", " +
+                                        objects[i][property].z + ");\n";
                                 }
                             } else if (property == "rotation") {    // properties of type Ayce.Quaternion
                                 if(objects[i][property].x != referenceObject[property].x ||     // property is different from default property
                                     objects[i][property].y != referenceObject[property].y ||
                                     objects[i][property].z != referenceObject[property].z ||
                                     objects[i][property].w != referenceObject[property].w) {
-                                    output += "objects[objects.length-1]." + property + " = new Ayce.Quaternion(" + objects[i][property].x + ", " + objects[i][property].y + ", " + objects[i][property].z + ", " + objects[i][property].w + ");\n";
+                                    output += "objects["+i+"]." + property + " = new Ayce.Quaternion(" +
+                                        objects[i][property].x + ", " +
+                                        objects[i][property].y + ", " +
+                                        objects[i][property].z + ", " +
+                                        objects[i][property].w + ");\n";
                                 }
                             }
                         }
@@ -89,7 +96,19 @@ var buildCodeString = function(){
             }
         }
     }
-    // TODO: set parent, collideWith here because now all objects are added to objects array
+    for(i = 0; i < objects.length; i++){
+        if(objects[i].parent!=null){
+            output += "objects["+i+"].parent = objects[" + objects[i].parent.id + "];\n";
+        }
+        if(objects[i].collideWith!=null){
+            output += "objects["+i+"].collideWith = [";
+            for(var j = 0; j < objects[i].collideWith.length; j++){
+                output += "objects["+objects[i].collideWith[j].id+"], "
+            }
+            output = output.replace(/[, ]+$/, "");  // remove trailing ", "
+            output += "];\n";
+        }
+    }
     output += "for(var i = 0; i < objects.length; i++){\n" +
         "\tscene.addToScene(objects[i]);\n" +
         "};\n" +

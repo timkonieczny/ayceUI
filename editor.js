@@ -54,6 +54,7 @@ for(i = 0; i < addObjectButtons.length; i++){
             objects[objects.length-1].script = function(){};
             cameraPreview.objects[objects.length-1].script = function(){};
             objects[objects.length-1].runScriptInPreview = false;
+            objects[objects.length-1].id = objects.length-1;
 
             scene.addToScene(objects[objects.length-1]);
             cameraPreview.scene.addToScene(cameraPreview.objects[cameraPreview.objects.length-1], false);
@@ -69,6 +70,8 @@ document.getElementById("add_light").onclick = function(){
     cameraPreview.objects.push(new Ayce.Light());
     objects[objects.length-1].screenName = this.dataset.type;
     objects[objects.length-1].script = function(){};
+    objects[objects.length-1].runScriptInPreview = false;
+    objects[objects.length-1].id = objects.length-1;
     cameraPreview.objects[objects.length-1].script = function(){};
     scene.addToScene(objects[objects.length-1]);
     cameraPreview.scene.addToScene(cameraPreview.objects[cameraPreview.objects.length-1], false);
