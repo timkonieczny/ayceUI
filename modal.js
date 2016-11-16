@@ -40,14 +40,20 @@ var closeModal = function(){
     mtlString = null;
 };
 
-var buildCodeString = function(){               // TODO: lights are in objects array too. Additional / redundant properties?
+var buildCodeString = function(){
     var referenceObject = new Ayce.Object3D();
+    var referenceLight = new Ayce.Light();
     var output = 'var scene = new Ayce.Scene(document.getElementById("ayce_canvas"));\n' +
         "var objects = [];\n";
     for(var i=0; i<objects.length; i++){
-        output += "objects["+i+"] = new Ayce.Object3D();\n";
+        var isLight = objects[i] instanceof Ayce.Light;
+        if(isLight){
+            output += "objects["+i+"] = new Ayce.Light();\n";
+        }else{
+            output += "objects["+i+"] = new Ayce.Object3D();\n";
+        }
         for (var property in objects[i]) {
-            if(objects[i].hasOwnProperty(property) && typeof objects[i][property] != "function" && objects[i][property]!=referenceObject[property]) {
+            if(objects[i].hasOwnProperty(property) && typeof objects[i][property] != "function" && ((!isLight &&objects[i][property]!=referenceObject[property])||(isLight &&objects[i][property]!=referenceLight[property]))) {
                 switch (typeof objects[i][property]) {
                     case "string":
                         output += "objects["+i+"]." + property + " = \"" + objects[i][property] + "\";\n";
@@ -89,6 +95,11 @@ var buildCodeString = function(){               // TODO: lights are in objects a
                                         objects[i][property].z + ", " +
                                         objects[i][property].w + ");\n";
                                 }
+                            } else if (property == "color" || property == "specularColor"){
+                                output += "objects["+i+"]." + property + " = {\n" +
+                                    "\tred: "+objects[i][property].red + ",\n" +
+                                    "\tgreen: "+objects[i][property].green + ",\n" +
+                                    "\tblue: "+objects[i][property].blue + "\n};\n";
                             }
                         }
                         break;
