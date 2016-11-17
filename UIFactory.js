@@ -129,7 +129,6 @@ var UIFactory = function(){
             objects[currentObjectId].transparent = cameraPreview.objects[currentObjectId].transparent = true;
         }
         scene.addToScene(objects[currentObjectId]);
-        console.log(objects[currentObjectId].identifier);
         cameraPreview.scene.addToScene(cameraPreview.objects[currentObjectId], false);
     };
 
@@ -267,9 +266,10 @@ var UIFactory = function(){
 
         var propertyInputs = document.getElementsByClassName("property_input");
         for (var i = 0; i < propertyInputs.length; i++) {
-            propertyInputs[i].addEventListener("wheel", function (e) {
-                updateProperties(e)
-            });
+            if(propertyInputs[i].type!="checkbox")
+                propertyInputs[i].addEventListener("wheel", function (e) {
+                    updateProperties(e)
+                });
             propertyInputs[i].addEventListener("change", function (e) {
                 updateProperties(e)
             });
