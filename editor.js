@@ -59,8 +59,8 @@ for(i = 0; i < addObjectButtons.length; i++){
             scene.addToScene(objects[objects.length-1]);
             cameraPreview.scene.addToScene(cameraPreview.objects[cameraPreview.objects.length-1], false);
 
-            var child = appendObjectInSceneChildElement(this.dataset.type);
-            showProperties(child);
+            var childNode = appendObjectInSceneChildNode(this.dataset.type);
+            showProperties(childNode);
         }
     }
 }
@@ -75,15 +75,26 @@ document.getElementById("add_light").onclick = function(){
     cameraPreview.objects[objects.length-1].script = function(){};
     scene.addToScene(objects[objects.length-1]);
     cameraPreview.scene.addToScene(cameraPreview.objects[cameraPreview.objects.length-1], false);
-    var child = appendObjectInSceneChildElement(this.dataset.type);
-    child.addEventListener("click", handleClickOnObject);
+    var childNode = appendObjectInSceneChildNode(this.dataset.type);
+    childNode.addEventListener("click", handleClickOnObject);
+    showProperties(childNode);
 };
 
 document.getElementById("add_camera").onclick = function(){
     document.getElementById("camera_preview_wrapper").style.display = "block";
-    var child = appendObjectInSceneChildElement(this.dataset.type);
-    child.addEventListener("click", handleClickOnObject);
+    var childNode = appendObjectInSceneChildNode(this.dataset.type);
+    childNode.addEventListener("click", handleClickOnObject);
     cameraPreview.renderPreview = true;
+    var cameraPosition = scene.getCamera().getManager().getGlobalPosition();
+    var cameraRotation = scene.getCamera().getManager().getGlobalRotation();
+    console.log(cameraRotation);
+    cameraPreview.modifier.position.x = cameraPosition.x;
+    cameraPreview.modifier.position.y = cameraPosition.y;
+    cameraPreview.modifier.position.z = cameraPosition.z;
+    cameraPreview.modifier.orientation.x = cameraRotation.x;
+    cameraPreview.modifier.orientation.y = cameraRotation.y;
+    cameraPreview.modifier.orientation.z = cameraRotation.z;
+    cameraPreview.modifier.orientation.w = cameraRotation.w;
 };
 
 document.getElementById("import_obj").addEventListener('click', function(){

@@ -121,7 +121,7 @@ document.getElementById("parent_actions_cancel").addEventListener("dragover", fu
 });
 document.getElementById("parent_actions_cancel").addEventListener("drop", function(e){});   // do nothing on cancel
 
-var appendObjectInSceneChildElement = function(type){
+var appendObjectInSceneChildNode = function(type){
     var child = document.createElement('li');
     if(type=="camera"){
         child.innerHTML = cameraPreview.screenName;

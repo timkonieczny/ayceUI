@@ -199,7 +199,7 @@ var createGeometry = function(obj, mtl){
         cameraPreview.scene.addToScene(cameraPreview.objects[cameraPreview.objects.length - 1], false);
         console.log("done");
 
-        var child = appendObjectInSceneChildElement("obj");
+        var child = appendObjectInSceneChildNode("obj");
         closeModal();
         child.onclick({srcElement: {dataset: {type: "obj"}}});
     }else{

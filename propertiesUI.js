@@ -1,16 +1,16 @@
 var uiFactory = new UIFactory();
 var activeElement = null;
 
-var showProperties = function(e) {
+var showProperties = function(node) {
     document.getElementById("sidebar_right").style.display = "block";
-    addClass(e, "button_dark_active");
-    currentObjectId = e.dataset.id;
+    addClass(node, "button_dark_active");
+    currentObjectId = node.dataset.id;
     uiFactory.resetAttributes();
-    if (e.dataset.type == "plane"||
-        e.dataset.type == "cube"||
-        e.dataset.type == "sphere"||
-        e.dataset.type == "icosahedron"||
-        e.dataset.type == "obj"){
+    if (node.dataset.type == "plane"||
+        node.dataset.type == "cube"||
+        node.dataset.type == "sphere"||
+        node.dataset.type == "icosahedron"||
+        node.dataset.type == "obj"){
         uiFactory.parent = true;
         uiFactory.position = true;
         uiFactory.rotation = true;
@@ -20,26 +20,26 @@ var showProperties = function(e) {
         uiFactory.lighting = true;
         uiFactory.visibility = true;
         uiFactory.editScript = true;
-    }else if(e.dataset.type == "light"){
+    }else if(node.dataset.type == "light"){
         uiFactory.position = true;
         uiFactory.lightColor = true;
         uiFactory.lightSpecularColor = true;
         uiFactory.editScript = true;
-    }else if(e.dataset.type == "camera"){
+    }else if(node.dataset.type == "camera"){
         uiFactory.camera = true;
         //uiFactory.parent = true;
         // TODO: add editScript
     }
     uiFactory.inflatePropertiesUI(document.getElementById("properties_list"));
 
-    e.removeEventListener("click", handleClickOnObject);
-    e.addEventListener("click", hideProperties, false);
-    if(activeElement!=null && activeElement != e){
+    node.removeEventListener("click", handleClickOnObject);
+    node.addEventListener("click", hideProperties, false);
+    if(activeElement!=null && activeElement != node){
         activeElement.removeEventListener("click", hideProperties);
         activeElement.addEventListener("click", handleClickOnObject);
         removeClass(activeElement, "button_dark_active");
     }
-    activeElement = e;
+    activeElement = node;
 };
 
 var hideProperties = function(){
