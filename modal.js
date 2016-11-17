@@ -114,8 +114,8 @@ var buildCodeString = function(){
                     case "object":
                         if (Array.isArray(objects[i][property])&&property != "collideWith") {   // collideWith is handled after this loop
                             output += "\t\t\tobjects["+i+"]." + property + " = [";
-                            for (var element in objects[i][property]) {
-                                output += element + ", ";
+                            for (j = 0; j < objects[i][property].length; j++) {
+                                output += objects[i][property][j] + ", ";
                             }
                             output = output.replace(/[, ]+$/, "");  // remove trailing ", "
                             output += "];\n";

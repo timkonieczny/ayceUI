@@ -129,6 +129,7 @@ var UIFactory = function(){
             objects[currentObjectId].transparent = cameraPreview.objects[currentObjectId].transparent = true;
         }
         scene.addToScene(objects[currentObjectId]);
+        console.log(objects[currentObjectId].identifier);
         cameraPreview.scene.addToScene(cameraPreview.objects[currentObjectId], false);
     };
 

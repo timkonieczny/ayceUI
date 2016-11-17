@@ -118,6 +118,7 @@ mainCanvas.addEventListener("click", function(e){
             objects[i].identifier[1]==identifier[1] &&
             objects[i].identifier[2]==identifier[2] &&
             objects[i].identifier[3]==identifier[3]){
+            console.log(objects[i]);
             handleClickOnObject({srcElement: document.getElementById(i.toString())});
         }
     }
