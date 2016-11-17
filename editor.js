@@ -21,6 +21,7 @@ scene.addToScene(basePlane, false);
 
 var objects = [];
 var cameraPreview = new CameraPreview();
+//cameraPreview.scene.getCamera().getManager().modifiers.push(mainCameraModifier);
 document.getElementById("camera_preview_wrapper").style.display = "none";
 var currentObjectId;
 
@@ -80,14 +81,11 @@ document.getElementById("add_light").onclick = function(){
     showProperties(childNode);
 };
 
-document.getElementById("add_camera").onclick = function(){
+document.getElementById("add_camera").onclick = function(){ // TODO: only allow one camera
     document.getElementById("camera_preview_wrapper").style.display = "block";
-    var childNode = appendObjectInSceneChildNode(this.dataset.type);
-    childNode.addEventListener("click", handleClickOnObject);
     cameraPreview.renderPreview = true;
     var cameraPosition = scene.getCamera().getManager().getGlobalPosition();
     var cameraRotation = scene.getCamera().getManager().getGlobalRotation();
-    console.log(cameraRotation);
     cameraPreview.modifier.position.x = cameraPosition.x;
     cameraPreview.modifier.position.y = cameraPosition.y;
     cameraPreview.modifier.position.z = cameraPosition.z;
@@ -95,6 +93,9 @@ document.getElementById("add_camera").onclick = function(){
     cameraPreview.modifier.orientation.y = cameraRotation.y;
     cameraPreview.modifier.orientation.z = cameraRotation.z;
     cameraPreview.modifier.orientation.w = cameraRotation.w;
+    var childNode = appendObjectInSceneChildNode(this.dataset.type);
+    childNode.addEventListener("click", handleClickOnObject);
+    showProperties(childNode);
 };
 
 document.getElementById("import_obj").addEventListener('click', function(){
