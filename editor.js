@@ -50,12 +50,14 @@ for(i = 0; i < addObjectButtons.length; i++){
             objects[objects.length-1].position.z = -2;
             cameraPreview.objects[cameraPreview.objects.length-1].position.z = -2;
 
-            objects[objects.length-1].screenName = this.dataset.type;
-
             objects[objects.length-1].script = function(){};
             cameraPreview.objects[objects.length-1].script = function(){};
-            objects[objects.length-1].runScriptInPreview = false;
-            objects[objects.length-1].id = objects.length-1;
+            var screenName = this.dataset.type;
+            objects[objects.length-1].ayceUI = {
+                id: objects.length-1,
+                screenName: screenName,
+                runScriptInPreview: false
+            };
 
             scene.addToScene(objects[objects.length-1]);
             cameraPreview.scene.addToScene(cameraPreview.objects[cameraPreview.objects.length-1], false);
@@ -69,10 +71,13 @@ for(i = 0; i < addObjectButtons.length; i++){
 document.getElementById("add_light").onclick = function(){
     objects.push(new Ayce.Light());
     cameraPreview.objects.push(new Ayce.Light());
-    objects[objects.length-1].screenName = this.dataset.type;
     objects[objects.length-1].script = function(){};
-    objects[objects.length-1].runScriptInPreview = false;
-    objects[objects.length-1].id = objects.length-1;
+    var screenName = this.dataset.type;
+    objects[objects.length-1].ayceUI = {
+        id: objects.length-1,
+        screenName: screenName,
+        runScriptInPreview: false
+    };
     cameraPreview.objects[objects.length-1].script = function(){};
     scene.addToScene(objects[objects.length-1]);
     cameraPreview.scene.addToScene(cameraPreview.objects[cameraPreview.objects.length-1], false);

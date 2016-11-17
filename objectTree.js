@@ -124,12 +124,12 @@ document.getElementById("parent_actions_cancel").addEventListener("drop", functi
 var appendObjectInSceneChildNode = function(type){
     var child = document.createElement('li');
     if(type=="camera"){
-        child.innerHTML = cameraPreview.screenName;
+        child.innerHTML = cameraPreview.ayceUI.screenName;
         // TODO: camera deletion
         //child.dataset.id = type;
         //child.id = type;
     }else{
-        child.innerHTML = objects[objects.length-1].screenName+"</div>" +
+        child.innerHTML = objects[objects.length-1].ayceUI.screenName+"</div>" +
             "<a class='delete_object_from_scene' id='delete_"+(objects.length-1)+"' data-id='"+(objects.length-1)+"'>&#215</a>";
         child.dataset.id = (objects.length-1);          //TODO: eliminate data-id
         child.id = objects.length-1;

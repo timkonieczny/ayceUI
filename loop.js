@@ -1,5 +1,5 @@
 function update() {
-    for(var i=0; i < objects.length; i++) if(objects[i] && objects[i].runScriptInPreview) objects[i].script();
+    for(var i=0; i < objects.length; i++) if(objects[i] && objects[i].ayceUI.runScriptInPreview) objects[i].script();
 
     Ayce.requestAnimFrame(update);
     scene.updateScene();

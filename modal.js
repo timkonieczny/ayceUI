@@ -150,6 +150,11 @@ var buildCodeString = function(){
                                     "\t\t\t\tred: "+objects[i][property].red + ",\n" +
                                     "\t\t\t\tgreen: "+objects[i][property].green + ",\n" +
                                     "\t\t\t\tblue: "+objects[i][property].blue + "\n\t\t\t};\n";
+                            } else if(property == "ayceUI"){
+                                output += "\t\t\tobjects["+i+"]." + property + " = {\n" +
+                                    "\t\t\t\tid: "+objects[i][property].id + ",\n" +
+                                    "\t\t\t\tscreenName: \""+objects[i][property].screenName + "\",\n" +
+                                    "\t\t\t\trunScriptInPreview: "+objects[i][property].runScriptInPreview+ "\n\t\t\t};\n";
                             }
                         }
                         break;
@@ -159,12 +164,12 @@ var buildCodeString = function(){
     }
     for(i = 0; i < objects.length; i++){
         if(objects[i].parent!=null){
-            output += "\t\t\tobjects["+i+"].parent = objects[" + objects[i].parent.id + "];\n";
+            output += "\t\t\tobjects["+i+"].parent = objects[" + objects[i].parent.ayceUI.id + "];\n";
         }
         if(objects[i].collideWith!=null){
             output += "\t\t\tobjects["+i+"].collideWith = [";
             for(var j = 0; j < objects[i].collideWith.length; j++){
-                output += "\t\t\tobjects["+objects[i].collideWith[j].id+"], "
+                output += "\t\t\tobjects["+objects[i].collideWith[j].ayceUI.id+"], "
             }
             output = output.replace(/[, ]+$/, "");  // remove trailing ", "
             output += "\t\t\t];\n";
@@ -257,7 +262,12 @@ var createGeometry = function(obj, mtl){
         objects[objects.length - 1].position.z = -2;
         cameraPreview.objects[cameraPreview.objects.length - 1].position.z = -2;
 
-        objects[objects.length - 1].screenName = "imported object";
+        var screenName = this.dataset.type;
+        objects[objects.length-1].ayceUI = {
+            id: objects.length-1,
+            screenName: "imported object",
+            runScriptInPreview: false
+        };
 
         scene.addToScene(objects[objects.length - 1]);
         cameraPreview.scene.addToScene(cameraPreview.objects[cameraPreview.objects.length - 1], false);
