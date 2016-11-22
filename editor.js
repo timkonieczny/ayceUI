@@ -21,6 +21,7 @@ scene.addToScene(basePlane, false);
 
 var objects = [];
 var cameraPreview = new CameraPreview();
+//cameraPreview.scene.setRenderer(new StereoProjectorRenderer(cameraPreview.canvas));
 document.getElementById("camera_preview_wrapper").style.display = "none";
 var currentObjectId;
 

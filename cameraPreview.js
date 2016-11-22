@@ -1,6 +1,6 @@
 var CameraPreview = function() {
-
-    this.scene = new Ayce.Scene(document.getElementById("camera_preview"));
+    this.canvas = document.getElementById("camera_preview");
+    this.scene = new Ayce.Scene(this.canvas);
     this.modifier = new Ayce.CameraModifier();
     this.objects = [];
     this.modifier.position.y = .5;
