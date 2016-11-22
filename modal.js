@@ -1,3 +1,5 @@
+var codeBuilder = new CodeBuilder();
+
 var openModal = function(type, currentObjectId){
     if(type == "obj"){
         document.getElementById("modal").style.display = "block";
@@ -7,7 +9,7 @@ var openModal = function(type, currentObjectId){
     }else if(type == "code"){
         document.getElementById("modal").style.display = "block";
         document.getElementById("export_code_textarea").style.display = "block";
-        document.getElementById("export_code_textarea").value = buildCodeString();
+        document.getElementById("export_code_textarea").value = codeBuilder.getCode();
     }else if(type == "script"){
         var resetScript = function(){
             document.getElementById("edit_script_textarea").value = objects[currentObjectId].script;
@@ -43,43 +45,6 @@ var closeModal = function(){
     document.getElementById("csv_drop_loading").style.display = "none";
     objString = null;
     mtlString = null;
-};
-
-var buildCodeString = function(){
-    var output = 'var scene = new Ayce.Scene(document.getElementById("ayce_canvas"));\n' +
-        "var objects = [\n";
-    for(var i=0; i<objects.length; i++){
-        var objectString = JSON.stringify(objects[i], null, "\t")+",";
-        objectString = formatJSONProperty(objectString, "vertices");
-        objectString = formatJSONProperty(objectString, "colors");
-        objectString = formatJSONProperty(objectString, "normals");
-        objectString = formatJSONProperty(objectString, "indices");
-        objectString = formatJSONProperty(objectString, "textureCoords");
-        objectString = formatJSONProperty(objectString, "textureIndices");
-        objectString = objectString.replace(/(\n)/g, "\n\t");
-        output += "\t"+objectString+"\n";
-    }
-    output += "\n];\n" +
-        "for(var i = 0; i < objects.length; i++){\n" +
-        "\tscene.addToScene(objects[i]);\n" +
-        "};\n" +
-        "var update = function(){\n" +
-        "\tAyce.requestAnimFrame(update);\n" +
-        "\tscene.updateScene();\n" +
-        "\tscene.drawScene();\n" +
-        "};\n" +
-        "update();";
-    return output;
-};
-
-var formatJSONProperty = function(JSONString, propertyName){
-    // /("propertyName": \[[^\]]*)/
-    var substrings = JSONString.match(new RegExp('("'+propertyName+'": \\[[^\\]]*)'));
-    if(substrings){
-        return JSONString.replace(substrings[0], substrings[0].replace(/(\t)+/g, " ").replace(/\n/g, ""));  // replace \t and \n and reinsert substring
-    }else{
-        return JSONString;
-    }
 };
 
 document.getElementById("obj_drop").addEventListener("dragover", function(e){
@@ -143,13 +108,18 @@ var createGeometry = function(obj, mtl){
         objects[objects.length - 1].position.z = -2;
         cameraPreview.objects[cameraPreview.objects.length - 1].position.z = -2;
 
-        objects[objects.length - 1].screenName = "imported object";
+        var screenName = this.dataset.type;
+        objects[objects.length-1].ayceUI = {
+            id: objects.length-1,
+            screenName: "imported object",
+            runScriptInPreview: false
+        };
 
         scene.addToScene(objects[objects.length - 1]);
         cameraPreview.scene.addToScene(cameraPreview.objects[cameraPreview.objects.length - 1], false);
         console.log("done");
 
-        var child = appendObjectInSceneChildElement("obj");
+        var child = appendObjectInSceneChildNode("obj");
         closeModal();
         child.onclick({srcElement: {dataset: {type: "obj"}}});
     }else{

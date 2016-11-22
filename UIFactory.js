@@ -246,7 +246,7 @@ var UIFactory = function(){
                     break;
                 case "run_script_in_preview":
                     if(e.type != "wheel") {
-                        objects[currentObjectId].runScriptInPreview = e.target.checked;
+                        objects[currentObjectId].ayceUI.runScriptInPreview = e.target.checked;
                     }
                     break;
                 default:
@@ -266,9 +266,10 @@ var UIFactory = function(){
 
         var propertyInputs = document.getElementsByClassName("property_input");
         for (var i = 0; i < propertyInputs.length; i++) {
-            propertyInputs[i].addEventListener("wheel", function (e) {
-                updateProperties(e)
-            });
+            if(propertyInputs[i].type!="checkbox")
+                propertyInputs[i].addEventListener("wheel", function (e) {
+                    updateProperties(e)
+                });
             propertyInputs[i].addEventListener("change", function (e) {
                 updateProperties(e)
             });
@@ -278,15 +279,15 @@ var UIFactory = function(){
                 openModal("script", currentObjectId);
             });
             document.getElementById("run_script_in_preview").addEventListener("click", function (e) {
-                objects[currentObjectId].runScriptInPreview = e.checked;
+                objects[currentObjectId].ayceUI.runScriptInPreview = e.checked;
             });
         }
         document.getElementById("object_name").addEventListener("input", function(e){
             if(currentObjectId == undefined){                           // if object is camera
-                cameraPreview.screenName = e.srcElement.value;
+                cameraPreview.ayceUI.screenName = e.srcElement.value;
                 document.getElementById("camera").innerHTML = e.srcElement.value;
             }else{                                                      // if regular object
-                objects[currentObjectId].screenName = e.srcElement.value;
+                objects[currentObjectId].ayceUI.screenName = e.srcElement.value;
                 document.getElementById(currentObjectId).innerHTML = e.srcElement.value;
             }
         });
@@ -318,7 +319,7 @@ var UIFactory = function(){
                     showNotification("Cannot make the active object the active object's parent", "fa-exclamation-circle");
                 } else {
                     var parentObject = objects[Number(e.dataTransfer.getData("text/html"))];
-                    this.innerHTML = "<div id='parent_dropped'>" + parentObject.screenName + "</div>";
+                    this.innerHTML = "<div id='parent_dropped'>" + parentObject.ayceUI.screenName + "</div>";
                     objects[currentObjectId].parent = parentObject;
                 }
                 return false;
@@ -373,13 +374,13 @@ var UIFactory = function(){
             document.getElementById("camera_rotation_z").value = eulerAngles[2];
         }
         if (uiFactory.camera) {
-            document.getElementById("object_name").value = cameraPreview.screenName;
+            document.getElementById("object_name").value = cameraPreview.ayceUI.screenName;
         } else {
-            document.getElementById("object_name").value = objects[currentObjectId].screenName;
+            document.getElementById("object_name").value = objects[currentObjectId].ayceUI.screenName;
         }
     };
     this.updateParentField = function(){
         if(objects[currentObjectId].parent)
-            document.getElementById("parent_drop").innerHTML = "<div id='parent_dropped'>"+objects[currentObjectId].parent.screenName+"</div>";
+            document.getElementById("parent_drop").innerHTML = "<div id='parent_dropped'>"+objects[currentObjectId].parent.ayceUI.screenName+"</div>";
     }
 };
