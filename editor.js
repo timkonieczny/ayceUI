@@ -5,19 +5,7 @@ modifier.position.y = .5;
 var mainCameraModifier = new MainCameraModifier(mainCanvas);
 scene.getCamera().getManager().modifiers.push(modifier, mainCameraModifier);
 
-var basePlane = (new Ayce.Geometry.Plane(10, 10, 2, 2, false)).getO3D();
-basePlane.position.x = -2.5;
-basePlane.rotation.fromEulerAngles(Math.PI/2, 0, 0);
-basePlane.textureCoords = [
-     0, 0,
-     0,10,
-    10, 0,
-    10,10
-];
-basePlane.transparent = true;
-basePlane.colors = null;
-basePlane.imageSrc = "grid.png";
-scene.addToScene(basePlane, false);
+scene.addToScene((new BasePlane(30, 30, 31, 31)).getO3D(), false);
 
 var objects = [];
 var cameraPreview = new CameraPreview();
