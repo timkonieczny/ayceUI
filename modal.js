@@ -317,13 +317,16 @@ var handleCSV = function(e){
         cameraPreview.objects.push(csvObjects2[i]);
         objects[objects.length - 1].position.z = -2;
         cameraPreview.objects[cameraPreview.objects.length - 1].position.z = -2;
-        objects[objects.length - 1].screenName = "imported object (csv)";
         objects[objects.length-1].script = function(){};
         cameraPreview.objects[objects.length-1].script = function(){};
-        objects[objects.length-1].runScriptInPreview = false;
+        objects[objects.length-1].ayceUI = {
+            id: objects.length-1,
+            screenName: "imported object (csv)",
+            runScriptInPreview: false
+        };
         scene.addToScene(objects[objects.length - 1]);
         cameraPreview.scene.addToScene(cameraPreview.objects[cameraPreview.objects.length-1], false);
-        var child = appendObjectInSceneChildElement("csv");
+        var child = appendObjectInSceneChildNode("csv");
         showProperties(child);
     }
 
