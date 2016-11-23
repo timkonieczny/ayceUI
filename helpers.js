@@ -33,6 +33,10 @@ var removeClass = function(element, className2){
     element.className = element.className.replace(new RegExp(className2, 'g'), "");
 };
 
+var setId = function(element, idName){
+    element.id = idName;
+};
+
 var showNotification = function(text, icon){
     var oldNotification = document.getElementById("notification");  // remove and re-add element to re-run CSS animation
     var notification = oldNotification.cloneNode(true);
