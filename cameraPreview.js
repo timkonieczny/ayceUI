@@ -1,4 +1,6 @@
 var CameraPreview = function() {
+
+    var scope = this;
     this.canvas = document.getElementById("camera_preview");
     this.scene = new Ayce.Scene(this.canvas);
     this.modifier = new Ayce.CameraModifier();
@@ -18,5 +20,19 @@ var CameraPreview = function() {
 
         this.scene.updateScene();
         this.scene.drawScene();
-    }
+    };
+
+    document.getElementById("camera_preview_expand").addEventListener("click", function(){
+        setId(document.getElementById("camera_preview_wrapper"), "camera_preview_expanded");
+        document.getElementById("camera_preview_expand").style.display = "none";
+        document.getElementById("camera_preview_expanded_controls").style.display = "inline-block";
+        scope.scene.resize();
+    });
+
+    document.getElementById("camera_preview_expanded_controls").addEventListener("click", function(){
+        setId(document.getElementById("camera_preview_expanded"), "camera_preview_wrapper");
+        document.getElementById("camera_preview_expand").style.display = "inline-block";
+        document.getElementById("camera_preview_expanded_controls").style.display = "none";
+        scope.scene.resize();
+    });
 };

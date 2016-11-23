@@ -28,6 +28,34 @@ html, body{
     bottom: 5px;
     left: 335px;
 }
+#camera_preview_expanded{
+    width: 100%;
+    height: 100%;
+    z-index: 3;
+    position: fixed;
+}
+#camera_preview{
+    position: absolute;
+    z-index: 0;
+}
+#camera_preview_controls{
+    position: absolute;
+    z-index: 1;
+    width: 100%;
+}
+#camera_preview_controls > * {
+    float: right;
+    margin: 5px;
+}
+#camera_preview_expanded_controls{
+    display: none;
+    margin: 0;
+}
+#camera_preview_expanded_controls > * {
+    float: right;
+    display: block;
+    margin: 5px 5px 0px 0px;
+}
 #notification{
     display: none;
     background: #0091ff;
