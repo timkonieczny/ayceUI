@@ -2,6 +2,7 @@ var mainCanvas = document.getElementById("main_canvas");
 var scene = new Ayce.Scene(mainCanvas);
 var modifier = new Ayce.CameraModifier();
 modifier.position.y = .5;
+modifier.position.z = 2;
 var mainCameraModifier = new MainCameraModifier(mainCanvas);
 scene.getCamera().getManager().modifiers.push(modifier, mainCameraModifier);
 
@@ -35,8 +36,6 @@ for(i = 0; i < addObjectButtons.length; i++){
             objects[objects.length-1] = geometry.getO3D();
             cameraPreview.objects.push(geometry.getO3D());
 
-            objects[objects.length-1].position.z = -2;
-            cameraPreview.objects[cameraPreview.objects.length-1].position.z = -2;
 
             objects[objects.length-1].script = function(){};
             cameraPreview.objects[objects.length-1].script = function(){};
@@ -102,11 +101,11 @@ document.getElementById("export_code").addEventListener('click', function(){
 mainCanvas.addEventListener("click", function(e){
     var identifier = scene.getPickedIdentifier(e.clientX, e.clientY);
     for(var i = 0; i < objects.length; i++){
-        if(objects[i].identifier[0]==identifier[0] &&
+        if(objects[i] instanceof Ayce.Object3D &&
+            objects[i].identifier[0]==identifier[0] &&
             objects[i].identifier[1]==identifier[1] &&
             objects[i].identifier[2]==identifier[2] &&
             objects[i].identifier[3]==identifier[3]){
-            console.log(objects[i]);
             handleClickOnObject({srcElement: document.getElementById(i.toString())});
         }
     }

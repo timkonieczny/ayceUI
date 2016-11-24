@@ -100,10 +100,6 @@ var createGeometry = function(obj, mtl){
         objects.push(object);                // TODO: more efficient solution for copying the O3D
         cameraPreview.objects.push(new Ayce.OBJLoader(obj, mtl, true)[0]);
 
-        objects[objects.length - 1].position.z = -2;
-        cameraPreview.objects[cameraPreview.objects.length - 1].position.z = -2;
-
-        var screenName = this.dataset.type;
         objects[objects.length-1].ayceUI = {
             id: objects.length-1,
             screenName: "imported object",
