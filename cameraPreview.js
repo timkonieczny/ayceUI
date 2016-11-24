@@ -28,10 +28,22 @@ var CameraPreview = function() {
         scope.scene.resize();
     });
 
-    document.getElementById("camera_preview_expanded_controls").addEventListener("click", function(){
+    document.getElementById("camera_preview_compress").addEventListener("click", function(){
         setId(document.getElementById("camera_preview_expanded"), "camera_preview_wrapper");
         document.getElementById("camera_preview_expand").style.display = "inline-block";
         document.getElementById("camera_preview_expanded_controls").style.display = "none";
         scope.scene.resize();
+    });
+
+    document.getElementById("camera_preview_view_vr").addEventListener("click", function(){
+        scope.scene.setRendererVR(false);
+        document.getElementById("camera_preview_view_desktop").style.display = "block";
+        document.getElementById("camera_preview_view_vr").style.display = "none";
+    });
+
+    document.getElementById("camera_preview_view_desktop").addEventListener("click", function(){
+        scope.scene.setRendererDesktop();
+        document.getElementById("camera_preview_view_desktop").style.display = "none";
+        document.getElementById("camera_preview_view_vr").style.display = "block";
     });
 };
