@@ -56,6 +56,9 @@ html, body{
     display: block;
     margin: 5px 5px 0px 0px;
 }
+#camera_preview_view_desktop{
+    display: none;
+}
 #notification{
     display: none;
     background: #0091ff;

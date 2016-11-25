@@ -13,7 +13,10 @@ MainCameraModifier = function (canvas) {
         alias: {
             isLeftDown: false,
             isMiddleDown: false,
-            isRightDown: false
+            isRightDown: false,
+            wasLeftDown: false,
+            wasMiddleDown: false,
+            wasRightDown: false
         }
     };
 
@@ -69,8 +72,12 @@ MainCameraModifier = function (canvas) {
     });
 
     canvas.addEventListener("mousemove", function (e) {
+        mouse.alias.wasMiddleDown = mouse.alias.isMiddleDown;
+        mouse.alias.wasRightDown = mouse.alias.isRightDown;
         mouse.alias.isMiddleDown = Ayce.KeyboardHandler.isKeyDown("ctrl");
         mouse.alias.isRightDown = Ayce.KeyboardHandler.isKeyDown("shift");
+        if(mouse.alias.wasMiddleDown!=mouse.alias.isMiddleDown || mouse.alias.wasRightDown!=mouse.alias.isRightDown)
+            mouse.isInitialized = false;
         if(mouse.isMiddleDown||mouse.isRightDown||mouse.alias.isMiddleDown||mouse.alias.isRightDown){
             mouse.position.x = e.x;
             mouse.position.y = e.y;

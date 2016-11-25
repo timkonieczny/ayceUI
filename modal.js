@@ -105,10 +105,6 @@ var createGeometry = function(obj, mtl){
         objects.push(object);                // TODO: more efficient solution for copying the O3D
         cameraPreview.objects.push(new Ayce.OBJLoader(obj, mtl, true)[0]);
 
-        objects[objects.length - 1].position.z = -2;
-        cameraPreview.objects[cameraPreview.objects.length - 1].position.z = -2;
-
-        var screenName = this.dataset.type;
         objects[objects.length-1].ayceUI = {
             id: objects.length-1,
             screenName: "imported object",
@@ -315,8 +311,6 @@ var handleCSV = function(e){
     for(i = 0; i < csvObjects.length; i++){
         objects.push(csvObjects[i]);
         cameraPreview.objects.push(csvObjects2[i]);
-        objects[objects.length - 1].position.z = -2;
-        cameraPreview.objects[cameraPreview.objects.length - 1].position.z = -2;
         objects[objects.length-1].script = function(){};
         cameraPreview.objects[objects.length-1].script = function(){};
         objects[objects.length-1].ayceUI = {
