@@ -159,7 +159,6 @@ var appendObjectInSceneChildNode = function(type){
             deleteObject(child);
         });
     }
-    //console.log(child);
     return child;
 };
 

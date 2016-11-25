@@ -151,6 +151,7 @@ document.getElementById("csv_drop").addEventListener("drop", function(e){
         reader.onload = function (e) {
             console.log("done (" + (Date.now()-csvTimer) + "ms)");
             var o3Ds = csvLoader.getO3Ds(e);
+            console.log(o3Ds);
             var cameraPreviewO3Ds = [];
 
             for(var i = 0; i < o3Ds.length; i++) {
@@ -164,7 +165,7 @@ document.getElementById("csv_drop").addEventListener("drop", function(e){
                 cameraPreview.objects[objects.length-1].script = function(){};
                 objects[objects.length-1].ayceUI = {
                     id: objects.length-1,
-                    screenName: "imported object (csv)",
+                    screenName: "trajectory " + objects[objects.length-1].visualization.id,
                     runScriptInPreview: false
                 };
                 scene.addToScene(objects[objects.length - 1]);

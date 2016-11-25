@@ -7,6 +7,15 @@ CSVLoader = function(){
     var offsetY = -7.5;
     var yHeight = 0.02;
 
+    var colors = {
+        speed: [],
+        acceleration: [],
+        reset: function(){
+            this.speed = [];
+            this.acceleration = []
+        }
+    };
+
     this.getO3Ds = function(e){
         var data = [];
         var csv = e.currentTarget.result;
@@ -18,6 +27,7 @@ CSVLoader = function(){
         var j = -1;
 
         var maxSpeed = 0;
+        var maxAcceleration = 0;
 
         csvTimer = Date.now();
         console.log("extracting data");
@@ -46,6 +56,8 @@ CSVLoader = function(){
                 turnC: point[11]!="" ? Number(point[11]) : null
             });
             if(data[j][data[j].length-1].speed!=null) maxSpeed = Math.max(maxSpeed, data[j][data[j].length-1].speed);
+            if(data[j][data[j].length-1].accelerationC!=null)
+                maxAcceleration = Math.max(maxAcceleration, data[j][data[j].length-1].accelerationC);
         }
 
         console.log("done (" + (Date.now()-csvTimer) + "ms)");
@@ -57,6 +69,10 @@ CSVLoader = function(){
 
         for(i = 0; i < data.length; i++){
             var object = new Ayce.Object3D();
+            object.visualization = {            // TODO: grab data from data file
+                id: data[i][0].trID
+            };
+            colors.reset();
             object.vertices = [];
             object.indices = [];
             object.colors = [];
@@ -72,7 +88,8 @@ CSVLoader = function(){
                     factor*(data[i][j].x-subtractX)+offsetX,        i*yHeight,        factor*(data[i][j].y-subtractY)+offsetY,    // back bottom
                     factor*(data[i][j].x-subtractX)+offsetX,        i*yHeight+yHeight,  factor*(data[i][j].y-subtractY)+offsetY     // back top
                 );
-                object.colors.push(
+
+                colors.speed.push(
                     data[i][j].speed/maxSpeed, data[i][j].speed/maxSpeed, data[i][j].speed/maxSpeed, 1.0,
                     data[i][j].speed/maxSpeed, data[i][j].speed/maxSpeed, data[i][j].speed/maxSpeed, 1.0,
                     data[i][j].speed/maxSpeed, data[i][j].speed/maxSpeed, data[i][j].speed/maxSpeed, 1.0,
@@ -83,16 +100,16 @@ CSVLoader = function(){
                     data[i][j].speed/maxSpeed, data[i][j].speed/maxSpeed, data[i][j].speed/maxSpeed, 1.0
                 );
 
-                /*object.colors.push(
-                 0.5, 0.5, 0.5, 1.0,
-                 0.5, 0.5, 0.5, 1.0,
-                 0.5, 0.5, 0.5, 1.0,
-                 0.5, 0.5, 0.5, 1.0,
-                 0.5, 0.5, 0.5, 1.0,
-                 0.5, 0.5, 0.5, 1.0,
-                 0.5, 0.5, 0.5, 1.0,
-                 0.5, 0.5, 0.5, 1.0
-                 );*/
+                colors.acceleration.push(
+                    data[i][j].accelerationC/maxAcceleration, data[i][j].accelerationC/maxAcceleration, data[i][j].accelerationC/maxAcceleration, 1.0,
+                    data[i][j].accelerationC/maxAcceleration, data[i][j].accelerationC/maxAcceleration, data[i][j].accelerationC/maxAcceleration, 1.0,
+                    data[i][j].accelerationC/maxAcceleration, data[i][j].accelerationC/maxAcceleration, data[i][j].accelerationC/maxAcceleration, 1.0,
+                    data[i][j].accelerationC/maxAcceleration, data[i][j].accelerationC/maxAcceleration, data[i][j].accelerationC/maxAcceleration, 1.0,
+                    data[i][j].accelerationC/maxAcceleration, data[i][j].accelerationC/maxAcceleration, data[i][j].accelerationC/maxAcceleration, 1.0,
+                    data[i][j].accelerationC/maxAcceleration, data[i][j].accelerationC/maxAcceleration, data[i][j].accelerationC/maxAcceleration, 1.0,
+                    data[i][j].accelerationC/maxAcceleration, data[i][j].accelerationC/maxAcceleration, data[i][j].accelerationC/maxAcceleration, 1.0,
+                    data[i][j].accelerationC/maxAcceleration, data[i][j].accelerationC/maxAcceleration, data[i][j].accelerationC/maxAcceleration, 1.0
+                );
 
                 var numberOfVertices = data[i].length*8;
 
@@ -143,9 +160,13 @@ CSVLoader = function(){
                 }
             }
             if(csvObjects[0]!=undefined) object.parent = csvObjects[0];
+            object.colors = colors.acceleration;
+
+            object.visualization.speedColors = colors.speed;
+            object.visualization.accelerationColors = colors.speed;
+
             csvObjects.push(object);
         }
-        console.log("done (" + (Date.now()-csvTimer) + "ms)");
 
         return csvObjects;
     };
