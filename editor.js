@@ -1,5 +1,6 @@
 var mainCanvas = document.getElementById("main_canvas");
 var scene = new Ayce.Scene(mainCanvas);
+var renderScene = true;
 var modifier = new Ayce.CameraModifier();
 modifier.position.y = .5;
 modifier.position.z = 2;
@@ -10,7 +11,15 @@ scene.addToScene((new BasePlane(30, 30, 31, 31)).getO3D(), false);
 
 var objects = [];
 var cameraPreview = new CameraPreview();
-//cameraPreview.scene.setRenderer(new StereoProjectorRenderer(cameraPreview.canvas));
+document.getElementById("camera_preview_expand").addEventListener("click", function(){
+    cameraPreview.expand();
+    renderScene = false;
+
+});
+document.getElementById("camera_preview_compress").addEventListener("click", function(){
+    cameraPreview.compress();
+    renderScene = true;
+});
 document.getElementById("camera_preview_wrapper").style.display = "none";
 var currentObjectId;
 
