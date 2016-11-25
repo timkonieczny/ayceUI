@@ -1,5 +1,12 @@
 CSVLoader = function(){
 
+    var factor = 10;
+    var subtractX = 7;  // TODO: calculate dynamically based on statistic of whole data set
+    var subtractY = 50;
+    var offsetX = -2;
+    var offsetY = -7.5;
+    var yHeight = 0.02;
+
     this.getO3Ds = function(e){
         var data = [];
         var csv = e.currentTarget.result;
@@ -44,12 +51,6 @@ CSVLoader = function(){
         console.log("done (" + (Date.now()-csvTimer) + "ms)");
 
         var csvObjects = [];
-        var factor = 10;
-        var subtractX = 7;  // TODO: calculate dynamically based on statistic of whole data set
-        var subtractY = 50;
-        var offsetX = -2;
-        var offsetY = -6.5;
-        var yHeight = 0.02;
 
         csvTimer = Date.now();
         console.log("building Ayce.Object3Ds");
@@ -141,6 +142,7 @@ CSVLoader = function(){
                     object.normals[object.indices[k]*3+2] = -nz;
                 }
             }
+            if(csvObjects[0]!=undefined) object.parent = csvObjects[0];
             csvObjects.push(object);
         }
         console.log("done (" + (Date.now()-csvTimer) + "ms)");
