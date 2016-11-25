@@ -1,4 +1,4 @@
-var CameraPreview = function() {
+CameraPreview = function() {
 
     var scope = this;
     this.scene = new Ayce.Scene(document.getElementById("camera_preview"));
@@ -32,6 +32,9 @@ var CameraPreview = function() {
         setId(document.getElementById("camera_preview_expanded"), "camera_preview_wrapper");
         document.getElementById("camera_preview_expand").style.display = "inline-block";
         document.getElementById("camera_preview_expanded_controls").style.display = "none";
+        document.getElementById("camera_preview_view_desktop").style.display = "none";
+        document.getElementById("camera_preview_view_vr").style.display = "block";
+        scope.scene.setRendererDesktop();
         scope.scene.resize();
     });
 
