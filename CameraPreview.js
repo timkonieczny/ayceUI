@@ -21,14 +21,14 @@ CameraPreview = function() {
         this.scene.drawScene();
     };
 
-    document.getElementById("camera_preview_expand").addEventListener("click", function(){
+    this.expand = function(){
         setId(document.getElementById("camera_preview_wrapper"), "camera_preview_expanded");
         document.getElementById("camera_preview_expand").style.display = "none";
         document.getElementById("camera_preview_expanded_controls").style.display = "inline-block";
         scope.scene.resize();
-    });
+    };
 
-    document.getElementById("camera_preview_compress").addEventListener("click", function(){
+    this.compress = function(){
         setId(document.getElementById("camera_preview_expanded"), "camera_preview_wrapper");
         document.getElementById("camera_preview_expand").style.display = "inline-block";
         document.getElementById("camera_preview_expanded_controls").style.display = "none";
@@ -36,7 +36,7 @@ CameraPreview = function() {
         document.getElementById("camera_preview_view_vr").style.display = "block";
         scope.scene.setRendererDesktop();
         scope.scene.resize();
-    });
+    };
 
     document.getElementById("camera_preview_view_vr").addEventListener("click", function(){
         scope.scene.setRendererVR(false);
