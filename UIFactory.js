@@ -29,82 +29,82 @@ var UIFactory = function(){
         }
         if(this.position){
             ui+='<li>Position:<br>' +
-                '<input class="property_input" id="position_x" title="position_x"/>' +
-                '<input class="property_input" id="position_y" title="position_y"/>' +
-                '<input class="property_input" id="position_z" title="position_z"/>' +
+                '<input type="number" class="property_input" id="position_x" title="position_x"/>' +
+                '<input type="number" class="property_input" id="position_y" title="position_y"/>' +
+                '<input type="number" class="property_input" id="position_z" title="position_z"/>' +
                 '</li>';
         }
         if(this.rotation){
             ui+='<li>Rotation:<br>' +
-                '<input class="property_input" id="rotation_x" title="rotation_x"/>' +
-                '<input class="property_input" id="rotation_y" title="rotation_y"/>' +
-                '<input class="property_input" id="rotation_z" title="rotation_z"/>' +
+                '<input type="number" class="property_input" id="rotation_x" title="rotation_x"/>' +
+                '<input type="number" class="property_input" id="rotation_y" title="rotation_y"/>' +
+                '<input type="number" class="property_input" id="rotation_z" title="rotation_z"/>' +
                 '</li>';
         }
         if(this.scale){
             ui+='<li>Scale:<br>' +
-                '<input class="property_input" id="scale_x" title="scale_x"/>' +
-                '<input class="property_input" id="scale_y" title="scale_y"/>' +
-                '<input class="property_input" id="scale_z" title="scale_z"/>' +
+                '<input type="number" class="property_input" id="scale_x" title="scale_x"/>' +
+                '<input type="number" class="property_input" id="scale_y" title="scale_y"/>' +
+                '<input type="number" class="property_input" id="scale_z" title="scale_z"/>' +
                 '</li>';
         }
         if(this.color){
             ui+='<li>Color:<br>' +
-                '<input class="property_input" id="colors_r" title="colors_r"/>' +
-                '<input class="property_input" id="colors_g" title="colors_g"/>' +
-                '<input class="property_input" id="colors_b" title="colors_b"/>' +
-                '<input class="property_input" id="colors_a" title="colors_a"/>' +
+                '<input type="number" class="property_input" id="colors_r" title="colors_r"/>' +
+                '<input type="number" class="property_input" id="colors_g" title="colors_g"/>' +
+                '<input type="number" class="property_input" id="colors_b" title="colors_b"/>' +
+                '<input type="number" class="property_input" id="colors_a" title="colors_a"/>' +
                 '</li>';
         }
         if(this.lightColor){
             ui+='<li>Color:<br>' +
-                '<input class="property_input" id="light_color_r" title="light_color_r"/>' +
-                '<input class="property_input" id="light_color_g" title="light_color_g"/>' +
-                '<input class="property_input" id="light_color_b" title="light_color_b"/>' +
+                '<input type="number" class="property_input" id="light_color_r" title="light_color_r"/>' +
+                '<input type="number" class="property_input" id="light_color_g" title="light_color_g"/>' +
+                '<input type="number" class="property_input" id="light_color_b" title="light_color_b"/>' +
                 '</li>';
         }
         if(this.lightSpecularColor){
             ui+='<li>Specular Color:<br>' +
-                '<input class="property_input" id="light_specular_color_r" title="light_specular_color_r"/>' +
-                '<input class="property_input" id="light_specular_color_g" title="light_specular_color_g"/>' +
-                '<input class="property_input" id="light_specular_color_b" title="light_specular_color_b"/>' +
+                '<input type="number" class="property_input" id="light_specular_color_r" title="light_specular_color_r"/>' +
+                '<input type="number" class="property_input" id="light_specular_color_g" title="light_specular_color_g"/>' +
+                '<input type="number" class="property_input" id="light_specular_color_b" title="light_specular_color_b"/>' +
                 '</li>';
         }
         if(this.twoFaceTransparency){
             ui+='<li>Two-Face Transparency:<br>' +
-                '<input class="property_input" id="two_face_transparency" type="checkbox" title="two_face_transparency"/>' +
+                '<input type="checkbox" class="property_input" id="two_face_transparency" title="two_face_transparency"/>' +
                 '</li>';
         }
         if(this.lighting){
             ui+='<li>Lighting:<br>' +
-                '<input class="property_input" id="use_fragment_lighting" type="checkbox"/>' +
+                '<input type="checkbox" class="property_input" id="use_fragment_lighting"/>' +
                 '<label for="use_fragment_lighting">Fragment Lighting</label>' +
-                '<input class="property_input" id="use_specular_lighting" type="checkbox"/>' +
+                '<input type="checkbox" class="property_input" id="use_specular_lighting" />' +
                 '<label for="use_specular_lighting">Specular Lighting</label>' +
                 '</li>';
         }
         if(this.lighting){
             ui+='<li>Visible:<br>' +
-                '<input class="property_input" id="visible" type="checkbox" title="visible"/>' +
+                '<input type="checkbox" class="property_input" id="visible" title="visible"/>' +
                 '</li>';
         }
         if(this.editScript){
             ui+='<li>Scripts:<br>' +
                 '<a id="edit_script" class="button_dark"><i class="fa fa-code"></i>Edit script</a>' +
-                '<input class="property_input" id="run_script_in_preview" type="checkbox"/>' +
+                '<input type="checkbox" class="property_input" id="run_script_in_preview" />' +
                 '<label for="run_script_in_preview">Run script in preview</label>' +
                 '</li>';
         }
         if(this.camera){
             ui+='<li>Position:<br>' +
-                '<input class="property_input" id="camera_position_x" title="camera_position_x"/>' +
-                '<input class="property_input" id="camera_position_y" title="camera_position_y"/>' +
-                '<input class="property_input" id="camera_position_z" title="camera_position_z"/>' +
+                '<input type="number" class="property_input" id="camera_position_x" title="camera_position_x"/>' +
+                '<input type="number" class="property_input" id="camera_position_y" title="camera_position_y"/>' +
+                '<input type="number" class="property_input" id="camera_position_z" title="camera_position_z"/>' +
                 '</li>' +
                 '<li>Rotation:<br>' +
-                '<input class="property_input" id="camera_rotation_x" title="camera_rotation_x"/>' +
-                '<input class="property_input" id="camera_rotation_y" title="camera_rotation_y"/>' +
-                '<input class="property_input" id="camera_rotation_z" title="camera_rotation_z"/>' +
+                '<input type="number" class="property_input" id="camera_rotation_x" title="camera_rotation_x"/>' +
+                '<input type="number" class="property_input" id="camera_rotation_y" title="camera_rotation_y"/>' +
+                '<input type="number" class="property_input" id="camera_rotation_z" title="camera_rotation_z"/>' +
                 '</li>';
         }
 
@@ -266,7 +266,7 @@ var UIFactory = function(){
 
         var propertyInputs = document.getElementsByClassName("property_input");
         for (var i = 0; i < propertyInputs.length; i++) {
-            if(propertyInputs[i].type!="checkbox")
+            if(propertyInputs[i].type=="number")
                 propertyInputs[i].addEventListener("wheel", function (e) {
                     updateProperties(e)
                 });
