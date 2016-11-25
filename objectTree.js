@@ -9,18 +9,18 @@ var handleDragover = function(e){
     e.preventDefault();
     e.dataTransfer.dropEffect = 'link';
 };
-var handleChildParentDrop = function(e, newParent){
-    if(e.dataTransfer.getData("text/html")==newParent.id){
+var handleChildParentDrop = function(id, newParent){
+    if(id==newParent.id){
         showNotification("Cannot make the active object the active object's parent", "fa-exclamation-circle");
         // same element
     }else if(newParent.parentNode.id!="objects_in_scene" &&
         Array.prototype.indexOf.call(newParent.parentNode.childNodes, newParent)==0 &&
-        (hasChildNodeWithId(newParent.parentNode, e.dataTransfer.getData("text/html")))){
+        (hasChildNodeWithId(newParent.parentNode, id))){
         showNotification("The object is already a child", "fa-exclamation-circle");
         // TODO: implement removing parent
         // already a child
     }else{
-        var newChild = document.getElementById(e.dataTransfer.getData("text/html"));
+        var newChild = document.getElementById(id);
 
         if(newChild.className == "parent_wrapper"){
             objects[Number(newChild.firstChild.id)].parent = objects[Number(newParent.id)];
@@ -41,7 +41,7 @@ var handleChildParentDrop = function(e, newParent){
                 handleDragover(e)
             });
             newParentCopy.addEventListener("drop", function (e) {
-                handleChildParentDrop(e, this)
+                handleChildParentDrop(e.dataTransfer.getData("text/html"), this)
             });
             newParentCopy.addEventListener("click", handleClickOnObject);
             wrapper.appendChild(newParentCopy);
@@ -106,7 +106,7 @@ var cleanUpObjectNode = function(wrapper){     // removes unnecessary wrappers
             handleDragover(e);
         });
         copy.addEventListener("drop", function(e){
-            handleChildParentDrop(e, this);
+            handleChildParentDrop(e.dataTransfer.getData("text/html"), this);
         });
         copy.addEventListener("click", handleClickOnObject);
         document.getElementById("delete_"+copy.id).addEventListener("click", function (e) {
@@ -146,7 +146,7 @@ var appendObjectInSceneChildNode = function(type){
         handleDragover(e);
     });
     child.addEventListener("drop", function(e){
-        handleChildParentDrop(e, this);
+        handleChildParentDrop(e.dataTransfer.getData("text/html"), this);
     });
     child.addEventListener("dragend", function(){
         handleChildParentDragend();
@@ -158,6 +158,11 @@ var appendObjectInSceneChildNode = function(type){
             e.stopPropagation();
             deleteObject(child);
         });
+    }
+    if(objects[objects.length-1].parent){
+        handleChildParentDrop(
+            objects[objects.length-1].ayceUI.id,
+            document.getElementById(objects[objects.length-1].parent.ayceUI.id));
     }
     return child;
 };
