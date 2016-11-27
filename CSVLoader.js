@@ -171,15 +171,10 @@ CSVLoader = function(){
                 }
             }
             if(csvObjects[0]!=undefined) object.parent = csvObjects[0];
-            object.colors = colors.acceleration;
+            object.colors = colors.speed;
 
             object.visualization.speedColors = colors.speed;
-            object.visualization.accelerationColors = colors.speed;
-
-            object.visualization.vertexLightingShader = "shader/csvVert";   // Vertex lighting shader
-            object.visualization.fragmentLightingShader = "shader/csvFrag";   // Fragment lighting shader
-
-            object.shader = object.visualization.vertexLightingShader;
+            object.visualization.accelerationColors = colors.acceleration;
 
             csvObjects.push(object);
         }

@@ -84,6 +84,9 @@ ul{
     padding: 3px;
     background-color: #e1e1e1;
 }
+#visualization_color{
+    width: 100%;
+}
 .property_drop{
     color: #676767;
     width: calc(100% - 5px - 5px);

@@ -270,6 +270,23 @@ UIFactory = function(){
                         objects[currentObjectId].ayceUI.runScriptInPreview = e.target.checked;
                     }
                     break;
+                case "visualization_color":
+                    if(e.type != "wheel") {
+                        scene.removeFromScene(objects[currentObjectId]);
+                        cameraPreview.scene.removeFromScene(cameraPreview.objects[currentObjectId]);
+                        switch(e.srcElement.options[e.srcElement.options.selectedIndex].value){
+                            case "speed":
+                                objects[currentObjectId].colors = cameraPreview.objects[currentObjectId].colors = objects[currentObjectId].visualization.speedColors;
+                                break;
+                            case "acceleration":
+                                objects[currentObjectId].colors = cameraPreview.objects[currentObjectId].colors = objects[currentObjectId].visualization.accelerationColors;
+                                break;
+                        }
+                        scene.addToScene(objects[currentObjectId]);
+                        cameraPreview.scene.addToScene(cameraPreview.objects[currentObjectId], false);
+
+                    }
+                    break;
                 default:
                     var attribute = e.srcElement.id.split("_");
                     if(e.type == "wheel") {

@@ -171,7 +171,7 @@ document.getElementById("csv_drop").addEventListener("drop", function(e){
                     runScriptInPreview: false
                 };
                 scene.addToScene(objects[objects.length - 1]);
-                cameraPreview.scene.addToScene(cameraPreview.objects[cameraPreview.objects.length-1], false);
+                //cameraPreview.scene.addToScene(cameraPreview.objects[cameraPreview.objects.length-1], false);
                 var child = appendObjectInSceneChildNode("csv");
                 showProperties(child);
             }
