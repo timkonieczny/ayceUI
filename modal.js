@@ -151,7 +151,6 @@ document.getElementById("csv_drop").addEventListener("drop", function(e){
         reader.onload = function (e) {
             console.log("done (" + (Date.now()-csvTimer) + "ms)");
             var o3Ds = csvLoader.getO3Ds(e);
-            console.log(o3Ds);
             var cameraPreviewO3Ds = [];
 
             for(var i = 0; i < o3Ds.length; i++) {
@@ -159,6 +158,9 @@ document.getElementById("csv_drop").addEventListener("drop", function(e){
             }
 
             for(i = 0; i < o3Ds.length; i++){
+                //o3Ds[i].uniforms = [];            // TODO: add uniforms for color mode selection
+                //o3Ds[i].logVertexShader = true;
+                //o3Ds[i].logFragmentShader = true;
                 objects.push(o3Ds[i]);
                 cameraPreview.objects.push(cameraPreviewO3Ds[i]);
                 objects[objects.length-1].script = function(){};

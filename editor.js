@@ -47,6 +47,9 @@ for(i = 0; i < addObjectButtons.length; i++){
 
 
             objects[objects.length-1].script = function(){};
+            objects[objects.length-1].logVertexShader = true;
+            objects[objects.length-1].logFragmentShader = true;
+            objects[objects.length-1].useFragmentLighting = true;
             cameraPreview.objects[objects.length-1].script = function(){};
             var screenName = this.dataset.type;
             objects[objects.length-1].ayceUI = {

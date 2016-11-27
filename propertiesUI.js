@@ -10,7 +10,6 @@ var showProperties = function(node) {
         node.dataset.type == "cube"||
         node.dataset.type == "sphere"||
         node.dataset.type == "icosahedron"||
-        node.dataset.type == "csv"||
         node.dataset.type == "obj"){
         uiFactory.parent = true;
         uiFactory.position = true;
@@ -30,6 +29,17 @@ var showProperties = function(node) {
         uiFactory.camera = true;
         //uiFactory.parent = true;
         // TODO: add editScript
+    }else if(node.dataset.type == "csv"){
+        uiFactory.csv = true;
+        uiFactory.parent = true;
+        uiFactory.position = true;
+        uiFactory.rotation = true;
+        uiFactory.scale = true;
+        uiFactory.color = true;
+        uiFactory.twoFaceTransparency = true;
+        uiFactory.lighting = true;
+        uiFactory.visibility = true;
+        uiFactory.editScript = true;
     }
     uiFactory.inflatePropertiesUI(document.getElementById("properties_list"));
 

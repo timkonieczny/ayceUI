@@ -111,6 +111,17 @@ CSVLoader = function(){
                     data[i][j].accelerationC/maxAcceleration, data[i][j].accelerationC/maxAcceleration, data[i][j].accelerationC/maxAcceleration, 1.0
                 );
 
+                /*object.colors.push(
+                    0.5, 0.5, 0.5, 1.0,
+                    0.5, 0.5, 0.5, 1.0,
+                    0.5, 0.5, 0.5, 1.0,
+                    0.5, 0.5, 0.5, 1.0,
+                    0.5, 0.5, 0.5, 1.0,
+                    0.5, 0.5, 0.5, 1.0,
+                    0.5, 0.5, 0.5, 1.0,
+                    0.5, 0.5, 0.5, 1.0
+                );*/
+
                 var numberOfVertices = data[i].length*8;
 
                 object.indices.push(
@@ -164,6 +175,11 @@ CSVLoader = function(){
 
             object.visualization.speedColors = colors.speed;
             object.visualization.accelerationColors = colors.speed;
+
+            object.visualization.vertexLightingShader = "shader/csvVert";   // Vertex lighting shader
+            object.visualization.fragmentLightingShader = "shader/csvFrag";   // Fragment lighting shader
+
+            object.shader = object.visualization.vertexLightingShader;
 
             csvObjects.push(object);
         }

@@ -1,4 +1,4 @@
-var UIFactory = function(){
+UIFactory = function(){
 
     var scope = this;
 
@@ -15,6 +15,7 @@ var UIFactory = function(){
         this.camera = false;
         this.editScript = false;
         this.parent = false;
+        this.csv = false;
     };
     this.resetAttributes();
 
@@ -25,6 +26,15 @@ var UIFactory = function(){
                 '<div class="property_input property_drop" id="parent_drop" title="parent">' +
                 '<span>drag and drop parent object here</span>' +
                 '</div>' +
+                '</li>';
+        }
+        if(this.csv){
+            // TODO: different colors as attributes, switch via uniform
+            ui+='<li>Visualization colors:<br>' +
+                '<select class="property_input" id="visualization_color" title="visualization_color">' +
+                '<option value="speed">speed</option>' +
+                '<option value="acceleration">accelerationC</option>' +
+                '</select> ' +
                 '</li>';
         }
         if(this.position){
@@ -173,6 +183,17 @@ var UIFactory = function(){
                         cameraPreview.scene.removeFromScene(cameraPreview.objects[currentObjectId]);
                         objects[currentObjectId].useFragmentLighting =
                             cameraPreview.objects[currentObjectId].useFragmentLighting = e.target.checked;
+                        if(objects[currentObjectId].visualization!=undefined){
+                            if(e.target.checked){
+                                objects[currentObjectId].shader =
+                                    cameraPreview.objects[currentObjectId].shader =
+                                        objects[currentObjectId].visualization.fragmentLightingShader;
+                            }else{
+                                objects[currentObjectId].shader =
+                                    cameraPreview.objects[currentObjectId].shader =
+                                        objects[currentObjectId].visualization.vertexLightingShader;
+                            }
+                        }
                         scene.addToScene(objects[currentObjectId]);
                         cameraPreview.scene.addToScene(cameraPreview.objects[currentObjectId], false);
                     }
