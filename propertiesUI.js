@@ -29,6 +29,10 @@ var showProperties = function(node) {
         uiFactory.camera = true;
         //uiFactory.parent = true;
         // TODO: add editScript
+    }else if(node.dataset.type == "skybox"){
+        //uiFactory.editScript = true;      // TODO: editScript, visibility
+        //uiFactory.visibility = true;
+        uiFactory.skybox = true;
     }
     uiFactory.inflatePropertiesUI(document.getElementById("properties_list"));
 

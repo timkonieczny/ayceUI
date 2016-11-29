@@ -15,6 +15,7 @@ var UIFactory = function(){
         this.camera = false;
         this.editScript = false;
         this.parent = false;
+        this.skybox = false;
     };
     this.resetAttributes();
 
@@ -23,7 +24,7 @@ var UIFactory = function(){
         if(this.parent){
             ui+='<li>Parent:<br>' +
                 '<div class="property_input property_drop" id="parent_drop" title="parent">' +
-                '<span>drag and drop parent object here</span>' +
+                '<span class="property_drop_text">drag and drop parent object here</span>' +
                 '</div>' +
                 '</li>';
         }
@@ -105,6 +106,31 @@ var UIFactory = function(){
                 '<input type="number" class="property_input" id="camera_rotation_x" title="camera_rotation_x"/>' +
                 '<input type="number" class="property_input" id="camera_rotation_y" title="camera_rotation_y"/>' +
                 '<input type="number" class="property_input" id="camera_rotation_z" title="camera_rotation_z"/>' +
+                '</li>';
+        }
+        if(this.skybox){
+            // editScript
+            // visibility
+
+            ui+='<li>Texture Images:<br>' +
+                '<div class="property_input property_drop texture_drop" id="skybox_top_texture_drop" title="top">' +
+                '<span class="property_drop_text">Top<br><span class="texture_drop_hint">drag and drop texture image here</span></span>' +
+                '</div>' +
+                '<div class="property_input property_drop texture_drop" id="skybox_bottom_texture_drop" title="top">' +
+                '<span class="property_drop_text">Bottom<br><span class="texture_drop_hint">drag and drop texture image here</span></span>' +
+                '</div>' +
+                '<div class="property_input property_drop texture_drop" id="skybox_left_texture_drop" title="top">' +
+                '<span class="property_drop_text">Left<br><span class="texture_drop_hint">drag and drop texture image here</span></span>' +
+                '</div>' +
+                '<div class="property_input property_drop texture_drop" id="skybox_right_texture_drop" title="top">' +
+                '<span class="property_drop_text">Right<br><span class="texture_drop_hint">drag and drop texture image here</span></span>' +
+                '</div>' +
+                '<div class="property_input property_drop texture_drop" id="skybox_front_texture_drop" title="top">' +
+                '<span class="property_drop_text">Front<br><span class="texture_drop_hint">drag and drop texture image here</span></span>' +
+                '</div>' +
+                '<div class="property_input property_drop texture_drop" id="skybox_back_texture_drop" title="top">' +
+                '<span class="property_drop_text">Back<br><span class="texture_drop_hint">drag and drop texture image here</span></span>' +
+                '</div>' +
                 '</li>';
         }
 
@@ -325,6 +351,52 @@ var UIFactory = function(){
                 return false;
             });
         }
+        if(scope.skybox){
+            var textureDrops = document.getElementsByClassName("texture_drop");
+            for(i = 0; i < textureDrops.length; i++){
+                var element = textureDrops[i];
+                textureDrops[i].removeEventListener("change", updateProperties);
+                textureDrops[i].removeEventListener("wheel", updateProperties);
+
+                textureDrops[i].addEventListener("dragenter", function () {
+                    console.log("texture dragenter");
+                });
+                textureDrops[i].addEventListener("dragover", function (e) {
+                    console.log("texture dragover");
+                    e.preventDefault();
+                    e.dataTransfer.dropEffect = 'link';
+                });
+                textureDrops[i].addEventListener("dragleave", function () {
+                    console.log("texture dragleave");
+                });
+                textureDrops[i].addEventListener("drop", function (e) {
+                    e.stopPropagation();
+                    e.preventDefault();
+                    console.log("texture drop");
+                    var file = e.dataTransfer.files[0];
+
+                    if(/(?:\.([^.]+))?$/.exec(file.name)[1] == "png" ||
+                        /(?:\.([^.]+))?$/.exec(file.name)[1] == "jpg" ||
+                        /(?:\.([^.]+))?$/.exec(file.name)[1] == "jpeg" ) {          // check if correct file was dropped
+
+                        var reader  = new FileReader();
+
+                        var textureDrop = this;
+                        reader.addEventListener("load", function () {
+                            console.log(this);
+                            preview.src = reader.result;
+                            textureDrop.style.background = "url(" + reader.result + ")";
+                            textureDrop.style.backgroundSize = "cover";
+                            console.log(document.getElementById("skybox_top_texture_drop"));
+                        }, false);
+
+                        reader.readAsDataURL(file);
+                    }else{
+                        showNotification("Please provide a valid image file.", "fa-exclamation-circle");
+                    }
+                });
+            }
+        }
     };
     var setPropertyValues = function() {
         if (uiFactory.parent) {
@@ -375,6 +447,8 @@ var UIFactory = function(){
         }
         if (uiFactory.camera) {
             document.getElementById("object_name").value = cameraPreview.ayceUI.screenName;
+        } else if(uiFactory.skybox){
+            document.getElementById("object_name").value = "skybox";
         } else {
             document.getElementById("object_name").value = objects[currentObjectId].ayceUI.screenName;
         }

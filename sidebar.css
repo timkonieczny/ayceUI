@@ -91,9 +91,22 @@ ul{
     height: calc(1em + 15px);
     text-align: center;
 }
-.property_drop span{
+.property_drop_text{
     margin: 5px;
     display: block;
+    font-size:1em;
+}
+.texture_drop_hint {
+    font-size: 0.8em;
+}
+.texture_drop{
+    width: calc(50% - 3px - 3px - 2.5px);
+    height: calc(1em + 2em + 25px);
+    float: left;
+    margin-bottom: 5px;
+}
+.texture_drop:nth-child(odd){
+    margin-left: 5px;
 }
 #parent_dropped{
     color: #ffffff;

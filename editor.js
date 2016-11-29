@@ -9,6 +9,20 @@ scene.getCamera().getManager().modifiers.push(modifier, mainCameraModifier);
 
 scene.addToScene((new BasePlane(30, 30, 31, 31)).getO3D(), false);
 
+/*var basePlane = (new Ayce.Geometry.Plane(10, 10, 2, 2, false)).getO3D();
+basePlane.position.x = -2.5;
+basePlane.rotation.fromEulerAngles(Math.PI/2, 0, 0);
+basePlane.textureCoords = [
+    0, 0,
+    0,10,
+    10, 0,
+    10,10
+];
+basePlane.transparent = true;
+basePlane.colors = null;
+basePlane.imageSrc = "grid.png";
+scene.addToScene(basePlane, false);*/
+
 var objects = [];
 var cameraPreview = new CameraPreview();
 document.getElementById("camera_preview_expand").addEventListener("click", function(){
@@ -94,6 +108,12 @@ document.getElementById("add_camera").onclick = function(){ // TODO: only allow 
     cameraPreview.modifier.orientation.y = cameraRotation.y;
     cameraPreview.modifier.orientation.z = cameraRotation.z;
     cameraPreview.modifier.orientation.w = cameraRotation.w;
+    var childNode = appendObjectInSceneChildNode(this.dataset.type);
+    childNode.addEventListener("click", handleClickOnObject);
+    showProperties(childNode);
+};
+
+document.getElementById("add_skybox").onclick = function(){
     var childNode = appendObjectInSceneChildNode(this.dataset.type);
     childNode.addEventListener("click", handleClickOnObject);
     showProperties(childNode);
