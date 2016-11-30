@@ -353,6 +353,12 @@ var UIFactory = function(){
         }
         if(scope.skybox){
             var textureDrops = document.getElementsByClassName("texture_drop");
+            var frontTexture = null;
+            var backTexture = null;
+            var topTexture = null;
+            var bottomTexture = null;
+            var leftTexture = null;
+            var rightTexture = null;
             for(i = 0; i < textureDrops.length; i++){
                 var element = textureDrops[i];
                 textureDrops[i].removeEventListener("change", updateProperties);
@@ -385,15 +391,47 @@ var UIFactory = function(){
                         reader.addEventListener("load", function () {
                             textureDrop.style.background = "url(" + reader.result + ")";
                             textureDrop.style.backgroundSize = "cover";
+                            switch (textureDrop.id){
+                                case "skybox_top_texture_drop":
+                                    topTexture = reader.result;
+                                    break;
+                                case "skybox_bottom_texture_drop":
+                                    bottomTexture = reader.result;
+                                    break;
+                                case "skybox_front_texture_drop":
+                                    frontTexture = reader.result;
+                                    break;
+                                case "skybox_back_texture_drop":
+                                    backTexture = reader.result;
+                                    break;
+                                case "skybox_left_texture_drop":
+                                    leftTexture = reader.result;
+                                    break;
+                                case "skybox_right_texture_drop":
+                                    rightTexture = reader.result;
+                                    break;
+                            }
 
-                            // TODO: position of parent is not applied. Doesn't matter if parent is camera or other object.
-                            objects.push(new Ayce.Skybox(
-                                reader.result, reader.result, reader.result,
-                                reader.result, reader.result, reader.result,
-                                "", scene.getCamera().getManager(), scene.getCamera().farPlane
-                            ));
-                            objects[objects.length-1].ayceUI = {runScriptInPreview: false};
-                            scene.addToScene(objects[objects.length-1]);
+                            if(frontTexture&&backTexture&&topTexture&&bottomTexture&&leftTexture&&rightTexture){
+                                objects.push(new Ayce.Skybox(
+                                    frontTexture, backTexture, topTexture,
+                                    bottomTexture, leftTexture, rightTexture,
+                                    "", scene.getCamera().getManager(), scene.getCamera().farPlane
+                                ));
+                                cameraPreview.objects.push(new Ayce.Skybox(
+                                    frontTexture, backTexture, topTexture,
+                                    bottomTexture, leftTexture, rightTexture,
+                                    "", scene.getCamera().getManager(), scene.getCamera().farPlane
+                                ));
+                                objects[objects.length-1].ayceUI = {
+                                    id: objects.length-1,
+                                    screenName: "skybox",
+                                    runScriptInPreview: false
+                                };
+                                cameraPreview.objects[objects.length-1].ayceUI = {runScriptInPreview: false};
+                                scene.addToScene(objects[objects.length-1]);
+                                cameraPreview.scene.addToScene(objects[objects.length-1]);
+                            }
                         }, false);
 
                         reader.readAsDataURL(file);
