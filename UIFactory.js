@@ -383,11 +383,17 @@ var UIFactory = function(){
 
                         var textureDrop = this;
                         reader.addEventListener("load", function () {
-                            console.log(this);
-                            preview.src = reader.result;
                             textureDrop.style.background = "url(" + reader.result + ")";
                             textureDrop.style.backgroundSize = "cover";
-                            console.log(document.getElementById("skybox_top_texture_drop"));
+
+                            // TODO: position of parent is not applied. Doesn't matter if parent is camera or other object.
+                            objects.push(new Ayce.Skybox(
+                                reader.result, reader.result, reader.result,
+                                reader.result, reader.result, reader.result,
+                                "", scene.getCamera().getManager(), scene.getCamera().farPlane
+                            ));
+                            objects[objects.length-1].ayceUI = {runScriptInPreview: false};
+                            scene.addToScene(objects[objects.length-1]);
                         }, false);
 
                         reader.readAsDataURL(file);

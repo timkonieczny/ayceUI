@@ -6,7 +6,6 @@ modifier.position.y = .5;
 modifier.position.z = 2;
 var mainCameraModifier = new MainCameraModifier(mainCanvas);
 scene.getCamera().getManager().modifiers.push(modifier, mainCameraModifier);
-
 scene.addToScene((new BasePlane(30, 30, 31, 31)).getO3D(), false);
 
 /*var basePlane = (new Ayce.Geometry.Plane(10, 10, 2, 2, false)).getO3D();
