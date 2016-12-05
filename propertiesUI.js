@@ -20,6 +20,10 @@ var showProperties = function(node) {
         uiFactory.lighting = true;
         uiFactory.visibility = true;
         uiFactory.editScript = true;
+        if(objects[currentObjectId].textureCoords&&objects[currentObjectId].textureIndices){
+            uiFactory.texture = true;
+            uiFactory.numberOfTextures = getNumberOfUniqueElements(objects[currentObjectId].textureIndices);
+        }
     }else if(node.dataset.type == "light"){
         uiFactory.position = true;
         uiFactory.lightColor = true;
@@ -29,6 +33,11 @@ var showProperties = function(node) {
         uiFactory.camera = true;
         //uiFactory.parent = true;
         // TODO: add editScript
+    }else if(node.dataset.type == "skybox"){
+        //uiFactory.editScript = true;      // TODO: editScript, visibility
+        //uiFactory.visibility = true;
+        uiFactory.skybox = true;
+        uiFactory.numberOfTextures = getNumberOfUniqueElements(objects[currentObjectId].textureIndices);
     }else if(node.dataset.type == "csv"){
         uiFactory.csv = true;
         uiFactory.parent = true;

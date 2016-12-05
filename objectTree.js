@@ -123,11 +123,16 @@ document.getElementById("parent_actions_cancel").addEventListener("drop", functi
 
 var appendObjectInSceneChildNode = function(type){
     var child = document.createElement('li');
-    if(type=="camera"){
+    if(type=="camera") {
         child.innerHTML = cameraPreview.ayceUI.screenName;
         // TODO: camera deletion
         //child.dataset.id = type;
         //child.id = type;
+    }else if(type=="skybox"){
+        child.innerHTML = "skybox</div>";/* +
+            "<a class='delete_object_from_scene' id='delete_"+(objects.length-1)+"' data-id='"+(objects.length-1)+"'>&#215</a>";*/ // TODO: skybox deletion
+        child.dataset.id = (objects.length-1);          //TODO: eliminate data-id
+        child.id = objects.length-1;
     }else{
         child.innerHTML = objects[objects.length-1].ayceUI.screenName+"</div>" +
             "<a class='delete_object_from_scene' id='delete_"+(objects.length-1)+"' data-id='"+(objects.length-1)+"'>&#215</a>";
@@ -153,16 +158,18 @@ var appendObjectInSceneChildNode = function(type){
     });
     document.getElementById("objects_in_scene_div").style.display = "block";
     document.getElementById("objects_in_scene").appendChild(child);
-    if(type!=="camera") {
+    if(type!=="camera" && type!=="skybox") {
         document.getElementById("delete_" + child.id).addEventListener("click", function (e) {
             e.stopPropagation();
             deleteObject(child);
         });
     }
-    if(objects[objects.length-1].parent){
-        handleChildParentDrop(
-            objects[objects.length-1].ayceUI.id,
-            document.getElementById(objects[objects.length-1].parent.ayceUI.id));
+    if(type!=="skybox"){
+        if(objects[objects.length-1].parent){
+            handleChildParentDrop(
+                objects[objects.length-1].ayceUI.id,
+                document.getElementById(objects[objects.length-1].parent.ayceUI.id));
+        }
     }
     return child;
 };

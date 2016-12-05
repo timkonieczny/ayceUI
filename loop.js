@@ -6,7 +6,7 @@ function update() {
         scene.updateScene();
         scene.drawScene();
     }
-    if(cameraPreview.renderPreview){}
+    if(cameraPreview.renderPreview)
         cameraPreview.update();
 }
 

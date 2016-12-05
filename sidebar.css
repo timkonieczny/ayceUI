@@ -25,6 +25,10 @@ ul{
 .add_object:nth-child(even){
     margin: 0 0 5px 2.5px;
 }
+#create_skybox{
+    width: calc(100% - 10px);
+    margin: 0;
+}
 #sidebar_left, #sidebar_right{
     position: absolute;
     z-index: 2;
@@ -89,14 +93,27 @@ ul{
 }
 .property_drop{
     color: #676767;
-    width: calc(100% - 5px - 5px);
+    width: calc(100% - 3px - 3px);
     padding: 5px;
     height: calc(1em + 15px);
     text-align: center;
 }
-.property_drop span{
+.property_drop_text{
     margin: 5px;
     display: block;
+    font-size:1em;
+}
+.texture_drop_hint {
+    font-size: 0.8em;
+}
+.texture_drop{
+    width: calc(50% - 3px - 3px - 2.5px);
+    height: calc(1em + 2em + 25px);
+    display: inline-block;
+    margin-bottom: 5px;
+}
+.texture_drop:nth-child(odd){
+    margin-left: 5px;
 }
 #parent_dropped{
     color: #ffffff;

@@ -99,11 +99,11 @@ var fileToGeometry = function(e, type){
 
 var createGeometry = function(obj, mtl){
 
-    var object = new Ayce.OBJLoader(obj, mtl, true)[0];
+    var object = new Ayce.OBJLoader(null, obj, mtl, true)[0];
     if(object.vertices) {
 
         objects.push(object);                // TODO: more efficient solution for copying the O3D
-        cameraPreview.objects.push(new Ayce.OBJLoader(obj, mtl, true)[0]);
+        cameraPreview.objects.push(new Ayce.OBJLoader(null, obj, mtl, true)[0]);
 
         objects[objects.length-1].ayceUI = {
             id: objects.length-1,

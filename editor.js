@@ -6,7 +6,6 @@ modifier.position.y = .5;
 modifier.position.z = 2;
 var mainCameraModifier = new MainCameraModifier(mainCanvas);
 scene.getCamera().getManager().modifiers.push(modifier, mainCameraModifier);
-
 scene.addToScene((new BasePlane(30, 30, 31, 31)).getO3D(), false);
 
 var objects = [];
@@ -31,20 +30,24 @@ var handleClickOnObject = function(e){
 for(i = 0; i < addObjectButtons.length; i++){
     addObjectButtons[i].onclick = function(){
         if(this.id != "import_obj" && this.id != "import_csv"){
-            objects.push(eval(this.dataset.objectconstructor));
-            if(!eval(this.dataset.centered)) {
-                objects[objects.length - 1].offset.set(
-                    -objects[objects.length - 1].a / 2.0,
-                    -objects[objects.length - 1].b / 2.0,
-                    -objects[objects.length - 1].c / 2.0
-                );
+            if(this.id!="create_skybox") {
+                objects.push(eval(this.dataset.objectconstructor));
+                if (!eval(this.dataset.centered)) {
+                    objects[objects.length - 1].offset.set(
+                        -objects[objects.length - 1].a / 2.0,
+                        -objects[objects.length - 1].b / 2.0,
+                        -objects[objects.length - 1].c / 2.0
+                    );
+                }
+
+                var geometry = objects[objects.length - 1];
+
+                objects[objects.length - 1] = geometry.getO3D();
+                cameraPreview.objects.push(geometry.getO3D());
+            }else{
+                objects.push(new Ayce.Skybox("", "", "", "", "", "", "", scene.getCamera().getManager(), scene.getCamera().farPlane));
+                cameraPreview.objects.push(new Ayce.Skybox("", "", "", "", "", "", "", scene.getCamera().getManager(), scene.getCamera().farPlane));
             }
-
-            var geometry = objects[objects.length-1];
-
-            objects[objects.length-1] = geometry.getO3D();
-            cameraPreview.objects.push(geometry.getO3D());
-
 
             objects[objects.length-1].script = function(){};
             objects[objects.length-1].logVertexShader = true;
@@ -58,8 +61,10 @@ for(i = 0; i < addObjectButtons.length; i++){
                 runScriptInPreview: false
             };
 
-            scene.addToScene(objects[objects.length-1]);
-            cameraPreview.scene.addToScene(cameraPreview.objects[cameraPreview.objects.length-1], false);
+            if(!objects[objects.length-1].textureCoords){
+                scene.addToScene(objects[objects.length-1]);
+                cameraPreview.scene.addToScene(cameraPreview.objects[cameraPreview.objects.length-1], false);
+            }
 
             var childNode = appendObjectInSceneChildNode(this.dataset.type);
             showProperties(childNode);
