@@ -5,6 +5,7 @@ var showProperties = function(node) {
     document.getElementById("sidebar_right").style.display = "block";
     addClass(node, "button_dark_active");
     currentObjectId = node.dataset.id;
+    console.log(node);
     uiFactory.resetAttributes();
     if (node.dataset.type == "plane"||
         node.dataset.type == "cube"||
@@ -20,6 +21,10 @@ var showProperties = function(node) {
         uiFactory.lighting = true;
         uiFactory.visibility = true;
         uiFactory.editScript = true;
+        if(objects[currentObjectId].textureCoords&&objects[currentObjectId].textureIndices){
+            uiFactory.texture = true;
+            uiFactory.numberOfTextures = getNumberOfUniqueElements(objects[currentObjectId].textureIndices);
+        }
     }else if(node.dataset.type == "light"){
         uiFactory.position = true;
         uiFactory.lightColor = true;
@@ -33,6 +38,7 @@ var showProperties = function(node) {
         //uiFactory.editScript = true;      // TODO: editScript, visibility
         //uiFactory.visibility = true;
         uiFactory.skybox = true;
+        uiFactory.numberOfTextures = getNumberOfUniqueElements(objects[currentObjectId].textureIndices);
     }
     uiFactory.inflatePropertiesUI(document.getElementById("properties_list"));
 

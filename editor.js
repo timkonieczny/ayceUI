@@ -8,20 +8,6 @@ var mainCameraModifier = new MainCameraModifier(mainCanvas);
 scene.getCamera().getManager().modifiers.push(modifier, mainCameraModifier);
 scene.addToScene((new BasePlane(30, 30, 31, 31)).getO3D(), false);
 
-/*var basePlane = (new Ayce.Geometry.Plane(10, 10, 2, 2, false)).getO3D();
-basePlane.position.x = -2.5;
-basePlane.rotation.fromEulerAngles(Math.PI/2, 0, 0);
-basePlane.textureCoords = [
-    0, 0,
-    0,10,
-    10, 0,
-    10,10
-];
-basePlane.transparent = true;
-basePlane.colors = null;
-basePlane.imageSrc = "grid.png";
-scene.addToScene(basePlane, false);*/
-
 var objects = [];
 var cameraPreview = new CameraPreview();
 document.getElementById("camera_preview_expand").addEventListener("click", function(){
@@ -44,20 +30,24 @@ var handleClickOnObject = function(e){
 for(i = 0; i < addObjectButtons.length; i++){
     addObjectButtons[i].onclick = function(){
         if(this.id != "import_obj"){
-            objects.push(eval(this.dataset.objectconstructor));
-            if(!eval(this.dataset.centered)) {
-                objects[objects.length - 1].offset.set(
-                    -objects[objects.length - 1].a / 2.0,
-                    -objects[objects.length - 1].b / 2.0,
-                    -objects[objects.length - 1].c / 2.0
-                );
+            if(this.id!="create_skybox") {
+                objects.push(eval(this.dataset.objectconstructor));
+                if (!eval(this.dataset.centered)) {
+                    objects[objects.length - 1].offset.set(
+                        -objects[objects.length - 1].a / 2.0,
+                        -objects[objects.length - 1].b / 2.0,
+                        -objects[objects.length - 1].c / 2.0
+                    );
+                }
+
+                var geometry = objects[objects.length - 1];
+
+                objects[objects.length - 1] = geometry.getO3D();
+                cameraPreview.objects.push(geometry.getO3D());
+            }else{
+                objects.push(new Ayce.Skybox("", "", "", "", "", "", "", scene.getCamera().getManager(), scene.getCamera().farPlane));
+                cameraPreview.objects.push(new Ayce.Skybox("", "", "", "", "", "", "", scene.getCamera().getManager(), scene.getCamera().farPlane));
             }
-
-            var geometry = objects[objects.length-1];
-
-            objects[objects.length-1] = geometry.getO3D();
-            cameraPreview.objects.push(geometry.getO3D());
-
 
             objects[objects.length-1].script = function(){};
             cameraPreview.objects[objects.length-1].script = function(){};
@@ -68,8 +58,10 @@ for(i = 0; i < addObjectButtons.length; i++){
                 runScriptInPreview: false
             };
 
-            scene.addToScene(objects[objects.length-1]);
-            cameraPreview.scene.addToScene(cameraPreview.objects[cameraPreview.objects.length-1], false);
+            if(!objects[objects.length-1].textureCoords){
+                scene.addToScene(objects[objects.length-1]);
+                cameraPreview.scene.addToScene(cameraPreview.objects[cameraPreview.objects.length-1], false);
+            }
 
             var childNode = appendObjectInSceneChildNode(this.dataset.type);
             showProperties(childNode);
@@ -107,12 +99,6 @@ document.getElementById("add_camera").onclick = function(){ // TODO: only allow 
     cameraPreview.modifier.orientation.y = cameraRotation.y;
     cameraPreview.modifier.orientation.z = cameraRotation.z;
     cameraPreview.modifier.orientation.w = cameraRotation.w;
-    var childNode = appendObjectInSceneChildNode(this.dataset.type);
-    childNode.addEventListener("click", handleClickOnObject);
-    showProperties(childNode);
-};
-
-document.getElementById("add_skybox").onclick = function(){
     var childNode = appendObjectInSceneChildNode(this.dataset.type);
     childNode.addEventListener("click", handleClickOnObject);
     showProperties(childNode);

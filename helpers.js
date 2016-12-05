@@ -57,6 +57,15 @@ var hasChildNodeWithId = function(parent, childId){
     return false;
 };
 
+var getNumberOfUniqueElements = function(array){
+    if(array)
+        return array.filter(function(element, index, array) {
+            return index == array.indexOf(element);
+        }).length;
+    else
+        return 0;
+};
+
 // Enables \t indenting in textareas
 var textareas = document.getElementsByTagName('textarea');
 var count = textareas.length;

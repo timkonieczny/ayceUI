@@ -16,11 +16,22 @@ var UIFactory = function(){
         this.editScript = false;
         this.parent = false;
         this.skybox = false;
+        this.texture = false;
+        this.numberOfTextures = 0;
     };
     this.resetAttributes();
 
     this.inflatePropertiesUI = function(parent){
         var ui = "";
+        if(this.texture){
+            ui+='<li>Texture Image:<br>';
+            for(var i = 0; i < this.numberOfTextures; i++){
+                ui+='<div class="property_input property_drop texture_drop" data-textureslot="'+i+'" title="top">' +
+                    '<span class="property_drop_text">Slot '+i+'<br><span class="texture_drop_hint">drag and drop texture image here</span></span>' +
+                    '</div>';
+            }
+            ui+='</li>';
+        }
         if(this.parent){
             ui+='<li>Parent:<br>' +
                 '<div class="property_input property_drop" id="parent_drop" title="parent">' +
@@ -113,23 +124,23 @@ var UIFactory = function(){
             // visibility
 
             ui+='<li>Texture Images:<br>' +
-                '<div class="property_input property_drop texture_drop" id="skybox_top_texture_drop" title="top">' +
-                '<span class="property_drop_text">Top<br><span class="texture_drop_hint">drag and drop texture image here</span></span>' +
-                '</div>' +
-                '<div class="property_input property_drop texture_drop" id="skybox_bottom_texture_drop" title="top">' +
-                '<span class="property_drop_text">Bottom<br><span class="texture_drop_hint">drag and drop texture image here</span></span>' +
-                '</div>' +
-                '<div class="property_input property_drop texture_drop" id="skybox_left_texture_drop" title="top">' +
-                '<span class="property_drop_text">Left<br><span class="texture_drop_hint">drag and drop texture image here</span></span>' +
-                '</div>' +
-                '<div class="property_input property_drop texture_drop" id="skybox_right_texture_drop" title="top">' +
-                '<span class="property_drop_text">Right<br><span class="texture_drop_hint">drag and drop texture image here</span></span>' +
-                '</div>' +
-                '<div class="property_input property_drop texture_drop" id="skybox_front_texture_drop" title="top">' +
+                '<div class="property_input property_drop texture_drop" data-textureslot="0" title="front">' +
                 '<span class="property_drop_text">Front<br><span class="texture_drop_hint">drag and drop texture image here</span></span>' +
                 '</div>' +
-                '<div class="property_input property_drop texture_drop" id="skybox_back_texture_drop" title="top">' +
+                '<div class="property_input property_drop texture_drop" data-textureslot="1" title="back">' +
                 '<span class="property_drop_text">Back<br><span class="texture_drop_hint">drag and drop texture image here</span></span>' +
+                '</div>' +
+                '<div class="property_input property_drop texture_drop" data-textureslot="2" title="top">' +
+                '<span class="property_drop_text">Top<br><span class="texture_drop_hint">drag and drop texture image here</span></span>' +
+                '</div>' +
+                '<div class="property_input property_drop texture_drop" data-textureslot="3" title="bottom">' +
+                '<span class="property_drop_text">Bottom<br><span class="texture_drop_hint">drag and drop texture image here</span></span>' +
+                '</div>' +
+                '<div class="property_input property_drop texture_drop" data-textureslot="4" title="right">' +
+                '<span class="property_drop_text">Right<br><span class="texture_drop_hint">drag and drop texture image here</span></span>' +
+                '</div>' +
+                '<div class="property_input property_drop texture_drop" data-textureslot="5" title="left">' +
+                '<span class="property_drop_text">Left<br><span class="texture_drop_hint">drag and drop texture image here</span></span>' +
                 '</div>' +
                 '</li>';
         }
@@ -351,16 +362,14 @@ var UIFactory = function(){
                 return false;
             });
         }
-        if(scope.skybox){
+        if(scope.texture||scope.skybox){
             var textureDrops = document.getElementsByClassName("texture_drop");
-            var frontTexture = null;
-            var backTexture = null;
-            var topTexture = null;
-            var bottomTexture = null;
-            var leftTexture = null;
-            var rightTexture = null;
-            for(i = 0; i < textureDrops.length; i++){
-                var element = textureDrops[i];
+            var numberOfAddedTextures = 0;
+            var texturePaths = [];
+            for(i = 0; i < scope.numberOfTextures; i++){
+                texturePaths[i] = null;
+            }
+            for(i = 0; i < textureDrops.length; i++) {
                 textureDrops[i].removeEventListener("change", updateProperties);
                 textureDrops[i].removeEventListener("wheel", updateProperties);
 
@@ -381,61 +390,29 @@ var UIFactory = function(){
                     console.log("texture drop");
                     var file = e.dataTransfer.files[0];
 
-                    if(/(?:\.([^.]+))?$/.exec(file.name)[1] == "png" ||
+                    if (/(?:\.([^.]+))?$/.exec(file.name)[1] == "png" ||
                         /(?:\.([^.]+))?$/.exec(file.name)[1] == "jpg" ||
-                        /(?:\.([^.]+))?$/.exec(file.name)[1] == "jpeg" ) {          // check if correct file was dropped
+                        /(?:\.([^.]+))?$/.exec(file.name)[1] == "jpeg") {          // check if correct file was dropped
 
-                        var reader  = new FileReader();
+                        var reader = new FileReader();
 
                         var textureDrop = this;
                         reader.addEventListener("load", function () {
                             textureDrop.style.background = "url(" + reader.result + ")";
                             textureDrop.style.backgroundSize = "cover";
-                            switch (textureDrop.id){
-                                case "skybox_top_texture_drop":
-                                    topTexture = reader.result;
-                                    break;
-                                case "skybox_bottom_texture_drop":
-                                    bottomTexture = reader.result;
-                                    break;
-                                case "skybox_front_texture_drop":
-                                    frontTexture = reader.result;
-                                    break;
-                                case "skybox_back_texture_drop":
-                                    backTexture = reader.result;
-                                    break;
-                                case "skybox_left_texture_drop":
-                                    leftTexture = reader.result;
-                                    break;
-                                case "skybox_right_texture_drop":
-                                    rightTexture = reader.result;
-                                    break;
-                            }
+                            texturePaths[Number(textureDrop.dataset.textureslot)] = reader.result;
+                            numberOfAddedTextures++;
 
-                            if(frontTexture&&backTexture&&topTexture&&bottomTexture&&leftTexture&&rightTexture){
-                                objects.push(new Ayce.Skybox(
-                                    frontTexture, backTexture, topTexture,
-                                    bottomTexture, leftTexture, rightTexture,
-                                    "", scene.getCamera().getManager(), scene.getCamera().farPlane
-                                ));
-                                cameraPreview.objects.push(new Ayce.Skybox(
-                                    frontTexture, backTexture, topTexture,
-                                    bottomTexture, leftTexture, rightTexture,
-                                    "", scene.getCamera().getManager(), scene.getCamera().farPlane
-                                ));
-                                objects[objects.length-1].ayceUI = {
-                                    id: objects.length-1,
-                                    screenName: "skybox",
-                                    runScriptInPreview: false
-                                };
-                                cameraPreview.objects[objects.length-1].ayceUI = {runScriptInPreview: false};
-                                scene.addToScene(objects[objects.length-1]);
-                                cameraPreview.scene.addToScene(objects[objects.length-1]);
+                            if (numberOfAddedTextures == scope.numberOfTextures) {
+                                objects[objects.length - 1].imageSrc = texturePaths;
+                                cameraPreview.objects[objects.length - 1].imageSrc = texturePaths;
+                                scene.addToScene(objects[objects.length - 1]);
+                                cameraPreview.scene.addToScene(objects[objects.length - 1]);
                             }
                         }, false);
 
                         reader.readAsDataURL(file);
-                    }else{
+                    } else {
                         showNotification("Please provide a valid image file.", "fa-exclamation-circle");
                     }
                 });
