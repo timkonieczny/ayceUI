@@ -58,6 +58,8 @@ var UIFactory = function(){
                 '<input type="number" class="property_input" id="scale_x" title="scale_x"/>' +
                 '<input type="number" class="property_input" id="scale_y" title="scale_y"/>' +
                 '<input type="number" class="property_input" id="scale_z" title="scale_z"/>' +
+                '<br><input type="checkbox" class="property_input" id="uniform_scaling"/>' +
+                '<label for="uniform_scaling">Uniform Scaling <i class="fa fa-link"></i></label>' +
                 '</li>';
         }
         if(this.color){
@@ -286,15 +288,29 @@ var UIFactory = function(){
                         objects[currentObjectId].ayceUI.runScriptInPreview = e.target.checked;
                     }
                     break;
+                case "uniform_scaling":
+                    break;
+                case "scale_x":
+                case "scale_y":
+                case "scale_z":
+                    element = document.getElementById(e.srcElement.id);
+                    if(e.type == "wheel") {
+                        element.value = Number(element.value) + factor * 0.1;
+                    }
+                    element.value = Math.max(e.target.value, 0.00001);
+                    if(document.getElementById("uniform_scaling").checked){
+                        document.getElementById("scale_x").value = element.value;
+                        document.getElementById("scale_y").value = element.value;
+                        document.getElementById("scale_z").value = element.value;
+                    }
+                    objects[currentObjectId].scale.x = document.getElementById("scale_x").value;
+                    objects[currentObjectId].scale.y = document.getElementById("scale_y").value;
+                    objects[currentObjectId].scale.z = document.getElementById("scale_z").value;
+                    break;
                 default:
                     var attribute = e.srcElement.id.split("_");
                     if(e.type == "wheel") {
                         e.target.value = Number(e.target.value) + factor * 0.1;
-                    }
-                    switch (attribute[0]) {
-                        case "scale":
-                            e.target.value = Math.max(e.target.value, 0.00001);
-                            break;
                     }
                     objects[currentObjectId][attribute[0]][attribute[1]] =
                         cameraPreview.objects[currentObjectId][attribute[0]][attribute[1]] = Number(e.target.value);

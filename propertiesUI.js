@@ -5,7 +5,6 @@ var showProperties = function(node) {
     document.getElementById("sidebar_right").style.display = "block";
     addClass(node, "button_dark_active");
     currentObjectId = node.dataset.id;
-    console.log(node);
     uiFactory.resetAttributes();
     if (node.dataset.type == "plane"||
         node.dataset.type == "cube"||
