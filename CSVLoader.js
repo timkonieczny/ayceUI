@@ -19,18 +19,19 @@ CSVLoader = function(){
     this.getO3Ds = function(e){
         var data = [];
         var csv = e.currentTarget.result;
-        csv = csv.replace(/^\s+|\s+$/g, "");    // remove \n from start and end of string
+        csv = csv.replace(/^\s+|\s+cn$/g, "");    // remove \n from start and end of string
         csv = csv.replace("trID,trN,pIdx,X,Y,time,SPEED,COURSE,SPEED_C,ACCELERATION_C,COURSE_C,TURN_C\n", "");
         csv = csv.split("\n");
         var point;
         var prevTrID = null;
         var j = -1;
 
-        var maxSpeed = 0;
         var maxAcceleration = 0;
 
-        csvTimer = Date.now();
+        var csvTimer = Date.now();
         console.log("extracting data");
+        var speeds = [];
+        var accelerations = [];
         for(var i = 0; i < csv.length; i++){
             point = csv[i].split(",");
 
@@ -55,10 +56,79 @@ CSVLoader = function(){
                 courseC: point[10]!="" ? Number(point[10]) : null,
                 turnC: point[11]!="" ? Number(point[11]) : null
             });
-            if(data[j][data[j].length-1].speed!=null) maxSpeed = Math.max(maxSpeed, data[j][data[j].length-1].speed);
+            if(data[j][data[j].length-1].speed!=null)
+                speeds.push(data[j][data[j].length - 1].speed);
             if(data[j][data[j].length-1].accelerationC!=null)
-                maxAcceleration = Math.max(maxAcceleration, data[j][data[j].length-1].accelerationC);
+                accelerations.push(data[j][data[j].length-1].accelerationC);
         }
+
+        var getMedianAt = function(array, middle){
+            //var divider = middle>0.5 ? 1-middle : middle;
+            if(array.length%(1/(middle>0.5 ? 1-middle : middle))>0){
+                return (array[Math.floor(array.length*middle)]+array[Math.ceil(array.length*middle)])/2
+            }else{
+                return array[array.length*middle]
+            }
+        };
+        var getMinMaxWithoutOutliers = function(array){
+            array.sort(function(a,b){return a-b});
+
+            var q2 = getMedianAt(array, 0.5);
+            var q1 = getMedianAt(array, 0.25);
+            var q3 = getMedianAt(array, 0.75);
+
+            var interQuartRange = q3 - q1;
+
+            var upperFenceI = q3+interQuartRange*1.5;
+            var lowerFenceI = q1-interQuartRange*1.5;
+
+            var upperFenceO = q3+interQuartRange*3;
+            var lowerFenceO = q1-interQuartRange*3;
+            var majorUpperOutliers = [];
+            var minorUpperOutliers = [];
+            var majorLowerOutliers = [];
+            var minorLowerOutliers = [];
+
+            /*console.log("upperMedian = "+q1+
+                "\nmedian = "+q2+
+                "\nlowerMedian = "+q3+
+                "\ninnerQuartRange = "+interQuartRange+
+                "\nupperFenceI = "+upperFenceI+
+                "\nlowerFenceI = "+lowerFenceI+
+                "\nupperFenceO = "+upperFenceO+
+                "\nlowerFenceO = "+lowerFenceO
+            );*/
+
+            for(i = 0; i < array.length; i++){
+                if(array[i]<lowerFenceI){
+                    if(array[i]<lowerFenceO)
+                        majorLowerOutliers.push(array[i]);
+                    else
+                        minorLowerOutliers.push(array[i]);
+                }else if(array[i]>upperFenceI){
+                    if(array[i]>upperFenceO)
+                        majorUpperOutliers.push(array[i]);
+                    else
+                        minorUpperOutliers.push(array[i]);
+                }
+            }
+
+            var scaleTop, scaleBottom;
+            if(minorUpperOutliers.length > 0)
+                scaleTop = Math.max.apply( Math, minorUpperOutliers );
+            else
+                scaleTop = Math.min.apply( Math, array );
+
+            if(minorLowerOutliers.length>0)
+                scaleBottom = Math.max.apply( Math, minorLowerOutliers );
+            else
+                scaleBottom = Math.min.apply(Math, array);
+
+            return [scaleTop, scaleBottom]
+        };
+
+        var speedScale = chroma.scale("Spectral").domain(getMinMaxWithoutOutliers(speeds));
+        var accelerationScale = chroma.scale('Spectral').domain(getMinMaxWithoutOutliers(accelerations).reverse());
 
         console.log("done (" + (Date.now()-csvTimer) + "ms)");
 
@@ -76,7 +146,6 @@ CSVLoader = function(){
             object.vertices = [];
             object.indices = [];
             object.colors = [];
-            //for(j = 0; j < data[i].length-1; j++) {
             for(j = 0; j < data[i].length; j++) {
                 object.vertices.push(
                     factor*(data[i][j].x-subtractX)+offsetX,        i*yHeight,        factor*(data[i][j].y-subtractY)+offsetY,    // foreign front bottom
@@ -89,26 +158,30 @@ CSVLoader = function(){
                     factor*(data[i][j].x-subtractX)+offsetX,        i*yHeight+yHeight,  factor*(data[i][j].y-subtractY)+offsetY     // back top
                 );
 
+                var color = speedScale(data[i][j].speed).rgb();
+
                 colors.speed.push(
-                    data[i][j].speed/maxSpeed, data[i][j].speed/maxSpeed, data[i][j].speed/maxSpeed, 1.0,
-                    data[i][j].speed/maxSpeed, data[i][j].speed/maxSpeed, data[i][j].speed/maxSpeed, 1.0,
-                    data[i][j].speed/maxSpeed, data[i][j].speed/maxSpeed, data[i][j].speed/maxSpeed, 1.0,
-                    data[i][j].speed/maxSpeed, data[i][j].speed/maxSpeed, data[i][j].speed/maxSpeed, 1.0,
-                    data[i][j].speed/maxSpeed, data[i][j].speed/maxSpeed, data[i][j].speed/maxSpeed, 1.0,
-                    data[i][j].speed/maxSpeed, data[i][j].speed/maxSpeed, data[i][j].speed/maxSpeed, 1.0,
-                    data[i][j].speed/maxSpeed, data[i][j].speed/maxSpeed, data[i][j].speed/maxSpeed, 1.0,
-                    data[i][j].speed/maxSpeed, data[i][j].speed/maxSpeed, data[i][j].speed/maxSpeed, 1.0
+                    color[0]/255, color[1]/255, color[2]/255, 1.0,
+                    color[0]/255, color[1]/255, color[2]/255, 1.0,
+                    color[0]/255, color[1]/255, color[2]/255, 1.0,
+                    color[0]/255, color[1]/255, color[2]/255, 1.0,
+                    color[0]/255, color[1]/255, color[2]/255, 1.0,
+                    color[0]/255, color[1]/255, color[2]/255, 1.0,
+                    color[0]/255, color[1]/255, color[2]/255, 1.0,
+                    color[0]/255, color[1]/255, color[2]/255, 1.0
                 );
 
+                color = accelerationScale(data[i][j].acceleration).rgb();
+
                 colors.acceleration.push(
-                    data[i][j].accelerationC/maxAcceleration, data[i][j].accelerationC/maxAcceleration, data[i][j].accelerationC/maxAcceleration, 1.0,
-                    data[i][j].accelerationC/maxAcceleration, data[i][j].accelerationC/maxAcceleration, data[i][j].accelerationC/maxAcceleration, 1.0,
-                    data[i][j].accelerationC/maxAcceleration, data[i][j].accelerationC/maxAcceleration, data[i][j].accelerationC/maxAcceleration, 1.0,
-                    data[i][j].accelerationC/maxAcceleration, data[i][j].accelerationC/maxAcceleration, data[i][j].accelerationC/maxAcceleration, 1.0,
-                    data[i][j].accelerationC/maxAcceleration, data[i][j].accelerationC/maxAcceleration, data[i][j].accelerationC/maxAcceleration, 1.0,
-                    data[i][j].accelerationC/maxAcceleration, data[i][j].accelerationC/maxAcceleration, data[i][j].accelerationC/maxAcceleration, 1.0,
-                    data[i][j].accelerationC/maxAcceleration, data[i][j].accelerationC/maxAcceleration, data[i][j].accelerationC/maxAcceleration, 1.0,
-                    data[i][j].accelerationC/maxAcceleration, data[i][j].accelerationC/maxAcceleration, data[i][j].accelerationC/maxAcceleration, 1.0
+                    color[0]/255, color[1]/255, color[2]/255, 1.0,
+                    color[0]/255, color[1]/255, color[2]/255, 1.0,
+                    color[0]/255, color[1]/255, color[2]/255, 1.0,
+                    color[0]/255, color[1]/255, color[2]/255, 1.0,
+                    color[0]/255, color[1]/255, color[2]/255, 1.0,
+                    color[0]/255, color[1]/255, color[2]/255, 1.0,
+                    color[0]/255, color[1]/255, color[2]/255, 1.0,
+                    color[0]/255, color[1]/255, color[2]/255, 1.0
                 );
 
                 /*object.colors.push(
