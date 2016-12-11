@@ -12,12 +12,18 @@ CSVLoader = function(){
         }
     };
 
-    this.getO3Ds = function(e){
+    this.getO3Ds = function(trajString, dataString){
         var data = [];
-        var csv = e;
-        csv = csv.replace(/^\s+|\s+cn$/g, "");    // remove \n from start and end of string
-        csv = csv.replace("trID,trN,pIdx,X,Y,time,SPEED,COURSE,SPEED_C,ACCELERATION_C,COURSE_C,TURN_C\n", "");
-        csv = csv.split("\n");
+        var csvTraj = trajString;
+        var csvData = dataString;
+        csvTraj = csvTraj.replace(/^\s+|\s+cn$/g, "");    // remove \n from start and end of string
+        csvTraj = csvTraj.replace("trID,trN,pIdx,X,Y,time,SPEED,COURSE,SPEED_C,ACCELERATION_C,COURSE_C,TURN_C\n", "");
+        csvTraj = csvTraj.split("\n");
+
+        csvData = csvData.replace(/^\s+|\s+cn$/g, "");    // remove \n from start and end of string
+        csvData = csvData.replace("id,Name,trN,trN,Entity ID,Number of positions,Track length,Start date+time,End date+time,Start date,End date,Start time,End time,Duration (second),Duration (minutes),Duration (hours),Year (start),Year (end),Month (start),Month (end),Day of week (start),Day of week (end),Hour (start),Hour (end),Stop duration,Stop duration (hours),Stop duration (minutes),Distance to next trajectory,max_SPEED,median_SPEED,Clusters (Route similarity; 1km/5)\n", "");
+        csvData = csvData.split("\n");
+
         var point;
         var prevTrID = null;
         var j = -1;
@@ -28,8 +34,8 @@ CSVLoader = function(){
         console.log("extracting data");
         var speeds = [];
         var accelerations = [];
-        for(var i = 0; i < csv.length; i++){
-            point = csv[i].split(",");
+        for(var i = 0; i < csvTraj.length; i++){
+            point = csvTraj[i].split(",");
 
             var trID = point[0]!="" ? Number(point[0]) : null;
             if(trID != prevTrID){
@@ -56,6 +62,42 @@ CSVLoader = function(){
                 speeds.push(data[j][data[j].length - 1].speed);
             if(data[j][data[j].length-1].accelerationC!=null)
                 accelerations.push(data[j][data[j].length-1].accelerationC);
+        }
+
+        for(i = 0; i < csvData.length; i++){
+            point = csvData[i].split(",");
+            for(j = 0; j < data[i].length; j++){
+                if(data[i][j].trID == point[0]){
+                    data[i][j].name =                       point[1]!="" ? point[1] : null;
+                    data[i][j].entityID =                   point[4]!="" ? point[4] : null;
+                    data[i][j].numberOfPositions =          point[5]!="" ? Number(point[5]) : null;
+                    data[i][j].trackLength =                point[6]!="" ? Number(point[6]) : null;
+                    data[i][j].startDateTime =              point[7]!="" ? point[7] : null;
+                    data[i][j].endDateTime =                point[8]!="" ? point[8] : null;
+                    data[i][j].startDate =                  point[9]!="" ? point[9] : null;
+                    data[i][j].endDate =                    point[10]!="" ? point[10] : null;
+                    data[i][j].startTime =                  point[11]!="" ? point[11] : null;
+                    data[i][j].endTime =                    point[12]!="" ? point[12] : null;
+                    data[i][j].durationSeconds =            point[13]!="" ? Number(point[13]) : null;
+                    data[i][j].durationMinutes =            point[14]!="" ? Number(point[14]) : null;
+                    data[i][j].durationHours =              point[15]!="" ? Number(point[15]) : null;
+                    data[i][j].startYear =                  point[16]!="" ? Number(point[16]) : null;
+                    data[i][j].endYear =                    point[17]!="" ? Number(point[17]) : null;
+                    data[i][j].startMonth =                 point[18]!="" ? Number(point[18]) : null;
+                    data[i][j].endMonth =                   point[19]!="" ? Number(point[19]) : null;
+                    data[i][j].startDayOfWeek =             point[20]!="" ? Number(point[20]) : null;
+                    data[i][j].endDayOfWeek =               point[21]!="" ? Number(point[21]) : null;
+                    data[i][j].startHour =                  point[22]!="" ? Number(point[22]) : null;
+                    data[i][j].endHour =                    point[23]!="" ? Number(point[23]) : null;
+                    data[i][j].stopDuration =               point[24]!="" ? Number(point[24]) : null;
+                    data[i][j].stopDurationHours =          point[25]!="" ? Number(point[25]) : null;
+                    data[i][j].stopDurationMinutes =        point[26]!="" ? Number(point[26]) : null;
+                    data[i][j].distanceToNextTrajectory =   point[27]!="" ? Number(point[27]) : null;
+                    data[i][j].maxSpeed =                   point[28]!="" ? Number(point[28]) : null;
+                    data[i][j].medianSpeed =                point[29]!="" ? Number(point[29]) : null;
+                    data[i][j].clusters =                   point[30]!="" ? Number(point[30]) : null;
+                }
+            }
         }
 
         var getMedianAt = function(array, middle){
