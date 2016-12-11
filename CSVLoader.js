@@ -1,11 +1,7 @@
 CSVLoader = function(){
 
-    var factor = 10;
-    var subtractX = 7;  // TODO: calculate dynamically based on statistic of whole data set
-    var subtractY = 50;
-    var offsetX = -2;
-    var offsetY = -7.5;
-    var yHeight = 0.02;
+    var boundarySize = 3;
+    var trajectoryHeight = 0.05;
 
     var colors = {
         speed: [],
@@ -137,6 +133,41 @@ CSVLoader = function(){
         csvTimer = Date.now();
         console.log("building Ayce.Object3Ds");
 
+        var offsetX = 0, offsetY = 0, minX = null, minY = null, maxX = null, maxY = null, numberOfPoints = 0;
+        for(i = 0; i < data.length; i++) {
+            for(j = 0; j < data[i].length; j++) {
+                if(data[i][j].x){
+                    offsetX += data[i][j].x;
+                    if(maxX)
+                        maxX = Math.max(maxX, data[i][j].x);
+                    else
+                        maxX = data[i][j].x;
+
+                    if(maxY)
+                        maxY = Math.max(maxY, data[i][j].y);
+                    else
+                        maxY = data[i][j].y;
+
+                    if(minX)
+                        minX = Math.min(minX, data[i][j].x);
+                    else
+                        minX = data[i][j].x;
+
+                    if(minY)
+                        minY = Math.min(minY, data[i][j].y);
+                    else
+                        minY = data[i][j].y;
+                }
+                if(data[i][j].y){
+                    offsetY += data[i][j].y;
+                }
+                numberOfPoints++;
+            }
+        }
+        offsetX /= numberOfPoints;
+        offsetY /= numberOfPoints;
+        var scalingFactor = boundarySize/Math.max(maxX-minX, maxY-minY);
+
         for(i = 0; i < data.length; i++){
             var object = new Ayce.Object3D();
             object.visualization = {            // TODO: grab data from data file
@@ -148,14 +179,14 @@ CSVLoader = function(){
             object.colors = [];
             for(j = 0; j < data[i].length; j++) {
                 object.vertices.push(
-                    factor*(data[i][j].x-subtractX)+offsetX,        i*yHeight,        factor*(data[i][j].y-subtractY)+offsetY,    // foreign front bottom
-                    factor*(data[i][j].x-subtractX)+offsetX,        i*yHeight+yHeight,  factor*(data[i][j].y-subtractY)+offsetY,    // foreign front top
-                    factor*(data[i][j].x-subtractX)+offsetX,        i*yHeight,        factor*(data[i][j].y-subtractY)+offsetY,    // foreign back bottom
-                    factor*(data[i][j].x-subtractX)+offsetX,        i*yHeight+yHeight,  factor*(data[i][j].y-subtractY)+offsetY,    // foreign back top
-                    factor*(data[i][j].x-subtractX)+offsetX,        i*yHeight,        factor*(data[i][j].y-subtractY)+offsetY,    // front bottom
-                    factor*(data[i][j].x-subtractX)+offsetX,        i*yHeight+yHeight,  factor*(data[i][j].y-subtractY)+offsetY,    // front top
-                    factor*(data[i][j].x-subtractX)+offsetX,        i*yHeight,        factor*(data[i][j].y-subtractY)+offsetY,    // back bottom
-                    factor*(data[i][j].x-subtractX)+offsetX,        i*yHeight+yHeight,  factor*(data[i][j].y-subtractY)+offsetY     // back top
+                    scalingFactor*(data[i][j].x-offsetX),   i*trajectoryHeight,                 scalingFactor*(data[i][j].y-offsetY),    // foreign front bottom
+                    scalingFactor*(data[i][j].x-offsetX),   i*trajectoryHeight+trajectoryHeight,scalingFactor*(data[i][j].y-offsetY),    // foreign front top
+                    scalingFactor*(data[i][j].x-offsetX),   i*trajectoryHeight,                 scalingFactor*(data[i][j].y-offsetY),    // foreign back bottom
+                    scalingFactor*(data[i][j].x-offsetX),   i*trajectoryHeight+trajectoryHeight,scalingFactor*(data[i][j].y-offsetY),    // foreign back top
+                    scalingFactor*(data[i][j].x-offsetX),   i*trajectoryHeight,                 scalingFactor*(data[i][j].y-offsetY),    // front bottom
+                    scalingFactor*(data[i][j].x-offsetX),   i*trajectoryHeight+trajectoryHeight,scalingFactor*(data[i][j].y-offsetY),    // front top
+                    scalingFactor*(data[i][j].x-offsetX),   i*trajectoryHeight,                 scalingFactor*(data[i][j].y-offsetY),    // back bottom
+                    scalingFactor*(data[i][j].x-offsetX),   i*trajectoryHeight+trajectoryHeight,scalingFactor*(data[i][j].y-offsetY)     // back top
                 );
 
                 var color = speedScale(data[i][j].speed).rgb();
