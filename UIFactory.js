@@ -309,7 +309,7 @@ var UIFactory = function(){
                         objects[currentObjectId].ayceUI.runScriptInPreview = e.target.checked;
                     }
                     break;
-                case "visualization_color":
+                case "visualization_color": // TODO: Change color of all children
                     if(e.type != "wheel") {
                         scene.removeFromScene(objects[currentObjectId]);
                         cameraPreview.scene.removeFromScene(cameraPreview.objects[currentObjectId]);

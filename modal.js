@@ -26,6 +26,10 @@ var openModal = function(type, currentObjectId){
     }else if(type == "csv"){
         document.getElementById("modal").style.display = "block";
         document.getElementById("csv_upload_wrapper").style.display = "block";
+
+        document.getElementById("csv_drop").style.display = "flex";
+        document.getElementById("csv_data_drop").style.display = "flex";
+
     }
     document.getElementById("modal_close").addEventListener("click", closeModal);
 };
@@ -37,14 +41,24 @@ var closeModal = function(){
     document.getElementById("mtl_drop_done").style.display = "none";
     document.getElementById("file_upload_wrapper").style.display = "none";
     document.getElementById("import_processing").style.display = "none";
+    objString = null;
+    mtlString = null;
+
     document.getElementById("export_code_textarea").style.display = "none";
     document.getElementById("edit_script_textarea").style.display = "none";
     document.getElementById("edit_script_wrapper").style.display = "none";
-    document.getElementById("modal").style.display = "none";
+
+    document.getElementById("csv_drop").style.display = "none";
+    document.getElementById("csv_drop_done").style.display = "none";
+    document.getElementById("csv_data_drop").style.display = "none";
+    document.getElementById("csv_data_drop_done").style.display = "none";
+    document.getElementById("csv_data_drop_done").style.display = "none";
     document.getElementById("csv_upload_wrapper").style.display = "none";
-    document.getElementById("csv_drop_loading").style.display = "none";
-    objString = null;
-    mtlString = null;
+    document.getElementById("import_csv_processing").style.display = "none";
+    csvString = null;
+    csvDataString = null;
+
+    document.getElementById("modal").style.display = "none";
 };
 
 document.getElementById("obj_drop").addEventListener("dragover", function(e){
@@ -129,12 +143,14 @@ document.getElementById("csv_drop").addEventListener("dragover", function(e){
     e.preventDefault();
     e.dataTransfer.dropEffect = 'copy';
 }, false);
+document.getElementById("csv_data_drop").addEventListener("dragover", function(e){
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'copy';
+}, false);
 
-var csvTimer;
+var csvString = null, csvDataString = null;
 
-var csvLoader = new CSVLoader();
-
-document.getElementById("csv_drop").addEventListener("drop", function(e){
+var processCSV = function(e, type){
     e.stopPropagation();
     e.preventDefault();
 
@@ -142,44 +158,81 @@ document.getElementById("csv_drop").addEventListener("drop", function(e){
 
     if(/(?:\.([^.]+))?$/.exec(file.name)[1] == "csv") {          // check if correct file was dropped in correct field
 
-        document.getElementById("csv_drop").style.display = "none";
-        document.getElementById("csv_drop_loading").style.display = "flex";
+        if(type=="traj") {
+            document.getElementById("csv_drop").style.display = "none";
+            document.getElementById("csv_drop_loading").style.display = "flex";
+        }else if(type=="data"){
+            document.getElementById("csv_data_drop").style.display = "none";
+            document.getElementById("csv_data_drop_loading").style.display = "flex";
+        }
 
         csvTimer = Date.now();
         console.log("reading file");
         var reader = new FileReader();
         reader.onload = function (e) {
             console.log("done (" + (Date.now()-csvTimer) + "ms)");
-            var o3Ds = csvLoader.getO3Ds(e);
-            var cameraPreviewO3Ds = [];
-
-            for(var i = 0; i < o3Ds.length; i++) {
-                cameraPreviewO3Ds[i] = cloneO3D(o3Ds[i]);
+            if(type == "traj") csvString = e.currentTarget.result;
+            else if(type == "data") csvDataString = e.currentTarget.result;
+            if(type=="traj") {
+                document.getElementById("csv_drop_loading").style.display = "none";
+                document.getElementById("csv_drop_done").style.display = "flex";
+            }else if(type=="data"){
+                document.getElementById("csv_data_drop_loading").style.display = "none";
+                document.getElementById("csv_data_drop_done").style.display = "flex";
             }
+            if(csvString && csvDataString) {
 
-            for(i = 0; i < o3Ds.length; i++){
-                //o3Ds[i].uniforms = [];            // TODO: add uniforms for color mode selection
-                //o3Ds[i].logVertexShader = true;
-                //o3Ds[i].logFragmentShader = true;
-                objects.push(o3Ds[i]);
-                cameraPreview.objects.push(cameraPreviewO3Ds[i]);
-                objects[objects.length-1].script = function(){};
-                cameraPreview.objects[objects.length-1].script = function(){};
-                objects[objects.length-1].ayceUI = {
-                    id: objects.length-1,
-                    screenName: "trajectory " + objects[objects.length-1].visualization.id,
-                    runScriptInPreview: false
-                };
-                scene.addToScene(objects[objects.length - 1]);
-                //cameraPreview.scene.addToScene(cameraPreview.objects[cameraPreview.objects.length-1], false);
-                var child = appendObjectInSceneChildNode("csv");
-                showProperties(child);
+                document.getElementById("csv_drop_done").style.display = "none";
+                document.getElementById("csv_data_drop_done").style.display = "none";
+                document.getElementById("import_csv_processing").style.display = "flex";
+
+                console.log(document.getElementById("import_csv_processing"));
+
+                var o3Ds = csvLoader.getO3Ds(csvString, csvDataString);
+                var cameraPreviewO3Ds = [];
+
+                for (var i = 0; i < o3Ds.length; i++) {
+                    cameraPreviewO3Ds[i] = cloneO3D(o3Ds[i]);
+                }
+
+                for (i = 0; i < o3Ds.length; i++) {
+                    //o3Ds[i].uniforms = [];            // TODO: add uniforms for color mode selection
+                    //o3Ds[i].logVertexShader = true;
+                    //o3Ds[i].logFragmentShader = true;
+                    objects.push(o3Ds[i]);
+                    cameraPreview.objects.push(cameraPreviewO3Ds[i]);
+                    objects[objects.length - 1].script = function () {
+                    };
+                    cameraPreview.objects[objects.length - 1].script = function () {
+                    };
+                    objects[objects.length - 1].ayceUI = {
+                        id: objects.length - 1,
+                        screenName: "trajectory " + objects[objects.length - 1].visualization.id,
+                        runScriptInPreview: false
+                    };
+                    scene.addToScene(objects[objects.length - 1]);
+                    //cameraPreview.scene.addToScene(cameraPreview.objects[cameraPreview.objects.length-1], false);
+                    var child = appendObjectInSceneChildNode("csv");
+                    showProperties(child);
+                }
+                document.getElementById("csv_drop_loading").style.display = "none";
+                closeModal();
             }
-            document.getElementById("csv_drop_loading").style.display = "none";
-            closeModal();
         };
         reader.readAsText(file);
     }else{
         showNotification("Please provide a valid .csv file.", "fa-exclamation-circle");
     }
+};
+
+var csvTimer;
+
+var csvLoader = new CSVLoader();
+
+document.getElementById("csv_drop").addEventListener("drop", function(e){
+    processCSV(e, "traj")
+}, false);
+
+document.getElementById("csv_data_drop").addEventListener("drop", function(e){
+    processCSV(e, "data")
 }, false);

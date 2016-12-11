@@ -14,7 +14,7 @@ CSVLoader = function(){
 
     this.getO3Ds = function(e){
         var data = [];
-        var csv = e.currentTarget.result;
+        var csv = e;
         csv = csv.replace(/^\s+|\s+cn$/g, "");    // remove \n from start and end of string
         csv = csv.replace("trID,trN,pIdx,X,Y,time,SPEED,COURSE,SPEED_C,ACCELERATION_C,COURSE_C,TURN_C\n", "");
         csv = csv.split("\n");

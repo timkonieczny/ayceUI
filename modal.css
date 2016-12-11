@@ -129,7 +129,7 @@
     position: absolute;
     bottom: 0;
 }
-#import_processing{
+#import_processing, #import_csv_processing{
     position: absolute;
     top: 0;
     bottom: 0;
@@ -143,15 +143,15 @@
     align-items: center;
     cursor: default;
 }
-#csv_drop{
+/*#csv_drop{
     display: flex;
     height: calc(100% - 12px - 4px);
     width: calc(100% - 12px - 4px);
-}
+}*/
 #csv_drop_loading{
     text-align: center;
     font-size: 1.7em;
-    height: calc(100% - 12px - 4px);
+    /*height: calc(100% - 12px - 4px);*/
     width: calc(100% - 12px - 4px);
     display: none;
 }
