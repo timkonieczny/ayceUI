@@ -316,13 +316,14 @@ CSVLoader = function(){
                     object.normals[object.indices[k]*3+2] = -nz;
                 }
             }
-            if(csvObjects[0]!=undefined) object.parent = csvObjects[0];
-            object.colors = colors.speed;
-
-            object.visualization.speedColors = colors.speed;
-            object.visualization.accelerationColors = colors.acceleration;
-
-            csvObjects.push(object);
+            if(csvObjects.length == 0) csvObjects.push(new EmptyObject());
+            else {
+                object.parent = csvObjects[0];
+                object.colors = colors.speed;
+                object.visualization.speedColors = colors.speed;
+                object.visualization.accelerationColors = colors.acceleration;
+                csvObjects.push(object);
+            }
         }
 
         return csvObjects;

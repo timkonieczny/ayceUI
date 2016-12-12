@@ -186,8 +186,6 @@ var processCSV = function(e, type){
                 document.getElementById("csv_data_drop_done").style.display = "none";
                 document.getElementById("import_csv_processing").style.display = "flex";
 
-                console.log(document.getElementById("import_csv_processing"));
-
                 var o3Ds = csvLoader.getO3Ds(csvString, csvDataString);
                 var cameraPreviewO3Ds = [];
 
@@ -195,26 +193,36 @@ var processCSV = function(e, type){
                     cameraPreviewO3Ds[i] = cloneO3D(o3Ds[i]);
                 }
 
+                var child;
                 for (i = 0; i < o3Ds.length; i++) {
                     //o3Ds[i].uniforms = [];            // TODO: add uniforms for color mode selection
                     //o3Ds[i].logVertexShader = true;
                     //o3Ds[i].logFragmentShader = true;
                     objects.push(o3Ds[i]);
                     cameraPreview.objects.push(cameraPreviewO3Ds[i]);
-                    objects[objects.length - 1].script = function () {
-                    };
-                    cameraPreview.objects[objects.length - 1].script = function () {
-                    };
-                    objects[objects.length - 1].ayceUI = {
-                        id: objects.length - 1,
-                        screenName: "trajectory " + objects[objects.length - 1].visualization.id,
-                        runScriptInPreview: false
-                    };
-                    scene.addToScene(objects[objects.length - 1]);
-                    //cameraPreview.scene.addToScene(cameraPreview.objects[cameraPreview.objects.length-1], false);
-                    var child = appendObjectInSceneChildNode("csv");
-                    showProperties(child);
+                    objects[objects.length - 1].script = function () {};
+                    cameraPreview.objects[objects.length - 1].script = function () {};
+                    if(i>0) {   // 0th object is EmptyObject (parent object), can't be rendered
+                        objects[objects.length - 1].ayceUI = {
+                            id: objects.length - 1,
+                            screenName: "trajectory " + objects[objects.length - 1].visualization.id,
+                            runScriptInPreview: false
+                        };
+                        scene.addToScene(objects[objects.length - 1]);
+                        cameraPreview.scene.addToScene(cameraPreview.objects[cameraPreview.objects.length - 1], false);
+                        appendObjectInSceneChildNode("csv");
+                        currentObjectId = objects.length - 1;
+                    }else{
+                        objects[objects.length - 1].ayceUI = {
+                            id: objects.length - 1,
+                            screenName: "trajectory parent",
+                            runScriptInPreview: false
+                        };
+                        child = appendObjectInSceneChildNode("empty");
+                        currentObjectId = objects.length - 1;
+                    }
                 }
+                showProperties(child);
                 document.getElementById("csv_drop_loading").style.display = "none";
                 closeModal();
             }
