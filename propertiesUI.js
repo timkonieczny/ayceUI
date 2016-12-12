@@ -38,6 +38,10 @@ var showProperties = function(node) {
         //uiFactory.visibility = true;
         uiFactory.skybox = true;
         uiFactory.numberOfTextures = getNumberOfUniqueElements(objects[currentObjectId].textureIndices);
+    }else if(node.dataset.type == "empty"){
+        uiFactory.parent = true;
+        uiFactory.position = true;
+        uiFactory.rotation = true;
     }
     uiFactory.inflatePropertiesUI(document.getElementById("properties_list"));
 

@@ -141,7 +141,6 @@ var appendObjectInSceneChildNode = function(type){
     }
     child.dataset.type = type;
     child.className = "object_in_scene button_dark";
-    //child.onclick = showProperties;
     child.addEventListener("click", handleClickOnObject);
     child.draggable = true;
     child.addEventListener("dragstart", function(e){
@@ -189,10 +188,12 @@ var handleDeletedObject = function(child){
 };
 
 var deleteObject = function(child){
-    scene.removeFromScene(objects[child.id]);
-    objects[child.id] = null;
-    cameraPreview.scene.removeFromScene(cameraPreview.objects[child.id]);
-    cameraPreview.objects[child.id] = null;
+    if(!(objects[child.id] instanceof EmptyObject)) {
+        scene.removeFromScene(objects[child.id]);
+        objects[child.id] = null;
+        cameraPreview.scene.removeFromScene(cameraPreview.objects[child.id]);
+        cameraPreview.objects[child.id] = null;
+    }
     handleDeletedObject(child);
 };
 
