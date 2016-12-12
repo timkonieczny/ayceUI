@@ -42,8 +42,12 @@ for(i = 0; i < addObjectButtons.length; i++){
 
                 var geometry = objects[objects.length - 1];
 
-                objects[objects.length - 1] = geometry.getO3D();
-                cameraPreview.objects.push(geometry.getO3D());
+                var o3D = geometry.getO3D();
+                o3D.textureCoords = o3D.textureIndices = null;
+                objects[objects.length - 1] = o3D;
+                o3D = geometry.getO3D();
+                o3D.textureCoords = o3D.textureIndices = null;
+                cameraPreview.objects.push(o3D);
             }else{
                 objects.push(new Ayce.Skybox("", "", "", "", "", "", "", scene.getCamera().getManager(), scene.getCamera().farPlane));
                 cameraPreview.objects.push(new Ayce.Skybox("", "", "", "", "", "", "", scene.getCamera().getManager(), scene.getCamera().farPlane));
@@ -71,6 +75,14 @@ for(i = 0; i < addObjectButtons.length; i++){
         }
     }
 }
+
+document.getElementById("add_empty").onclick = function(){
+    objects.push(new EmptyObject());
+    cameraPreview.objects.push(new EmptyObject());
+    var childNode = appendObjectInSceneChildNode(this.dataset.type);
+    childNode.addEventListener("click", handleClickOnObject);
+    showProperties(childNode);
+};
 
 document.getElementById("add_light").onclick = function(){
     objects.push(new Ayce.Light());

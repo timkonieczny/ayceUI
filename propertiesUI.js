@@ -49,6 +49,10 @@ var showProperties = function(node) {
         uiFactory.lighting = true;
         uiFactory.visibility = true;
         uiFactory.editScript = true;
+    }else if(node.dataset.type == "empty"){
+        uiFactory.parent = true;
+        uiFactory.position = true;
+        uiFactory.rotation = true;
     }
     uiFactory.inflatePropertiesUI(document.getElementById("properties_list"));
 
