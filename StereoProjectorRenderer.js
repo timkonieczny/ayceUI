@@ -14,6 +14,15 @@ StereoProjectorRenderer = function (canvas) {
 
     var i = 0;
 
+    this.update = function(camera, objects, transparentObjects){
+        for(i=0; i < objects.length; i++){
+            objects[i].buffer.updateVR(camera);
+        }
+        for(i=0; i < transparentObjects.length; i++){
+            transparentObjects[i].buffer.updateVR(camera);
+        }
+    };
+
     /**
      * Renders objects
      * @param {Camera} camera
@@ -28,14 +37,14 @@ StereoProjectorRenderer = function (canvas) {
         // Render opaque objects
         for (i=0; i<objects.length; i++) {
             buffer = objects[i].buffer;
-            buffer.render();
+            buffer.renderVR("left");
         }
 
         // Render transparent objects
         for (i=0; i<transparentObjects.length; i++) {
             buffer = transparentObjects[i].buffer;      // TODO: Do textured objects show up? With alpha too?
             console.log(transparentObjects[i]);
-            buffer.render();
+            buffer.renderVR("left");
         }
 
         this.setViewportAndScissor(canvas.width/2, 0, canvas.width/2, canvas.height);
@@ -43,13 +52,13 @@ StereoProjectorRenderer = function (canvas) {
         // Render opaque objects
         for (i=0; i<objects.length; i++) {
             buffer = objects[i].buffer;
-            buffer.render();
+            buffer.renderVR("right");
         }
 
         // Render transparent objects
         for (i=0; i<transparentObjects.length; i++) {
             buffer = transparentObjects[i].buffer;
-            buffer.render();
+            buffer.renderVR("right");
         }
     };
 };

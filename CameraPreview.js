@@ -7,6 +7,8 @@ CameraPreview = function() {
     this.objects = [];
     this.modifier.position.y = .5;
     this.scene.getCamera().getManager().modifiers.push(this.modifier);
+    //this.scene.getCamera().getManager().cameraProperties.eyeTranslationL = -0.5;
+    //this.scene.getCamera().getManager().cameraProperties.eyeTranslationR = 0.5;
     this.renderer = new StereoProjectorRenderer(scope.canvas);
     this.ayceUI = {
         id: null,
@@ -57,7 +59,7 @@ CameraPreview = function() {
 
     document.getElementById("camera_preview_view_stereo").addEventListener("click", function(){
         scope.scene.setRenderer(scope.renderer);
-        scope.scene.getCamera().useVR = false;
+        scope.scene.getCamera().useVR = true;
         document.getElementById("camera_preview_view_stereo").style.display = "none";
         document.getElementById("camera_preview_view_desktop").style.display = "block";
         document.getElementById("camera_preview_view_vr").style.display = "block";
