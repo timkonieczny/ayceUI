@@ -53,6 +53,16 @@ var showProperties = function(node) {
         uiFactory.parent = true;
         uiFactory.position = true;
         uiFactory.rotation = true;
+        var nextSibling = null;
+        nextSibling = document.getElementById(currentObjectId).nextElementSibling;
+        while(nextSibling && nextSibling.dataset.type!="csv"){
+            nextSibling = nextSibling.nextElementSibling;
+        }
+        if(nextSibling){
+            uiFactory.sortData = objects[Number(nextSibling.id)].visualization;
+        }else{
+            uiFactory.sortData = false;
+        }
     }
     uiFactory.inflatePropertiesUI(document.getElementById("properties_list"));
 

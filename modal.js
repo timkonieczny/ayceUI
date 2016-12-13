@@ -205,7 +205,7 @@ var processCSV = function(e, type){
                     if(i>0) {   // 0th object is EmptyObject (parent object), can't be rendered
                         objects[objects.length - 1].ayceUI = {
                             id: objects.length - 1,
-                            screenName: "trajectory " + objects[objects.length - 1].visualization.id,
+                            screenName: "trajectory " + objects[objects.length - 1].visualization.trN,
                             runScriptInPreview: false
                         };
                         scene.addToScene(objects[objects.length - 1]);
@@ -222,7 +222,7 @@ var processCSV = function(e, type){
                         currentObjectId = objects.length - 1;
                     }
                 }
-                showProperties(child);
+                showProperties(document.getElementById(child.id));
                 document.getElementById("csv_drop_loading").style.display = "none";
                 closeModal();
             }

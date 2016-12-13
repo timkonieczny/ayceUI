@@ -16,6 +16,7 @@ var UIFactory = function(){
         this.editScript = false;
         this.parent = false;
         this.csv = false;
+        this.sortData = false;
         this.skybox = false;
         this.texture = false;
         this.numberOfTextures = 0;
@@ -41,12 +42,24 @@ var UIFactory = function(){
                 '</li>';
         }
         if(this.csv){
-            // TODO: different colors as attributes, switch via uniform
             ui+='<li>Visualization colors:<br>' +
                 '<select class="property_input" id="visualization_color" title="visualization_color">' +
                 '<option value="speed">speed</option>' +
                 '<option value="acceleration">accelerationC</option>' +
                 '</select> ' +
+                '</li>';
+            // TODO: different colors as attributes, switch via uniform
+        }
+        if(this.sortData){                          // TODO: event listeners
+            ui+='<li>Sort trajectories by:<br>' +
+                '<select class="property_input" id="visualization_sorting" title="visualization_sorting">';
+            for (var property in this.sortData) {
+                if (this.sortData.hasOwnProperty(property)) {
+                    if(property!="niceNames"&&property!="speedColors"&&property!="accelerationColors")
+                        ui+='<option value="'+property+'">'+this.sortData.niceNames[property]+'</option>';
+                }
+            }
+            ui+='</select> ' +
                 '</li>';
         }
         if(this.position){
