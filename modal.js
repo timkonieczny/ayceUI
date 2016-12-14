@@ -187,6 +187,9 @@ var processCSV = function(e, type){
                 document.getElementById("import_csv_processing").style.display = "flex";
 
                 var o3Ds = csvLoader.getO3Ds(csvString, csvDataString);
+                csvTimer = Date.now();
+                console.log("adding objects to scene");
+
                 var cameraPreviewO3Ds = [];
 
                 for (var i = 0; i < o3Ds.length; i++) {
@@ -194,7 +197,7 @@ var processCSV = function(e, type){
                 }
 
                 var child;
-                for (i = 0; i < o3Ds.length; i++) {
+                for (i = 0; i < Math.min(2000, o3Ds.length); i++) {   // TODO: apply limit in CSV Loader
                     //o3Ds[i].uniforms = [];            // TODO: add uniforms for color mode selection
                     //o3Ds[i].logVertexShader = true;
                     //o3Ds[i].logFragmentShader = true;
@@ -205,7 +208,7 @@ var processCSV = function(e, type){
                     if(i>0) {   // 0th object is EmptyObject (parent object), can't be rendered
                         objects[objects.length - 1].ayceUI = {
                             id: objects.length - 1,
-                            screenName: "trajectory " + objects[objects.length - 1].visualization.trN,
+                            screenName: "trajectory " + objects[objects.length - 1].visualization.id,
                             runScriptInPreview: false
                         };
                         scene.addToScene(objects[objects.length - 1]);
@@ -222,6 +225,7 @@ var processCSV = function(e, type){
                         currentObjectId = objects.length - 1;
                     }
                 }
+                console.log("done (" + (Date.now()-csvTimer) + "ms)");
                 showProperties(document.getElementById(child.id));
                 document.getElementById("csv_drop_loading").style.display = "none";
                 closeModal();

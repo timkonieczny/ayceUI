@@ -22,7 +22,8 @@ CSVLoader = function(){
         for(i = 0; i < trajHeader.length; i++){
             trajHeader[i] = trajHeader[i].replace(new RegExp("[^a-zA-Z_]+", 'g'), "");
         }
-        csvTraj = csvTraj.replace("trID,trN,pIdx,X,Y,time,SPEED,COURSE,SPEED_C,ACCELERATION_C,COURSE_C,TURN_C\n", "");
+        csvTraj = csvTraj.replace(/^\s+|\s+cn$/g, "");    // remove \n from start and end of string
+        csvTraj = csvTraj.replace(/^(.*)$/m, "");         // remove first line (header)
         csvTraj = csvTraj.replace(/^\s+|\s+cn$/g, "");    // remove \n from start and end of string
         csvTraj = csvTraj.split("\n");
         csvTraj.splice(csvTraj.length-1, 1);    // because \n at end of string can't be removed
@@ -33,9 +34,10 @@ CSVLoader = function(){
         for(i = 0; i < dataHeader.length; i++){
             dataHeader[i] = dataHeader[i].replace(new RegExp("[^a-zA-Z_]+", 'g'), "");
         }
-        csvData = csvData.replace("id,Name,trN,trN,Entity ID,Number of positions,Track length,Start date+time,End date+time,Start date,End date,Start time,End time,Duration (second),Duration (minutes),Duration (hours),Year (start),Year (end),Month (start),Month (end),Day of week (start),Day of week (end),Hour (start),Hour (end),Stop duration,Stop duration (hours),Stop duration (minutes),Distance to next trajectory,max_SPEED,median_SPEED,Clusters (Route similarity; 1km/5)\n", "");
+        csvData = csvData.replace(/^(.*)$/m, "");           // remove first line (header)
+        csvData = csvData.replace(/^\s+|\s+cn$/g, "");    // remove \n from start and end of string
         csvData = csvData.split("\n");
-        csvData.splice(csvTraj.length-1, 1);    // because \n at end of string can't be removed
+        csvData.splice(csvData.length-1, 1);    // because \n at end of string can't be removed
 
         var point;
         var prevTrID = null;
@@ -57,28 +59,26 @@ CSVLoader = function(){
             }
             prevTrID = trID;
 
-            trajectories[j].push({
-                trID: point[0]!="" ? Number(point[0]) : null,
-                trN: point[1]!="" ? Number(point[1]) : null,
-                pIdx: point[2]!="" ? Number(point[2]) : null,
-                x: point[3]!="" ? Number(point[3]) : null,
-                y: point[4]!="" ? Number(point[4]) : null,
-                time: point[5],
-                speed: point[6]!="" ? Number(point[6]) : null,
-                course: point[7]!="" ? Number(point[7]) : null,
-                speedC: point[8]!="" ? Number(point[8]) : null,
-                accelerationC: point[9]!="" ? Number(point[9]) : null,
-                courseC: point[10]!="" ? Number(point[10]) : null,
-                turnC: point[11]!="" ? Number(point[11]) : null
-            });
-            if(trajectories[j][trajectories[j].length-1].speed!=null)
-                speeds.push(trajectories[j][trajectories[j].length - 1].speed);
-            if(trajectories[j][trajectories[j].length-1].accelerationC!=null)
-                accelerations.push(trajectories[j][trajectories[j].length-1].accelerationC);
+            var dataPoint = {};
+            for(k = 0; k < trajHeader.length; k++){
+                dataPoint[trajHeader[k].toLowerCase()] = point[k]!="" ? point[k] : null
+            }
+            if(dataPoint.x && dataPoint.x!=undefined) dataPoint.x = Number(dataPoint.x);
+            if(dataPoint.y && dataPoint.y!=undefined) dataPoint.y = Number(dataPoint.y);
+            trajectories[j].push(dataPoint);
+
+            if(trajectories[j][trajectories[j].length-1].speed) {
+                speeds.push(Number(trajectories[j][trajectories[j].length - 1].speed));
+                //console.log(Number(trajectories[j][trajectories[j].length - 1].speed));
+            }else if(trajectories[j][trajectories[j].length-1].speed_c) {
+                speeds.push(Number(trajectories[j][trajectories[j].length - 1].speed_c));
+                //console.log(Number(trajectories[j][trajectories[j].length - 1].speed_c));
+            }
+            if(trajectories[j][trajectories[j].length-1].acceleration_c)
+                accelerations.push(Number(trajectories[j][trajectories[j].length-1].acceleration_c));
         }
 
         var getMedianAt = function(array, middle){
-            //var divider = middle>0.5 ? 1-middle : middle;
             if(array.length%(1/(middle>0.5 ? 1-middle : middle))>0){
                 return (array[Math.floor(array.length*middle)]+array[Math.ceil(array.length*middle)])/2
             }else{
@@ -129,15 +129,35 @@ CSVLoader = function(){
             }
 
             var scaleTop, scaleBottom;
+
+            var min = function(array){          // Workaround for bug in chrome http://stackoverflow.com/questions/18308700/chrome-how-to-solve-maximum-call-stack-size-exceeded-errors-on-math-max-apply
+                var maxArrayLength = 124980;
+                var minimaOfArraySlices = [];
+                for(i = 0; i < Math.ceil(array.length / maxArrayLength); i++) {
+                    minimaOfArraySlices.push(Math.min.apply(Math, array.slice(i * maxArrayLength, Math.min((i + 1) * maxArrayLength, array.length))));
+                }
+                return Math.min.apply(Math, minimaOfArraySlices);
+            };
+
             if(minorUpperOutliers.length > 0)
                 scaleTop = Math.max.apply( Math, minorUpperOutliers );
             else
-                scaleTop = Math.min.apply( Math, array );
+                scaleTop = min(array);
 
             if(minorLowerOutliers.length>0)
                 scaleBottom = Math.max.apply( Math, minorLowerOutliers );
             else
-                scaleBottom = Math.min.apply(Math, array);
+                scaleBottom = min(array);
+
+            if(minorUpperOutliers.length > 0)
+                scaleTop = Math.max.apply( Math, minorUpperOutliers );
+            else
+                scaleTop = min(array);
+
+            if(minorLowerOutliers.length>0)
+                scaleBottom = Math.max.apply( Math, minorLowerOutliers );
+            else
+                scaleBottom = min(array);
 
             return [scaleTop, scaleBottom]
         };
@@ -189,20 +209,25 @@ CSVLoader = function(){
 
         csvObjects.push(new EmptyObject());
 
+        var object, color, numberOfVertices, x1, y1, z1, x2, y2, z2, x3, y3, z3, nx, ny, nz, vectorLength, k, index;
+
+        var newObject = new Ayce.Object3D();
+
         for(i = 0; i < trajectories.length; i++){
-            var object = new Ayce.Object3D();
-            object.visualization = {niceNames:{}};
+            csvObjects.push(new Ayce.Object3D());
+            index = csvObjects.length-1;
+            csvObjects[index].visualization = {niceNames:{}};
             point = csvData[i].split(",");
             for(j = 0; j < dataHeader.length; j++){
-                object.visualization[dataHeader[j]] = point[j]!="" ? point[j] : null;
-                object.visualization.niceNames[dataHeader[j]] = dataHeaderNiceNames[j];
-            }           //TODO: Where is trajectory 1
+                csvObjects[index].visualization[dataHeader[j]] = point[j]!="" ? point[j] : null;
+                csvObjects[index].visualization.niceNames[dataHeader[j]] = dataHeaderNiceNames[j];
+            }
             colors.reset();
-            object.vertices = [];
-            object.indices = [];
-            object.colors = [];
+            csvObjects[index].vertices = [];
+            csvObjects[index].indices = [];
+            csvObjects[index].colors = [];
             for(j = 0; j < trajectories[i].length; j++) {
-                object.vertices.push(
+                csvObjects[index].vertices.push(
                     scalingFactor*(trajectories[i][j].x-offsetX),   i*trajectoryHeight,                 scalingFactor*(trajectories[i][j].y-offsetY),    // foreign front bottom
                     scalingFactor*(trajectories[i][j].x-offsetX),   i*trajectoryHeight+trajectoryHeight,scalingFactor*(trajectories[i][j].y-offsetY),    // foreign front top
                     scalingFactor*(trajectories[i][j].x-offsetX),   i*trajectoryHeight,                 scalingFactor*(trajectories[i][j].y-offsetY),    // foreign back bottom
@@ -213,7 +238,8 @@ CSVLoader = function(){
                     scalingFactor*(trajectories[i][j].x-offsetX),   i*trajectoryHeight+trajectoryHeight,scalingFactor*(trajectories[i][j].y-offsetY)     // back top
                 );
 
-                var color = speedScale(trajectories[i][j].speed).rgb();
+                if(trajectories[i][j].speed) color = speedScale(trajectories[i][j].speed).rgb();
+                else color = speedScale(trajectories[i][j].speed_c).rgb();
 
                 colors.speed.push(
                     color[0]/255, color[1]/255, color[2]/255, 1.0,
@@ -250,9 +276,9 @@ CSVLoader = function(){
                     0.5, 0.5, 0.5, 1.0
                 );*/
 
-                var numberOfVertices = trajectories[i].length*8;
+                numberOfVertices = trajectories[i].length*8;
 
-                object.indices.push(
+                csvObjects[index].indices.push(
                     (j*8+4)%numberOfVertices, (j*8+5)%numberOfVertices, (j*8+9)%numberOfVertices,   // front 1
                     (j*8+4)%numberOfVertices, (j*8+9)%numberOfVertices, (j*8+8)%numberOfVertices,   // front 2
                     (j*8+11)%numberOfVertices, (j*8+7)%numberOfVertices, (j*8+6)%numberOfVertices,  // back 1
@@ -260,51 +286,50 @@ CSVLoader = function(){
                 );
             }
 
-            object.normals = [];
+            csvObjects[index].normals = [];
 
-            for(j = 0; j < object.indices.length; j+=12){
+            for(j = 0; j < csvObjects[index].indices.length; j+=12){
 
                 // get vertex coordinates
-                var x1 = object.vertices[object.indices[j]*3];
-                var y1 = object.vertices[object.indices[j]*3+1];
-                var z1 = object.vertices[object.indices[j]*3+2];
+                x1 = csvObjects[index].vertices[csvObjects[index].indices[j]*3];
+                y1 = csvObjects[index].vertices[csvObjects[index].indices[j]*3+1];
+                z1 = csvObjects[index].vertices[csvObjects[index].indices[j]*3+2];
 
-                var x2 = object.vertices[object.indices[j+1]*3];
-                var y2 = object.vertices[object.indices[j+1]*3+1];
-                var z2 = object.vertices[object.indices[j+1]*3+2];
+                x2 = csvObjects[index].vertices[csvObjects[index].indices[j+1]*3];
+                y2 = csvObjects[index].vertices[csvObjects[index].indices[j+1]*3+1];
+                z2 = csvObjects[index].vertices[csvObjects[index].indices[j+1]*3+2];
 
-                var x3 = object.vertices[object.indices[j+2]*3];
-                var y3 = object.vertices[object.indices[j+2]*3+1];
-                var z3 = object.vertices[object.indices[j+2]*3+2];
+                x3 = csvObjects[index].vertices[csvObjects[index].indices[j+2]*3];
+                y3 = csvObjects[index].vertices[csvObjects[index].indices[j+2]*3+1];
+                z3 = csvObjects[index].vertices[csvObjects[index].indices[j+2]*3+2];
 
                 // calculate normal vector
-                var nx = (y2 - y1)*(z3 - z1) - (z2 - z1)*(y3 - y1);
-                var ny = (z2 - z1)*(x3 - x1) - (x2 - x1)*(z3 - z1);
-                var nz = (x2 - x1)*(y3 - y1) - (y2 - y1)*(x3 - x1);
-                var vectorLength = Math.sqrt(nx*nx+ny*ny+nz*nz);
+                nx = (y2 - y1)*(z3 - z1) - (z2 - z1)*(y3 - y1);
+                ny = (z2 - z1)*(x3 - x1) - (x2 - x1)*(z3 - z1);
+                nz = (x2 - x1)*(y3 - y1) - (y2 - y1)*(x3 - x1);
+                vectorLength = Math.sqrt(nx*nx+ny*ny+nz*nz);
                 // normalize normal vector
                 nx /= vectorLength;
                 ny /= vectorLength;
                 nz /= vectorLength;
 
-                for(var k = j; k < j+6; k++){   // set normals for front
-                    object.normals[object.indices[k]*3] = nx;
-                    object.normals[object.indices[k]*3+1] = ny;
-                    object.normals[object.indices[k]*3+2] = nz;
+                for(k = j; k < j+6; k++){   // set normals for front
+                    csvObjects[index].normals[csvObjects[index].indices[k]*3] = nx;
+                    csvObjects[index].normals[csvObjects[index].indices[k]*3+1] = ny;
+                    csvObjects[index].normals[csvObjects[index].indices[k]*3+2] = nz;
                 }
                 for(k = j+6; k < j+12; k++){    // set normals for back
-                    object.normals[object.indices[k]*3] = -nx;
-                    object.normals[object.indices[k]*3+1] = -ny;
-                    object.normals[object.indices[k]*3+2] = -nz;
+                    csvObjects[index].normals[csvObjects[index].indices[k]*3] = -nx;
+                    csvObjects[index].normals[csvObjects[index].indices[k]*3+1] = -ny;
+                    csvObjects[index].normals[csvObjects[index].indices[k]*3+2] = -nz;
                 }
             }
-            object.parent = csvObjects[0];
-            object.colors = colors.speed;
-            object.visualization.speedColors = colors.speed;
-            object.visualization.accelerationColors = colors.acceleration;
-            csvObjects.push(object);
+            csvObjects[index].parent = csvObjects[0];
+            csvObjects[index].colors = colors.speed;
+            csvObjects[index].visualization.speedColors = colors.speed;
+            csvObjects[index].visualization.accelerationColors = colors.acceleration;
         }
-
+        console.log("done (" + (Date.now()-csvTimer) + "ms)");
         return csvObjects;
     };
 };
