@@ -186,7 +186,8 @@ var processCSV = function(e, type){
                 document.getElementById("csv_data_drop_done").style.display = "none";
                 document.getElementById("import_csv_processing").style.display = "flex";
 
-                var o3Ds = csvLoader.getO3Ds(csvString, csvDataString);
+                var o3Ds = csvLoader.getO3Ds(csvString, csvDataString, 0, 2000);
+                //var o3Ds = csvLoader.getO3Ds(csvString, csvDataString, 0, 10000);     // This still works
                 csvTimer = Date.now();
                 console.log("adding objects to scene");
 
@@ -197,7 +198,7 @@ var processCSV = function(e, type){
                 }
 
                 var child;
-                for (i = 0; i < Math.min(2000, o3Ds.length); i++) {   // TODO: apply limit in CSV Loader
+                for (i = 0; i < o3Ds.length; i++) {
                     //o3Ds[i].uniforms = [];            // TODO: add uniforms for color mode selection
                     //o3Ds[i].logVertexShader = true;
                     //o3Ds[i].logFragmentShader = true;

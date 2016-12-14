@@ -12,7 +12,7 @@ CSVLoader = function(){
         }
     };
 
-    this.getO3Ds = function(trajString, dataString){
+    this.getO3Ds = function(trajString, dataString, firstTrajectory, lastTrajectory){
         var trajectories = [];
         var csvTraj = trajString;
         var csvData = dataString;
@@ -38,6 +38,13 @@ CSVLoader = function(){
         csvData = csvData.replace(/^\s+|\s+cn$/g, "");    // remove \n from start and end of string
         csvData = csvData.split("\n");
         csvData.splice(csvData.length-1, 1);    // because \n at end of string can't be removed
+        if(firstTrajectory==undefined||firstTrajectory<0||firstTrajectory>lastTrajectory||firstTrajectory>csvData.length-1){
+            firstTrajectory = 0;
+        }
+        if(lastTrajectory==undefined||lastTrajectory<0||lastTrajectory<firstTrajectory||lastTrajectory>csvData.length-1){
+            lastTrajectory = csvData.length-1;
+        }
+        csvData = csvData.slice(firstTrajectory, lastTrajectory);    // because \n at end of string can't be removed
 
         var point;
         var prevTrID = null;
@@ -49,33 +56,38 @@ CSVLoader = function(){
         console.log("extracting data");
         var speeds = [];
         var accelerations = [];
+        var addTrajectory = true;
         for(var i = 0; i < csvTraj.length; i++){
             point = csvTraj[i].split(",");
 
             var trID = point[0]!="" ? Number(point[0]) : null;
             if(trID != prevTrID){
-                trajectories.push([]);
                 j++;
+                addTrajectory = (j >= firstTrajectory);
+                if(j == lastTrajectory) break;
+                if(addTrajectory) trajectories.push([]);
             }
             prevTrID = trID;
 
-            var dataPoint = {};
-            for(k = 0; k < trajHeader.length; k++){
-                dataPoint[trajHeader[k].toLowerCase()] = point[k]!="" ? point[k] : null
-            }
-            if(dataPoint.x && dataPoint.x!=undefined) dataPoint.x = Number(dataPoint.x);
-            if(dataPoint.y && dataPoint.y!=undefined) dataPoint.y = Number(dataPoint.y);
-            trajectories[j].push(dataPoint);
+            if(addTrajectory) {
+                var dataPoint = {};
+                for (k = 0; k < trajHeader.length; k++) {
+                    dataPoint[trajHeader[k].toLowerCase()] = point[k] != "" ? point[k] : null
+                }
+                if (dataPoint.x && dataPoint.x != undefined) dataPoint.x = Number(dataPoint.x);
+                if (dataPoint.y && dataPoint.y != undefined) dataPoint.y = Number(dataPoint.y);
+                trajectories[j-firstTrajectory].push(dataPoint);
 
-            if(trajectories[j][trajectories[j].length-1].speed) {
-                speeds.push(Number(trajectories[j][trajectories[j].length - 1].speed));
-                //console.log(Number(trajectories[j][trajectories[j].length - 1].speed));
-            }else if(trajectories[j][trajectories[j].length-1].speed_c) {
-                speeds.push(Number(trajectories[j][trajectories[j].length - 1].speed_c));
-                //console.log(Number(trajectories[j][trajectories[j].length - 1].speed_c));
+                if (trajectories[j-firstTrajectory][trajectories[j-firstTrajectory].length - 1].speed) {
+                    speeds.push(Number(trajectories[j-firstTrajectory][trajectories[j-firstTrajectory].length - 1].speed));
+                    //console.log(Number(trajectories[j-firstTrajectory][trajectories[j-firstTrajectory].length - 1].speed));
+                } else if (trajectories[j-firstTrajectory][trajectories[j-firstTrajectory].length - 1].speed_c) {
+                    speeds.push(Number(trajectories[j-firstTrajectory][trajectories[j-firstTrajectory].length - 1].speed_c));
+                    //console.log(Number(trajectories[j-firstTrajectory][trajectories[j-firstTrajectory].length - 1].speed_c));
+                }
+                if (trajectories[j-firstTrajectory][trajectories[j-firstTrajectory].length - 1].acceleration_c)
+                    accelerations.push(Number(trajectories[j-firstTrajectory][trajectories[j-firstTrajectory].length - 1].acceleration_c));
             }
-            if(trajectories[j][trajectories[j].length-1].acceleration_c)
-                accelerations.push(Number(trajectories[j][trajectories[j].length-1].acceleration_c));
         }
 
         var getMedianAt = function(array, middle){
