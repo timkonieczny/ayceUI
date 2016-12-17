@@ -174,7 +174,8 @@ CSVLoader = function(){
             return [scaleTop, scaleBottom]
         };
 
-        var speedScale = chroma.scale("Spectral").domain(getMinMaxWithoutOutliers(speeds));
+        //var speedScale = chroma.scale("Spectral").domain(getMinMaxWithoutOutliers(speeds));
+        var speedScale = chroma.scale("Spectral").domain(speeds);
         var accelerationScale = chroma.scale('Spectral').domain(getMinMaxWithoutOutliers(accelerations).reverse());
 
         console.log("done (" + (Date.now()-csvTimer) + "ms)");
