@@ -211,8 +211,8 @@ CSVLoader = function(){
         accelerations = temp[2];
         csvData = extractData(dataString, firstTrajectory, lastTrajectory);
 
-        //var speedScale = chroma.scale("Spectral").domain(getMinMaxWithoutOutliers(speeds));
-        speedScale = chroma.scale("Spectral").domain(speeds);
+        speedScale = chroma.scale("Spectral").domain(getMinMaxWithoutOutliers(speeds));
+        //speedScale = chroma.scale("Spectral").domain(speeds);
         accelerationScale = chroma.scale('Spectral').domain(getMinMaxWithoutOutliers(accelerations).reverse());
 
         console.log("done (" + (Date.now()-csvTimer) + "ms)");
@@ -261,7 +261,7 @@ CSVLoader = function(){
         csvObjects = [new EmptyObject()];
     };
 
-    var color, numberOfVertices, x1, y1, z1, x2, y2, z2, x3, y3, z3, nx, ny, nz, vectorLength, k, j;
+    var color, prevColor, numberOfVertices, x1, y1, z1, x2, y2, z2, x3, y3, z3, nx, ny, nz, vectorLength, k, j;
     var getVerticesColorsIndices = function(trajectory, object, heightIndex){
         colors.reset();
         object.vertices = [];
@@ -279,14 +279,29 @@ CSVLoader = function(){
                 scalingFactor*(trajectory[j].x-offsetX),   heightIndex*trajectoryHeight+trajectoryHeight,scalingFactor*(trajectory[j].y-offsetY)     // back top
             );
 
-            if(trajectory[j].speed) color = speedScale(trajectory[j].speed).rgb();
-            else color = speedScale(trajectory[j].speed_c).rgb();
+            if(j>0){
+                if(trajectory[j].speed){
+                    color = speedScale(trajectory[j].speed).rgb();
+                    prevColor = speedScale(trajectory[j-1].speed).rgb();
+                }else {
+                    color = speedScale(trajectory[j].speed_c).rgb();
+                    prevColor = speedScale(trajectory[j-1].speed_c).rgb();
+                }
+            }else {
+                if(trajectory[j].speed){
+                    color = speedScale(trajectory[j].speed).rgb();
+                    prevColor = speedScale(trajectory[trajectory.length-1].speed).rgb();
+                }else {
+                    color = speedScale(trajectory[j].speed_c).rgb();
+                    prevColor = speedScale(trajectory[trajectory.length-1].speed_c).rgb();
+                }
+            }
 
             colors.speed.push(
-                color[0]/255, color[1]/255, color[2]/255, 1.0,
-                color[0]/255, color[1]/255, color[2]/255, 1.0,
-                color[0]/255, color[1]/255, color[2]/255, 1.0,
-                color[0]/255, color[1]/255, color[2]/255, 1.0,
+                prevColor[0]/255, prevColor[1]/255, prevColor[2]/255, 1.0,
+                prevColor[0]/255, prevColor[1]/255, prevColor[2]/255, 1.0,
+                prevColor[0]/255, prevColor[1]/255, prevColor[2]/255, 1.0,
+                prevColor[0]/255, prevColor[1]/255, prevColor[2]/255, 1.0,
                 color[0]/255, color[1]/255, color[2]/255, 1.0,
                 color[0]/255, color[1]/255, color[2]/255, 1.0,
                 color[0]/255, color[1]/255, color[2]/255, 1.0,
@@ -294,12 +309,17 @@ CSVLoader = function(){
             );
 
             color = accelerationScale(trajectory[j].acceleration).rgb();
+            if(j>0){
+                prevColor = speedScale(trajectory[j-1].speed).rgb();
+            }else {
+                prevColor = accelerationScale(trajectory[trajectory.length-1].acceleration).rgb();
+            }
 
             colors.acceleration.push(
-                color[0]/255, color[1]/255, color[2]/255, 1.0,
-                color[0]/255, color[1]/255, color[2]/255, 1.0,
-                color[0]/255, color[1]/255, color[2]/255, 1.0,
-                color[0]/255, color[1]/255, color[2]/255, 1.0,
+                prevColor[0]/255, prevColor[1]/255, prevColor[2]/255, 1.0,
+                prevColor[0]/255, prevColor[1]/255, prevColor[2]/255, 1.0,
+                prevColor[0]/255, prevColor[1]/255, prevColor[2]/255, 1.0,
+                prevColor[0]/255, prevColor[1]/255, prevColor[2]/255, 1.0,
                 color[0]/255, color[1]/255, color[2]/255, 1.0,
                 color[0]/255, color[1]/255, color[2]/255, 1.0,
                 color[0]/255, color[1]/255, color[2]/255, 1.0,
