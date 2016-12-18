@@ -185,48 +185,26 @@ var processCSV = function(e, type){
                 document.getElementById("csv_drop_done").style.display = "none";
                 document.getElementById("csv_data_drop_done").style.display = "none";
                 document.getElementById("import_csv_processing").style.display = "flex";
-                var o3Ds = csvLoader.getO3Ds(csvString, csvDataString, 0, 1000);
-                var joinedTrajectories = [];
-                var startObjectIndex = 1;
-                var startNewObject = false;
-                joinedTrajectories[0] = new Ayce.Object3D();
 
-                for(var k = 0; k < joinedTrajectories.length; k++) {        // TODO: build this right into CSVLoader to avoid memory issues
-                    joinedTrajectories[k].vertices = [];
-                    joinedTrajectories[k].indices = [];
-                    joinedTrajectories[k].colors = [];
-                    joinedTrajectories[k].normals = [];
-                    var numberOfIndices = 0;
-                    for (var i = startObjectIndex; i < o3Ds.length; i++) {
-                        var indicesToConcat = [];
-                        for (var j = 0; j < o3Ds[i].indices.length; j++) {
-                            if (o3Ds[i].indices[j] + numberOfIndices <= 65535) {    // 65535 is maximum number of indices that can be handled by WebGL. Starting new Object here
-                                indicesToConcat.push(o3Ds[i].indices[j] + numberOfIndices);
-                            } else {
-                                joinedTrajectories.push(new Ayce.Object3D());
-                                startObjectIndex = i;
-                                numberOfIndices = 0;
-                                startNewObject = true;
-                                break;
-                            }
-                        }
-                        if(startNewObject){
-                            startNewObject = false;
-                            break;
-                        }
-                        joinedTrajectories[k].indices = joinedTrajectories[k].indices.concat(indicesToConcat);
-                        joinedTrajectories[k].vertices = joinedTrajectories[k].vertices.concat(o3Ds[i].vertices);
-                        joinedTrajectories[k].colors = joinedTrajectories[k].colors.concat(o3Ds[i].colors);
-                        joinedTrajectories[k].normals = joinedTrajectories[k].normals.concat(o3Ds[i].normals);
-                        numberOfIndices += o3Ds[i].vertices.length / 3;
-                    }
+                //var o3Ds = csvLoader.getIndividualO3Ds(csvString, csvDataString, 0, 100);
+                var o3Ds = csvLoader.getGroupedO3Ds(csvString, csvDataString);
 
-                    objects.push(joinedTrajectories[k]);
-                    cameraPreview.objects.push(joinedTrajectories[k]);
-                    objects[objects.length - 1].script = function () {
-                    };
-                    cameraPreview.objects[objects.length - 1].script = function () {
-                    };
+                objects.push(o3Ds[0]);
+                cameraPreview.objects.push(o3Ds[0]);
+                objects[objects.length - 1].script = function () {};
+                cameraPreview.objects[objects.length - 1].script = function () {};
+                objects[objects.length - 1].ayceUI = {
+                    id: objects.length - 1,
+                    screenName: "dataset",
+                    runScriptInPreview: false
+                };
+                appendObjectInSceneChildNode("empty");
+                currentObjectId = objects.length - 1;
+                for(var i = 1; i < o3Ds.length; i++){
+                    objects.push(o3Ds[i]);
+                    cameraPreview.objects.push(o3Ds[i]);
+                    objects[objects.length - 1].script = function () {};
+                    cameraPreview.objects[objects.length - 1].script = function () {};
                     objects[objects.length - 1].ayceUI = {
                         id: objects.length - 1,
                         screenName: "trajectory",
@@ -234,10 +212,10 @@ var processCSV = function(e, type){
                     };
                     scene.addToScene(objects[objects.length - 1]);
                     cameraPreview.scene.addToScene(cameraPreview.objects[cameraPreview.objects.length - 1], false);
-                    appendObjectInSceneChildNode("obj");        // TODO
+                    appendObjectInSceneChildNode("obj");        // TODO: append as csv
                     currentObjectId = objects.length - 1;
-                    joinedTrajectories[k] = null;
                 }
+
                 document.getElementById("csv_drop_loading").style.display = "none";
                 closeModal();
             }
