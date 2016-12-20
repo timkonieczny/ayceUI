@@ -1,4 +1,4 @@
-var UIFactory = function(){
+UIFactory = function(){
 
     var scope = this;
 
