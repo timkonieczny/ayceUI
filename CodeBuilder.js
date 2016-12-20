@@ -1,4 +1,4 @@
-var CodeBuilder = function(){
+CodeBuilder = function(){
 
     var referenceObject = new Ayce.Object3D();
     var referenceLight = new Ayce.Light();

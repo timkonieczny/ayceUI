@@ -163,7 +163,7 @@ var appendObjectInSceneChildNode = function(type){
             deleteObject(child);
         });
     }
-    if(type!=="skybox"){
+    if(type!=="camera" && type!=="skybox"){
         if(objects[objects.length-1].parent){
             handleChildParentDrop(
                 objects[objects.length-1].ayceUI.id,
