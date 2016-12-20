@@ -430,7 +430,10 @@ CSVLoader = function(){
         csvObjects[csvObjects.length-1].colors = [];
         csvObjects[csvObjects.length-1].normals = [];
 
+        var label = {startId: null, endId: null, reset: function(){this.startId = null; this.endId = null}};
+
         for(var i = 0; i < trajectories.length; i++){
+            if(!label.startId) label.startId = Number(csvData[i].id);
             //csvObjects[index].visualization = csvData[index];
             geometry = getVerticesColorsIndices(trajectories[i], geometry, i);
 
@@ -440,7 +443,9 @@ CSVLoader = function(){
                         geometry.indices[j] + csvObjects[csvObjects.length-1].vertices.length/3
                     );
                 }else{
-                    console.log("splitting "+csvObjects.length);
+                    label.endId = Number(csvData[i-1].id);
+                    csvObjects[csvObjects.length-1].visualization.id = csvObjects[csvObjects.length-1].visualization.id.replace(/(, )$/, "");
+                    console.log("Splitting imported data into "+csvObjects.length+" objects.");
                     csvObjects.push(new Ayce.Object3D());
                     csvObjects[csvObjects.length-1].vertices = [];
                     csvObjects[csvObjects.length-1].indices = [];
@@ -448,16 +453,17 @@ CSVLoader = function(){
                     csvObjects[csvObjects.length-1].normals = [];
                     geometry.addedIndices = geometry.indices;
 
+                    label.reset();
                     break;
                 }
             }
 
-            csvObjects[csvObjects.length-1].visualization = csvData[csvObjects.length-1];
-            if(csvObjects[csvObjects.length-1].visualization.speedColors == undefined) csvObjects[csvObjects.length-1].visualization.speedColors = [];
+            console.log(csvObjects.length-1);
+            if(csvObjects[csvObjects.length-1].visualization == undefined)
+                csvObjects[csvObjects.length-1].visualization = {speedColors: [], accelerationColors: [], id: ""};
+            csvObjects[csvObjects.length-1].visualization.id += csvData[i].id+", ";
             csvObjects[csvObjects.length-1].visualization.speedColors = csvObjects[csvObjects.length-1].visualization.speedColors.concat(colors.speed);
-            if(csvObjects[csvObjects.length-1].visualization.accelerationColors == undefined) csvObjects[csvObjects.length-1].visualization.accelerationColors = [];
             csvObjects[csvObjects.length-1].visualization.accelerationColors = csvObjects[csvObjects.length-1].visualization.accelerationColors.concat(colors.acceleration);
-            csvObjects[csvObjects.length-1].visualization.id = "insert id";     // TODO insert from to id
             csvObjects[csvObjects.length-1].parent = csvObjects[0];
             csvObjects[csvObjects.length-1].indices = geometry.addedIndices.slice();
             csvObjects[csvObjects.length-1].vertices = csvObjects[csvObjects.length-1].vertices.concat(geometry.vertices);
@@ -467,6 +473,8 @@ CSVLoader = function(){
         console.log("done (" + (Date.now()-csvTimer) + "ms)");
 
         csvObjects[0].visualization = {isGrouped: true};
+
+        console.log(csvObjects);
 
         return csvObjects;
     };
