@@ -261,6 +261,7 @@ CSVLoader = function(){
     };
 
     var color, prevColor, numberOfVertices, x1, y1, z1, x2, y2, z2, x3, y3, z3, nx, ny, nz, vectorLength, k, j;
+
     var getVerticesColorsIndices = function(trajectory, object, heightIndex){
         colors.reset();
         object.vertices = [];
@@ -396,9 +397,7 @@ CSVLoader = function(){
         for(var i = 0; i < trajectories.length; i++){
             csvObjects.push(new Ayce.Object3D());
             index = csvObjects.length-1;
-            csvObjects[index].visualization = csvData[index];
-            console.log(csvObjects[index]);
-            console.log(csvData[index]);
+            csvObjects[index].visualization = csvData[index-1];
             getVerticesColorsIndices(trajectories[i], csvObjects[index], i);
 
             csvObjects[index].parent = csvObjects[0];
@@ -407,6 +406,8 @@ CSVLoader = function(){
             csvObjects[index].visualization.accelerationColors = colors.acceleration;
         }
         console.log("done (" + (Date.now()-csvTimer) + "ms)");
+
+        csvObjects[0].visualization = {isGrouped: false};
 
         return csvObjects;
     };
@@ -456,6 +457,7 @@ CSVLoader = function(){
             csvObjects[csvObjects.length-1].visualization.speedColors = csvObjects[csvObjects.length-1].visualization.speedColors.concat(colors.speed);
             if(csvObjects[csvObjects.length-1].visualization.accelerationColors == undefined) csvObjects[csvObjects.length-1].visualization.accelerationColors = [];
             csvObjects[csvObjects.length-1].visualization.accelerationColors = csvObjects[csvObjects.length-1].visualization.accelerationColors.concat(colors.acceleration);
+            csvObjects[csvObjects.length-1].visualization.id = "insert id";     // TODO insert from to id
             csvObjects[csvObjects.length-1].parent = csvObjects[0];
             csvObjects[csvObjects.length-1].indices = geometry.addedIndices.slice();
             csvObjects[csvObjects.length-1].vertices = csvObjects[csvObjects.length-1].vertices.concat(geometry.vertices);
@@ -463,6 +465,8 @@ CSVLoader = function(){
             csvObjects[csvObjects.length-1].colors = csvObjects[csvObjects.length-1].colors.concat(colors.speed);
         }
         console.log("done (" + (Date.now()-csvTimer) + "ms)");
+
+        csvObjects[0].visualization = {isGrouped: true};
 
         return csvObjects;
     };

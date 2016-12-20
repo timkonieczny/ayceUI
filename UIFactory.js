@@ -323,7 +323,7 @@ var UIFactory = function(){
                         objects[currentObjectId].ayceUI.runScriptInPreview = e.target.checked;
                     }
                     break;
-                case "visualization_color": // TODO: Change color of all children
+                case "visualization_color":
                     if(e.type != "wheel") {
                         var childrenIds = getO3dChildrenIds(currentObjectId);
                         for(var i = 0; i < childrenIds.length; i++){
@@ -339,6 +339,31 @@ var UIFactory = function(){
                             }
                             scene.addToScene(objects[childrenIds[i]]);
                             cameraPreview.scene.addToScene(cameraPreview.objects[childrenIds[i]], false);
+                        }
+                    }
+                    break;
+                case "visualization_sorting": // TODO: Change color of all children
+                    if(e.type != "wheel") {
+                        if(objects[currentObjectId].visualization.isGrouped){
+
+                        }else{
+                            childrenIds = getO3dChildrenIds(currentObjectId);
+                            for(i = 0; i < childrenIds.length; i++){
+                                console.log(objects[childrenIds[i]].visualization);
+
+                                /*scene.removeFromScene(objects[childrenIds[i]]);
+                                cameraPreview.scene.removeFromScene(cameraPreview.objects[childrenIds[i]]);
+                                switch(e.srcElement.options[e.srcElement.options.selectedIndex].value){
+                                    case "speed":
+                                        objects[childrenIds[i]].colors = cameraPreview.objects[childrenIds[i]].colors = objects[childrenIds[i]].visualization.speedColors;
+                                        break;
+                                    case "acceleration":
+                                        objects[childrenIds[i]].colors = cameraPreview.objects[childrenIds[i]].colors = objects[childrenIds[i]].visualization.accelerationColors;
+                                        break;
+                                }
+                                scene.addToScene(objects[childrenIds[i]]);
+                                cameraPreview.scene.addToScene(cameraPreview.objects[childrenIds[i]], false);*/
+                            }
                         }
                     }
                     break;
