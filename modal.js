@@ -186,7 +186,7 @@ var processCSV = function(e, type){
                 document.getElementById("csv_data_drop_done").style.display = "none";
                 document.getElementById("import_csv_processing").style.display = "flex";
 
-                //var o3Ds = csvLoader.getIndividualO3Ds(csvString, csvDataString, 0, 100);
+                //var o3Ds = csvLoader.getIndividualO3Ds(csvString, csvDataString);
                 var o3Ds = csvLoader.getGroupedO3Ds(csvString, csvDataString);
 
                 objects.push(o3Ds[0]);
@@ -212,7 +212,7 @@ var processCSV = function(e, type){
                     };
                     scene.addToScene(objects[objects.length - 1]);
                     cameraPreview.scene.addToScene(cameraPreview.objects[cameraPreview.objects.length - 1], false);
-                    appendObjectInSceneChildNode("obj");        // TODO: append as csv
+                    appendObjectInSceneChildNode("csv");
                     currentObjectId = objects.length - 1;
                 }
 

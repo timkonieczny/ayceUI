@@ -17,6 +17,7 @@ var UIFactory = function(){
         this.parent = false;
         this.csv = false;
         this.sortData = false;
+        this.visualizationColors = false;
         this.skybox = false;
         this.texture = false;
         this.numberOfTextures = 0;
@@ -41,12 +42,12 @@ var UIFactory = function(){
                 '</div>' +
                 '</li>';
         }
-        if(this.csv){
+        if(this.visualizationColors){
             ui+='<li>Visualization colors:<br>' +
                 '<select class="property_input" id="visualization_color" title="visualization_color">' +
                 '<option value="speed">speed</option>' +
                 '<option value="acceleration">accelerationC</option>' +
-                '</select> ' +
+                '</select>' +
                 '</li>';
             // TODO: different colors as attributes, switch via uniform
         }
@@ -324,19 +325,21 @@ var UIFactory = function(){
                     break;
                 case "visualization_color": // TODO: Change color of all children
                     if(e.type != "wheel") {
-                        scene.removeFromScene(objects[currentObjectId]);
-                        cameraPreview.scene.removeFromScene(cameraPreview.objects[currentObjectId]);
-                        switch(e.srcElement.options[e.srcElement.options.selectedIndex].value){
-                            case "speed":
-                                objects[currentObjectId].colors = cameraPreview.objects[currentObjectId].colors = objects[currentObjectId].visualization.speedColors;
-                                break;
-                            case "acceleration":
-                                objects[currentObjectId].colors = cameraPreview.objects[currentObjectId].colors = objects[currentObjectId].visualization.accelerationColors;
-                                break;
+                        var childrenIds = getO3dChildrenIds(currentObjectId);
+                        for(var i = 0; i < childrenIds.length; i++){
+                            scene.removeFromScene(objects[childrenIds[i]]);
+                            cameraPreview.scene.removeFromScene(cameraPreview.objects[childrenIds[i]]);
+                            switch(e.srcElement.options[e.srcElement.options.selectedIndex].value){
+                                case "speed":
+                                    objects[childrenIds[i]].colors = cameraPreview.objects[childrenIds[i]].colors = objects[childrenIds[i]].visualization.speedColors;
+                                    break;
+                                case "acceleration":
+                                    objects[childrenIds[i]].colors = cameraPreview.objects[childrenIds[i]].colors = objects[childrenIds[i]].visualization.accelerationColors;
+                                    break;
+                            }
+                            scene.addToScene(objects[childrenIds[i]]);
+                            cameraPreview.scene.addToScene(cameraPreview.objects[childrenIds[i]], false);
                         }
-                        scene.addToScene(objects[currentObjectId]);
-                        cameraPreview.scene.addToScene(cameraPreview.objects[currentObjectId], false);
-
                     }
                     break;
                 case "uniform_scaling":

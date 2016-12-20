@@ -87,7 +87,6 @@ CSVLoader = function(){
         csvData = csvData.replace(/^(.*)$/m, "");           // remove first line (header)
         csvData = csvData.replace(/^\s+|\s+cn$/g, "");    // remove \n from start and end of string
         csvData = csvData.split("\n");
-        csvData.splice(csvData.length-1, 1);    // because \n at end of string can't be removed
 
         var newCSVData = [];
 
@@ -267,7 +266,7 @@ CSVLoader = function(){
         object.vertices = [];
         object.indices = [];
         object.colors = [];
-        for(j = 0; j < trajectory.length; j++) {
+        for(j = 0; j < trajectory.length; j++) {    // TODO: Generate color split points (Email)3
             object.vertices.push(
                 scalingFactor*(trajectory[j].x-offsetX),   heightIndex*trajectoryHeight,                 scalingFactor*(trajectory[j].y-offsetY),    // foreign front bottom
                 scalingFactor*(trajectory[j].x-offsetX),   heightIndex*trajectoryHeight+trajectoryHeight,scalingFactor*(trajectory[j].y-offsetY),    // foreign front top
@@ -310,7 +309,7 @@ CSVLoader = function(){
 
             color = accelerationScale(trajectory[j].acceleration).rgb();
             if(j>0){
-                prevColor = speedScale(trajectory[j-1].speed).rgb();
+                prevColor = speedScale(trajectory[j-1].acceleration).rgb();
             }else {
                 prevColor = accelerationScale(trajectory[trajectory.length-1].acceleration).rgb();
             }
@@ -398,7 +397,9 @@ CSVLoader = function(){
             csvObjects.push(new Ayce.Object3D());
             index = csvObjects.length-1;
             csvObjects[index].visualization = csvData[index];
-            getVerticesColorsIndices(trajectories[i], csvObjects[index], i)
+            console.log(csvObjects[index]);
+            console.log(csvData[index]);
+            getVerticesColorsIndices(trajectories[i], csvObjects[index], i);
 
             csvObjects[index].parent = csvObjects[0];
             csvObjects[index].colors = colors.speed;
@@ -451,10 +452,10 @@ CSVLoader = function(){
             }
 
             csvObjects[csvObjects.length-1].visualization = csvData[csvObjects.length-1];
-            /*if(csvObjects[csvObjects.length-1].visualization.speedColors == undefined) csvObjects[csvObjects.length-1].visualization.speedColors = [];
+            if(csvObjects[csvObjects.length-1].visualization.speedColors == undefined) csvObjects[csvObjects.length-1].visualization.speedColors = [];
             csvObjects[csvObjects.length-1].visualization.speedColors = csvObjects[csvObjects.length-1].visualization.speedColors.concat(colors.speed);
             if(csvObjects[csvObjects.length-1].visualization.accelerationColors == undefined) csvObjects[csvObjects.length-1].visualization.accelerationColors = [];
-            csvObjects[csvObjects.length-1].visualization.accelerationColors = csvObjects[csvObjects.length-1].visualization.accelerationColors.concat(colors.acceleration);*/
+            csvObjects[csvObjects.length-1].visualization.accelerationColors = csvObjects[csvObjects.length-1].visualization.accelerationColors.concat(colors.acceleration);
             csvObjects[csvObjects.length-1].parent = csvObjects[0];
             csvObjects[csvObjects.length-1].indices = geometry.addedIndices.slice();
             csvObjects[csvObjects.length-1].vertices = csvObjects[csvObjects.length-1].vertices.concat(geometry.vertices);

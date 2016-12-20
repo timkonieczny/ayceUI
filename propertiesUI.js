@@ -53,8 +53,7 @@ var showProperties = function(node) {
         uiFactory.parent = true;
         uiFactory.position = true;
         uiFactory.rotation = true;
-        var nextSibling = null;
-        nextSibling = document.getElementById(currentObjectId).nextElementSibling;
+        var nextSibling = document.getElementById(currentObjectId).nextElementSibling;
         while(nextSibling && nextSibling.dataset.type!="csv"){
             nextSibling = nextSibling.nextElementSibling;
         }
@@ -63,6 +62,7 @@ var showProperties = function(node) {
         }else{
             uiFactory.sortData = false;
         }
+        uiFactory.visualizationColors = true;
     }
     uiFactory.inflatePropertiesUI(document.getElementById("properties_list"));
 

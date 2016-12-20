@@ -74,6 +74,16 @@ var getNumberOfUniqueElements = function(array){
         return 0;
 };
 
+var getO3dChildrenIds = function(parentId){
+    var parent = document.getElementById(parentId);
+    if(parent.parentNode.firstChild != parent) return false;
+    var childIds = [];
+    for(var i = 1; i < parent.parentNode.childNodes.length; i++){
+        childIds.push(Number(parent.parentNode.childNodes[i].id));
+    }
+    return childIds;
+};
+
 // Enables \t indenting in textareas
 var textareas = document.getElementsByTagName('textarea');
 var count = textareas.length;

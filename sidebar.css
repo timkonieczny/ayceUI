@@ -88,7 +88,7 @@ ul{
     padding: 3px;
     background-color: #e1e1e1;
 }
-#visualization_color{
+#visualization_color, #visualization_sorting{
     width: 100%;
 }
 .property_drop{
