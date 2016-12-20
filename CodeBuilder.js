@@ -159,6 +159,157 @@ CodeBuilder = function(){
             "\t\t</script>\n" +
             "\t</body>\n" +
             "</html>";
+
+
+        var saveProject = function(indexHTML){
+            var sourceFiles = [];
+            var numberOfSourceFiles = 0;
+
+            var getFileAsString = function(path){
+                numberOfSourceFiles++;
+                var client = new XMLHttpRequest();
+                var filename = path.replace(/^.*[\\\/]/, '');   // remove folder prefix
+                var directory = path.replace(/[^\/]*$/, '');   // remove folder prefix
+                client.open('GET', path);
+                client.onreadystatechange = function() {
+                    if(this.readyState == this.DONE) {
+                        sourceFiles.push({directory: directory, filename: filename, content: client.responseText});
+                        if (sourceFiles.length == numberOfSourceFiles) {
+                            var zip = new JSZip();
+                            zip.file("index.html", indexHTML);
+                            var lib = zip.folder("lib");
+                            var allyoucaneatvr = lib.folder("allyoucaneatvr");
+                            var inputHandlers = allyoucaneatvr.folder("inputHandlers");
+                            var math = allyoucaneatvr.folder("math");
+                            var objects = allyoucaneatvr.folder("objects");
+                            var loader = objects.folder("loader");
+                            var types = objects.folder("types");
+                            var stage = allyoucaneatvr.folder("stage");
+                            var buffer = stage.folder("buffer");
+                            var camera = stage.folder("camera");
+                            var cameraModifiers = camera.folder("cameraModifiers");
+                            var renderer = stage.folder("renderer");
+                            var sound = stage.folder("sound");
+                            var ayceFiles = {
+                                inputHandlers: {
+                                    folder: allyoucaneatvr.folder("inputHandlers"),
+                                    gamepadHandler: inputHandlers.file("GamepadHandler.js"),
+                                    hmdHandler: inputHandlers.file("HMDHandler.js"),
+                                    keyboardHandler: inputHandlers.file("KeyboardHandler.js"),
+                                    mouseHandler: inputHandlers.file("MouseHandler.js"),
+                                    sensorsHandler: inputHandlers.file("SensorsHandler.js")
+                                },
+                                math: {
+                                    folder: allyoucaneatvr.folder("math"),
+                                    geometry: math.file("Geometry.js"),
+                                    matrix3: math.file("Matrix3.js"),
+                                    matrix4: math.file("Matrix4.js"),
+                                    quaternion: math.file("Quaternion.js"),
+                                    vector2: math.file("Vector2.js"),
+                                    vector3: math.file("Vector3.js")
+                                },
+                                objects: {
+                                    folder: allyoucaneatvr.folder("Objects")
+                                },
+                                stage: {
+                                    folder: allyoucaneatvr.folder("stage")
+                                },
+                                allyoucaneatvr: allyoucaneatvr.file("allyoucaneatVR.js")
+                            };
+                            ayceFiles.objects.loader = {
+                                folder: ayceFiles.objects.folder.folder("loader")
+                            };
+                            ayceFiles.objects.types = {
+                                folder: ayceFiles.objects.folder.folder("types")
+                            };
+                            ayceFiles.stage.buffer = {
+                                folder: ayceFiles.stage.folder.folder("buffer")
+                            };
+                            ayceFiles.stage.camera = {
+                                folder: ayceFiles.stage.folder.folder("camera")
+                            };
+                            ayceFiles.stage.renderer = {
+                                folder: ayceFiles.stage.folder.folder("renderer")
+                            };
+                            ayceFiles.stage.sound = {
+                                folder: ayceFiles.stage.folder.folder("sound")
+                            };
+                            ayceFiles.stage.camera.cameraModifiers = {
+                                folder: ayceFiles.stage.camera.folder.folder("cameraModifiers")
+                            };
+
+                            for (var i = 0; i < sourceFiles.length; i++) {
+                                var directories = sourceFiles[i].directory.replace(/^(lib\/allyoucaneatvr\/)/, "").replace(/\/$/, "").split("/");
+                                switch(directories.length){
+                                    case 0:
+                                        zip.file(sourceFiles[i].filename, sourceFiles[i].content);
+                                        break;
+                                    case 1:
+                                        if(directories[0]=="") zip.file(sourceFiles[i].filename, sourceFiles[i].content);
+                                        else ayceFiles[directories[0]].folder.file(sourceFiles[i].filename, sourceFiles[i].content);
+                                        break;
+                                    case 2:
+                                        ayceFiles[directories[0]][directories[1]].folder.file(sourceFiles[i].filename, sourceFiles[i].content);
+                                        break;
+                                    case 3:
+                                        ayceFiles[directories[0]][directories[1]][directories[2]].folder.file(sourceFiles[i].filename, sourceFiles[i].content);
+                                        break;
+                                    case 4:
+                                        ayceFiles[directories[0]][directories[1]][directories[2]][directories[3]].folder.file(sourceFiles[i].filename, sourceFiles[i].content);
+                                        break;
+                                }
+                            }
+                            zip.generateAsync({type: "blob"})
+                                .then(function (content) {
+                                    saveAs(content, "ayceUI-project.zip");
+                                });
+
+                        }
+                    }
+                };
+                client.send();
+            };
+
+            getFileAsString("lib/allyoucaneatvr/allyoucaneatVR.js");
+            getFileAsString("lib/allyoucaneatvr/math/Vector2.js");
+            getFileAsString("lib/allyoucaneatvr/math/Vector3.js");
+            getFileAsString("lib/allyoucaneatvr/math/Matrix3.js");
+            getFileAsString("lib/allyoucaneatvr/math/Matrix4.js");
+            getFileAsString("lib/allyoucaneatvr/math/Quaternion.js");
+            getFileAsString("lib/allyoucaneatvr/math/Geometry.js");
+            getFileAsString("lib/allyoucaneatvr/stage/buffer/Buffer.js");
+            getFileAsString("lib/allyoucaneatvr/stage/buffer/BufferMulti.js");
+            getFileAsString("lib/allyoucaneatvr/stage/buffer/Shader.js");
+            getFileAsString("lib/allyoucaneatvr/stage/buffer/ShaderGenerator.js");
+            getFileAsString("lib/allyoucaneatvr/stage/camera/Camera.js");
+            getFileAsString("lib/allyoucaneatvr/stage/camera/CameraManager.js");
+            getFileAsString("lib/allyoucaneatvr/stage/camera/cameraModifiers/CameraModifier.js");
+            getFileAsString("lib/allyoucaneatvr/stage/camera/cameraModifiers/Cardboard.js");
+            getFileAsString("lib/allyoucaneatvr/stage/camera/cameraModifiers/Gamepad.js");
+            getFileAsString("lib/allyoucaneatvr/stage/camera/cameraModifiers/MouseKeyboard.js");
+            getFileAsString("lib/allyoucaneatvr/stage/camera/cameraModifiers/WebVR.js");
+            getFileAsString("lib/allyoucaneatvr/stage/renderer/Renderer.js");
+            getFileAsString("lib/allyoucaneatvr/stage/renderer/VRRenderer.js");
+            getFileAsString("lib/allyoucaneatvr/stage/sound/AudioContext.js");
+            getFileAsString("lib/allyoucaneatvr/stage/sound/Sound.js");
+            getFileAsString("lib/allyoucaneatvr/stage/Light.js");
+            getFileAsString("lib/allyoucaneatvr/stage/Scene.js");
+            getFileAsString("lib/allyoucaneatvr/stage/Timer.js");
+            getFileAsString("lib/allyoucaneatvr/stage/XMLLoader.js");
+            getFileAsString("lib/allyoucaneatvr/inputHandlers/GamepadHandler.js");
+            getFileAsString("lib/allyoucaneatvr/inputHandlers/HMDHandler.js");
+            getFileAsString("lib/allyoucaneatvr/inputHandlers/KeyboardHandler.js");
+            getFileAsString("lib/allyoucaneatvr/inputHandlers/MouseHandler.js");
+            getFileAsString("lib/allyoucaneatvr/inputHandlers/SensorsHandler.js");
+            getFileAsString("lib/allyoucaneatvr/objects/Object3D.js");
+            getFileAsString("lib/allyoucaneatvr/objects/loader/OBJLoader.js");
+            getFileAsString("lib/allyoucaneatvr/objects/types/ParticleSystem.js");
+            getFileAsString("lib/allyoucaneatvr/objects/types/Skybox.js");
+            getFileAsString("lib/allyoucaneatvr/objects/types/VRSquare.js");
+        };
+
+        saveProject(output);
+
         return output;
     }
 };
