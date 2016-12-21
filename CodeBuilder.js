@@ -212,6 +212,8 @@ CodeBuilder = function(){
                 var isLight = objects[i] instanceof Ayce.Light;
                 if(isLight){
                     output += "\t\t\tobjects["+i+"] = new Ayce.Light();\n";
+                }else if(objects[i] instanceof EmptyObject){
+                    output += "\t\t\tobjects["+i+"] = {position: new Ayce.Vector3(), rotation: new Ayce.Quaternion()};\n";
                 }else{
                     output += "\t\t\tobjects["+i+"] = new Ayce.Object3D();\n";
                 }
@@ -293,7 +295,9 @@ CodeBuilder = function(){
                 cameraOrientation = scene.getCamera().getManager().getGlobalRotation();
             }
             output += "\t\t\tfor(var i = 0; i < objects.length; i++){\n" +
-                "\t\t\t\tscene.addToScene(objects[i]);\n" +
+                "\t\t\t\tif(objects[i] instanceof Ayce.Object3D || objects[i] instanceof Ayce.Light){\n" +
+                "\t\t\t\t\tscene.addToScene(objects[i]);\n" +
+                "\t\t\t\t};\n" +
                 "\t\t\t};\n" +
                 "\t\t\tvar modifier = new Ayce.CameraModifier();\n" +         // TODO: proper support for cameras (parents, modifiers,...)
                 "\t\t\tmodifier.position.x = " + cameraPosition.x + ";\n" +
