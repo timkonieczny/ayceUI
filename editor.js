@@ -125,8 +125,10 @@ document.getElementById("import_csv").addEventListener('click', function(){
     openModal("csv");
 });
 
+var codeBuilder = new CodeBuilder();
+
 document.getElementById("export_code").addEventListener('click', function(){
-    openModal("code");
+    codeBuilder.saveProject();
 });
 
 mainCanvas.addEventListener("click", function(e){
