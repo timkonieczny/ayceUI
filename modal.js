@@ -1,15 +1,9 @@
-var codeBuilder = new CodeBuilder();
-
 var openModal = function(type, currentObjectId){
     if(type == "obj"){
         document.getElementById("modal").style.display = "block";
         document.getElementById("file_upload_wrapper").style.display = "block";
         document.getElementById("obj_drop").style.display = "flex";
         document.getElementById("mtl_drop").style.display = "flex";
-    }else if(type == "code"){
-        document.getElementById("modal").style.display = "block";
-        document.getElementById("export_code_textarea").style.display = "block";
-        document.getElementById("export_code_textarea").value = codeBuilder.getCode();
     }else if(type == "script"){
         var resetScript = function(){
             document.getElementById("edit_script_textarea").value = objects[currentObjectId].script;

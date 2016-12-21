@@ -120,8 +120,11 @@ document.getElementById("import_obj").addEventListener('click', function(){
     openModal("obj");
 });
 
+var codeBuilder = new CodeBuilder();
+
 document.getElementById("export_code").addEventListener('click', function(){
     openModal("code");
+    codeBuilder.saveProject();
 });
 
 mainCanvas.addEventListener("click", function(e){
