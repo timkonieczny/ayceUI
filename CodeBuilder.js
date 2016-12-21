@@ -213,8 +213,8 @@ CodeBuilder = function(){
                 if(isLight){
                     output += "\t\t\tobjects["+i+"] = new Ayce.Light();\n";
                 }else if(objects[i] instanceof EmptyObject){
-                    output += "\t\t\tobjects["+i+"] = {" +
-                        "\t\t\t\tposition: new Ayce.Vector3(\n" + objects[i].position.x + ", "+ objects[i].position.y + ", "+ objects[i].position.z +"),\n" +
+                    output += "\t\t\tobjects["+i+"] = {\n" +
+                        "\t\t\t\tposition: new Ayce.Vector3(" + objects[i].position.x + ", "+ objects[i].position.y + ", "+ objects[i].position.z +"),\n" +
                         "\t\t\t\trotation: new Ayce.Quaternion(" + objects[i].rotation.x + ", " + objects[i].rotation.y + ", " + objects[i].rotation.z + ", " + objects[i].rotation.w + "),\n" +
                         "\t\t\t\tgetGlobalPosition: function(){return this.position},\n" +
                         "\t\t\t\tgetGlobalRotation: function(){return this.rotation}\n\t\t\t};\n";
