@@ -6,46 +6,46 @@ CodeBuilder = function(){
     this.getCode = function(){
         var output = '<html style="height: 100%; width: 100%; margin: 0; padding: 0; border: 0;">\n' +
             '\t<head>\n' +
-            '\t\t<script type="text/javascript" src="allyoucaneatvr/allyoucaneatVR.js"></script>\n' +
-            '\t\t<script type="text/javascript" src="allyoucaneatvr/math/Vector2.js"></script>\n' +
-            '\t\t<script type="text/javascript" src="allyoucaneatvr/math/Vector3.js"></script>\n' +
-            '\t\t<script type="text/javascript" src="allyoucaneatvr/math/Matrix3.js"></script>\n' +
-            '\t\t<script type="text/javascript" src="allyoucaneatvr/math/Matrix4.js"></script>\n' +
-            '\t\t<script type="text/javascript" src="allyoucaneatvr/math/Quaternion.js"></script>\n' +
-            '\t\t<script type="text/javascript" src="allyoucaneatvr/math/Geometry.js"></script>\n' +
-            '\t\t<script type="text/javascript" src="allyoucaneatvr/stage/buffer/Buffer.js"></script>\n' +
-            '\t\t<script type="text/javascript" src="allyoucaneatvr/stage/buffer/BufferMulti.js"></script>\n' +
-            '\t\t<script type="text/javascript" src="allyoucaneatvr/stage/buffer/Shader.js"></script>\n' +
-            '\t\t<script type="text/javascript" src="allyoucaneatvr/stage/buffer/ShaderGenerator.js"></script>\n' +
-            '\t\t<script type="text/javascript" src="allyoucaneatvr/stage/camera/Camera.js"></script>\n' +
-            '\t\t<script type="text/javascript" src="allyoucaneatvr/stage/camera/CameraManager.js"></script>\n' +
-            '\t\t<script type="text/javascript" src="allyoucaneatvr/stage/camera/cameraModifiers/CameraModifier.js"></script>\n' +
-            '\t\t<script type="text/javascript" src="allyoucaneatvr/stage/camera/cameraModifiers/Cardboard.js"></script>\n' +
-            '\t\t<script type="text/javascript" src="allyoucaneatvr/stage/camera/cameraModifiers/Gamepad.js"></script>\n' +
-            '\t\t<script type="text/javascript" src="allyoucaneatvr/stage/camera/cameraModifiers/MouseKeyboard.js"></script>\n' +
-            '\t\t<script type="text/javascript" src="allyoucaneatvr/stage/camera/cameraModifiers/WebVR.js"></script>\n' +
-            '\t\t<script type="text/javascript" src="allyoucaneatvr/stage/renderer/Renderer.js"></script>\n' +
-            '\t\t<script type="text/javascript" src="allyoucaneatvr/stage/renderer/VRRenderer.js"></script>\n' +
-            '\t\t<script type="text/javascript" src="allyoucaneatvr/stage/sound/AudioContext.js"></script>\n' +
-            '\t\t<script type="text/javascript" src="allyoucaneatvr/stage/sound/Sound.js"></script>\n' +
-            '\t\t<script type="text/javascript" src="allyoucaneatvr/stage/Light.js"></script>\n' +
-            '\t\t<script type="text/javascript" src="allyoucaneatvr/stage/Scene.js"></script>\n' +
-            '\t\t<script type="text/javascript" src="allyoucaneatvr/stage/Timer.js"></script>\n' +
-            '\t\t<script type="text/javascript" src="allyoucaneatvr/stage/XMLLoader.js"></script>\n' +
-            '\t\t<script type="text/javascript" src="allyoucaneatvr/inputHandlers/GamepadHandler.js"></script>\n' +
-            '\t\t<script type="text/javascript" src="allyoucaneatvr/inputHandlers/HMDHandler.js"></script>\n' +
-            '\t\t<script type="text/javascript" src="allyoucaneatvr/inputHandlers/KeyboardHandler.js"></script>\n' +
-            '\t\t<script type="text/javascript" src="allyoucaneatvr/inputHandlers/MouseHandler.js"></script>\n' +
-            '\t\t<script type="text/javascript" src="allyoucaneatvr/inputHandlers/SensorsHandler.js"></script>\n' +
-            '\t\t<script type="text/javascript" src="allyoucaneatvr/objects/Object3D.js"></script>\n' +
-            '\t\t<script type="text/javascript" src="allyoucaneatvr/objects/loader/OBJLoader.js"></script>\n' +
-            '\t\t<script type="text/javascript" src="allyoucaneatvr/objects/types/ParticleSystem.js"></script>\n' +
-            '\t\t<script type="text/javascript" src="allyoucaneatvr/objects/types/Skybox.js"></script>\n' +
-            '\t\t<script type="text/javascript" src="allyoucaneatvr/objects/types/VRSquare.js"></script>\n' +
-            '\t\t<script type="text/javascript" src="allyoucaneatvr/objects/examples/Cube3D.js"></script>\n' +
-            '\t\t<script type="text/javascript" src="allyoucaneatvr/objects/examples/Pyramid3D.js"></script>\n' +
-            '\t\t<script type="text/javascript" src="allyoucaneatvr/objects/examples/Sphere3D.js"></script>\n' +
-            '\t\t<script type="text/javascript" src="allyoucaneatvr/objects/examples/Square.js"></script>\n' +
+            '\t\t<script type="text/javascript" src="lib/allyoucaneatvr/allyoucaneatVR.js"></script>\n' +
+            '\t\t<script type="text/javascript" src="lib/allyoucaneatvr/math/Vector2.js"></script>\n' +
+            '\t\t<script type="text/javascript" src="lib/allyoucaneatvr/math/Vector3.js"></script>\n' +
+            '\t\t<script type="text/javascript" src="lib/allyoucaneatvr/math/Matrix3.js"></script>\n' +
+            '\t\t<script type="text/javascript" src="lib/allyoucaneatvr/math/Matrix4.js"></script>\n' +
+            '\t\t<script type="text/javascript" src="lib/allyoucaneatvr/math/Quaternion.js"></script>\n' +
+            '\t\t<script type="text/javascript" src="lib/allyoucaneatvr/math/Geometry.js"></script>\n' +
+            '\t\t<script type="text/javascript" src="lib/allyoucaneatvr/stage/buffer/Buffer.js"></script>\n' +
+            '\t\t<script type="text/javascript" src="lib/allyoucaneatvr/stage/buffer/BufferMulti.js"></script>\n' +
+            '\t\t<script type="text/javascript" src="lib/allyoucaneatvr/stage/buffer/Shader.js"></script>\n' +
+            '\t\t<script type="text/javascript" src="lib/allyoucaneatvr/stage/buffer/ShaderGenerator.js"></script>\n' +
+            '\t\t<script type="text/javascript" src="lib/allyoucaneatvr/stage/camera/Camera.js"></script>\n' +
+            '\t\t<script type="text/javascript" src="lib/allyoucaneatvr/stage/camera/CameraManager.js"></script>\n' +
+            '\t\t<script type="text/javascript" src="lib/allyoucaneatvr/stage/camera/cameraModifiers/CameraModifier.js"></script>\n' +
+            '\t\t<script type="text/javascript" src="lib/allyoucaneatvr/stage/camera/cameraModifiers/Cardboard.js"></script>\n' +
+            '\t\t<script type="text/javascript" src="lib/allyoucaneatvr/stage/camera/cameraModifiers/Gamepad.js"></script>\n' +
+            '\t\t<script type="text/javascript" src="lib/allyoucaneatvr/stage/camera/cameraModifiers/MouseKeyboard.js"></script>\n' +
+            '\t\t<script type="text/javascript" src="lib/allyoucaneatvr/stage/camera/cameraModifiers/WebVR.js"></script>\n' +
+            '\t\t<script type="text/javascript" src="lib/allyoucaneatvr/stage/renderer/Renderer.js"></script>\n' +
+            '\t\t<script type="text/javascript" src="lib/allyoucaneatvr/stage/renderer/VRRenderer.js"></script>\n' +
+            '\t\t<script type="text/javascript" src="lib/allyoucaneatvr/stage/sound/AudioContext.js"></script>\n' +
+            '\t\t<script type="text/javascript" src="lib/allyoucaneatvr/stage/sound/Sound.js"></script>\n' +
+            '\t\t<script type="text/javascript" src="lib/allyoucaneatvr/stage/Light.js"></script>\n' +
+            '\t\t<script type="text/javascript" src="lib/allyoucaneatvr/stage/Scene.js"></script>\n' +
+            '\t\t<script type="text/javascript" src="lib/allyoucaneatvr/stage/Timer.js"></script>\n' +
+            '\t\t<script type="text/javascript" src="lib/allyoucaneatvr/stage/XMLLoader.js"></script>\n' +
+            '\t\t<script type="text/javascript" src="lib/allyoucaneatvr/inputHandlers/GamepadHandler.js"></script>\n' +
+            '\t\t<script type="text/javascript" src="lib/allyoucaneatvr/inputHandlers/HMDHandler.js"></script>\n' +
+            '\t\t<script type="text/javascript" src="lib/allyoucaneatvr/inputHandlers/KeyboardHandler.js"></script>\n' +
+            '\t\t<script type="text/javascript" src="lib/allyoucaneatvr/inputHandlers/MouseHandler.js"></script>\n' +
+            '\t\t<script type="text/javascript" src="lib/allyoucaneatvr/inputHandlers/SensorsHandler.js"></script>\n' +
+            '\t\t<script type="text/javascript" src="lib/allyoucaneatvr/objects/Object3D.js"></script>\n' +
+            '\t\t<script type="text/javascript" src="lib/allyoucaneatvr/objects/loader/OBJLoader.js"></script>\n' +
+            '\t\t<script type="text/javascript" src="lib/allyoucaneatvr/objects/types/ParticleSystem.js"></script>\n' +
+            '\t\t<script type="text/javascript" src="lib/allyoucaneatvr/objects/types/Skybox.js"></script>\n' +
+            '\t\t<script type="text/javascript" src="lib/allyoucaneatvr/objects/types/VRSquare.js"></script>\n' +
+            //'\t\t<script type="text/javascript" src="lib/allyoucaneatvr/objects/examples/Cube3D.js"></script>\n' +
+            //'\t\t<script type="text/javascript" src="lib/allyoucaneatvr/objects/examples/Pyramid3D.js"></script>\n' +
+            //'\t\t<script type="text/javascript" src="lib/allyoucaneatvr/objects/examples/Sphere3D.js"></script>\n' +
+            //'\t\t<script type="text/javascript" src="lib/allyoucaneatvr/objects/examples/Square.js"></script>\n' +
 
             //'\t\t<script src="AyceVR.min.js"></script>\n' +
             '\t</head>\n' +
@@ -136,8 +136,15 @@ CodeBuilder = function(){
                 output += "\t\t\t];\n";
             }
         }
-        var cameraPosition = cameraPreview.scene.getCamera().getManager().getGlobalPosition();
-        var cameraOrientation = cameraPreview.scene.getCamera().getManager().getGlobalRotation();
+
+        var cameraPosition, cameraOrientation;
+        if(cameraPreview.renderPreview) {           // if camera was added, use its pose
+            cameraPosition = cameraPreview.scene.getCamera().getManager().getGlobalPosition();
+            cameraOrientation = cameraPreview.scene.getCamera().getManager().getGlobalRotation();
+        }else{                                      // else use pose of editor camera
+            cameraPosition = scene.getCamera().getManager().getGlobalPosition();
+            cameraOrientation = scene.getCamera().getManager().getGlobalRotation();
+        }
         output += "\t\t\tfor(var i = 0; i < objects.length; i++){\n" +
             "\t\t\t\tscene.addToScene(objects[i]);\n" +
             "\t\t\t};\n" +
@@ -242,10 +249,10 @@ CodeBuilder = function(){
                                 var directories = sourceFiles[i].directory.replace(/^(lib\/allyoucaneatvr\/)/, "").replace(/\/$/, "").split("/");
                                 switch(directories.length){
                                     case 0:
-                                        zip.file(sourceFiles[i].filename, sourceFiles[i].content);
+                                        allyoucaneatvr.file(sourceFiles[i].filename, sourceFiles[i].content);
                                         break;
                                     case 1:
-                                        if(directories[0]=="") zip.file(sourceFiles[i].filename, sourceFiles[i].content);
+                                        if(directories[0]=="") allyoucaneatvr.file(sourceFiles[i].filename, sourceFiles[i].content);
                                         else ayceFiles[directories[0]].folder.file(sourceFiles[i].filename, sourceFiles[i].content);
                                         break;
                                     case 2:
