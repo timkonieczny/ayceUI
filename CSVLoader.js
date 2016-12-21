@@ -458,7 +458,6 @@ CSVLoader = function(){
                 }
             }
 
-            console.log(csvObjects.length-1);
             if(csvObjects[csvObjects.length-1].visualization == undefined)
                 csvObjects[csvObjects.length-1].visualization = {speedColors: [], accelerationColors: [], id: ""};
             csvObjects[csvObjects.length-1].visualization.id += csvData[i].id+", ";
@@ -473,8 +472,6 @@ CSVLoader = function(){
         console.log("done (" + (Date.now()-csvTimer) + "ms)");
 
         csvObjects[0].visualization = {isGrouped: true};
-
-        console.log(csvObjects);
 
         return csvObjects;
     };
