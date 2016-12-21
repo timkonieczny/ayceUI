@@ -57,6 +57,7 @@ CodeBuilder = function(){
         output += '\t\t\tvar scene = new Ayce.Scene(document.getElementById("ayce_canvas"));\n' +
             "\t\t\tvar objects = [];\n";
         for(var i=0; i<objects.length; i++){
+            console.log(Math.round(i/objects.length*100)+"%");
             var isLight = objects[i] instanceof Ayce.Light;
             if(isLight){
                 output += "\t\t\tobjects["+i+"] = new Ayce.Light();\n";
@@ -74,12 +75,7 @@ CodeBuilder = function(){
                             break;
                         case "object":
                             if (Array.isArray(objects[i][property])&&property != "collideWith") {   // collideWith is handled after this loop
-                                output += "\t\t\tobjects["+i+"]." + property + " = [";
-                                for (j = 0; j < objects[i][property].length; j++) {
-                                    output += objects[i][property][j] + ", ";
-                                }
-                                output = output.replace(/[, ]+$/, "");  // remove trailing ", "
-                                output += "];\n";
+                                output += "\t\t\tobjects["+i+"]." + property + " = [" + objects[i][property].toString() + "];\n";
                             } else if (objects[i][property] == null) {
                                 output += "\t\t\tobjects["+i+"]." + property + " = " + objects[i][property] + ";\n";
                             } else {
