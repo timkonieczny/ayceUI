@@ -312,8 +312,12 @@ CodeBuilder = function(){
                 "\t\t\tmodifier.orientation.z = " + cameraOrientation.z + ";\n" +
                 "\t\t\tmodifier.orientation.w = " + cameraOrientation.w + ";\n" +
                 "\t\t\tscene.getCamera().getManager().modifiers.push(modifier);\n" +
+                "\t\t\tfor(var i = 0; i < objects.length; i++){\n" +
+                "\t\t\t\tobjects[i].initScript();\n" +
                 "\t\t\tvar update = function(){\n" +
                 "\t\t\t\tAyce.requestAnimFrame(update);\n" +
+                "\t\t\tfor(i = 0; i < objects.length; i++){\n" +
+                "\t\t\t\tobjects[i].script();\n" +
                 "\t\t\t\tscene.updateScene();\n" +
                 "\t\t\t\tscene.drawScene();\n" +
                 "\t\t\t};\n" +

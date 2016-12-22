@@ -105,8 +105,9 @@ UIFactory = function(){
         if(this.editScript){
             ui+='<li>Scripts:<br>' +
                 '<a id="edit_script" class="button_dark"><i class="fa fa-code"></i>Edit script</a>' +
+                '<a id="edit_init_script" class="button_dark"><i class="fa fa-code"></i>Edit initialization script</a>' +
                 '<input type="checkbox" class="property_input" id="run_script_in_preview" />' +
-                '<label for="run_script_in_preview">Run script in preview</label>' +
+                '<label for="run_script_in_preview">Run scripts in preview</label>' +
                 '</li>';
         }
         if(this.camera){
@@ -330,6 +331,9 @@ UIFactory = function(){
         if(document.getElementById("edit_script")) {     // TODO: enable scripting with every object
             document.getElementById("edit_script").addEventListener("click", function () {
                 openModal("script", currentObjectId);
+            });
+            document.getElementById("edit_init_script").addEventListener("click", function () {
+                openModal("initScript", currentObjectId);
             });
             document.getElementById("run_script_in_preview").addEventListener("click", function (e) {
                 objects[currentObjectId].ayceUI.runScriptInPreview = e.checked;

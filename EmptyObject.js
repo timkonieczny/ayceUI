@@ -7,6 +7,7 @@ EmptyObject = function(){
     this.ayceUI = {
         id: objects.length-1,
         screenName: "empty object",
-        runScriptInPreview: false
+        runScriptInPreview: false,
+        runInitScript: false
     };
 };

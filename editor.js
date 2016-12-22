@@ -54,12 +54,15 @@ for(i = 0; i < addObjectButtons.length; i++){
             }
 
             objects[objects.length-1].script = function(){};
+            objects[objects.length-1].initScript = function(){};
             cameraPreview.objects[objects.length-1].script = function(){};
+            cameraPreview.objects[objects.length-1].initScript = function(){};
             var screenName = this.dataset.type;
             objects[objects.length-1].ayceUI = {
                 id: objects.length-1,
                 screenName: screenName,
-                runScriptInPreview: false
+                runScriptInPreview: false,
+                runInitScript: false,
             };
 
             if(!objects[objects.length-1].textureCoords){
@@ -85,13 +88,16 @@ document.getElementById("add_light").onclick = function(){
     objects.push(new Ayce.Light());
     cameraPreview.objects.push(new Ayce.Light());
     objects[objects.length-1].script = function(){};
+    objects[objects.length-1].initScript = function(){};
+    cameraPreview.objects[objects.length-1].script = function(){};
+    cameraPreview.objects[objects.length-1].initScript = function(){};
     var screenName = this.dataset.type;
     objects[objects.length-1].ayceUI = {
         id: objects.length-1,
         screenName: screenName,
-        runScriptInPreview: false
+        runScriptInPreview: false,
+        runInitScript: false
     };
-    cameraPreview.objects[objects.length-1].script = function(){};
     scene.addToScene(objects[objects.length-1]);
     cameraPreview.scene.addToScene(cameraPreview.objects[cameraPreview.objects.length-1], false);
     var childNode = appendObjectInSceneChildNode(this.dataset.type);

@@ -17,6 +17,20 @@ var openModal = function(type, currentObjectId){
             closeModal();
         });
         document.getElementById("reset_script").addEventListener("click", resetScript);
+    }else if(type == "initScript"){
+        resetScript = function(){
+            document.getElementById("edit_script_textarea").value = objects[currentObjectId].initScript;
+        };
+        document.getElementById("modal").style.display = "block";
+        document.getElementById("edit_script_wrapper").style.display = "block";
+        document.getElementById("edit_script_textarea").style.display = "block";
+        resetScript();
+        document.getElementById("save_script").addEventListener("click", function(){
+            eval("objects[currentObjectId].initScript = "+document.getElementById("edit_script_textarea").value);
+            objects[currentObjectId].ayceUI.runInitScript = true;
+            closeModal();
+        });
+        document.getElementById("reset_script").addEventListener("click", resetScript);
     }
     document.getElementById("modal_close").addEventListener("click", closeModal);
 };
@@ -97,7 +111,8 @@ var createGeometry = function(obj, mtl){
         objects[objects.length-1].ayceUI = {
             id: objects.length-1,
             screenName: "imported object",
-            runScriptInPreview: false
+            runScriptInPreview: false,
+            runInitScript: false
         };
 
         scene.addToScene(objects[objects.length - 1]);

@@ -9,7 +9,8 @@ CameraPreview = function() {
     this.ayceUI = {
         id: null,
         screenName: "camera",
-        runScriptInPreview: false
+        runScriptInPreview: false,
+        runInitScript: false
     };
     this.renderPreview = false;
 
