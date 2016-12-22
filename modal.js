@@ -1,3 +1,17 @@
+var evaluateInitScript = function(){
+    eval("objects[currentObjectId].initScript = "+document.getElementById("edit_script_textarea").value);
+    closeModal();
+};
+var evaluateUpdateScript = function(){
+    eval("objects[currentObjectId].script = "+document.getElementById("edit_script_textarea").value);
+    closeModal();
+};
+var resetInitScript = function(){
+    document.getElementById("edit_script_textarea").value = objects[currentObjectId].script;
+};
+var resetUpdateScript = function(){
+    document.getElementById("edit_script_textarea").value = objects[currentObjectId].initScript;
+};
 var openModal = function(type, currentObjectId){
     if(type == "obj"){
         document.getElementById("modal").style.display = "block";
@@ -5,32 +19,22 @@ var openModal = function(type, currentObjectId){
         document.getElementById("obj_drop").style.display = "flex";
         document.getElementById("mtl_drop").style.display = "flex";
     }else if(type == "script"){
-        var resetScript = function(){
-            document.getElementById("edit_script_textarea").value = objects[currentObjectId].script;
-        };
         document.getElementById("modal").style.display = "block";
         document.getElementById("edit_script_wrapper").style.display = "block";
         document.getElementById("edit_script_textarea").style.display = "block";
-        resetScript();
-        document.getElementById("save_script").addEventListener("click", function(){
-            eval("objects[currentObjectId].script = "+document.getElementById("edit_script_textarea").value);
-            closeModal();
-        });
-        document.getElementById("reset_script").addEventListener("click", resetScript);
+        resetUpdateScript();
+        document.getElementById("save_script").removeEventListener("click", evaluateInitScript);
+        document.getElementById("save_script").addEventListener("click", evaluateUpdateScript);
+        document.getElementById("reset_script").addEventListener("click", resetUpdateScript);
     }else if(type == "initScript"){
-        resetScript = function(){
-            document.getElementById("edit_script_textarea").value = objects[currentObjectId].initScript;
-        };
         document.getElementById("modal").style.display = "block";
         document.getElementById("edit_script_wrapper").style.display = "block";
         document.getElementById("edit_script_textarea").style.display = "block";
-        resetScript();
-        document.getElementById("save_script").addEventListener("click", function(){
-            eval("objects[currentObjectId].initScript = "+document.getElementById("edit_script_textarea").value);
-            objects[currentObjectId].ayceUI.runInitScript = true;
-            closeModal();
-        });
-        document.getElementById("reset_script").addEventListener("click", resetScript);
+        resetInitScript();
+        document.getElementById("save_script").removeEventListener("click", evaluateUpdateScript);
+        document.getElementById("save_script").addEventListener("click", evaluateInitScript);
+        document.getElementById("reset_script").addEventListener("click", resetInitScript);
+        objects[currentObjectId].ayceUI.runInitScript = true;
     }
     document.getElementById("modal_close").addEventListener("click", closeModal);
 };
