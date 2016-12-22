@@ -7,10 +7,10 @@ var evaluateUpdateScript = function(){
     closeModal();
 };
 var resetInitScript = function(){
-    document.getElementById("edit_script_textarea").value = objects[currentObjectId].script;
+    document.getElementById("edit_script_textarea").value = objects[currentObjectId].initScript;
 };
 var resetUpdateScript = function(){
-    document.getElementById("edit_script_textarea").value = objects[currentObjectId].initScript;
+    document.getElementById("edit_script_textarea").value = objects[currentObjectId].script;
 };
 var openModal = function(type, currentObjectId){
     if(type == "obj"){
