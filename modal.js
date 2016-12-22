@@ -107,14 +107,7 @@ var createGeometry = function(obj, mtl){
 
         objects.push(object);                // TODO: more efficient solution for copying the O3D
         cameraPreview.objects.push(new Ayce.OBJLoader(null, obj, mtl, true)[0]);
-
-        objects[objects.length-1].ayceUI = {
-            id: objects.length-1,
-            screenName: "imported object",
-            runScriptInPreview: false,
-            runInitScript: false
-        };
-
+        objects[objects.length-1].ayceUI = new AyceUIMetaObject("imported object");
         scene.addToScene(objects[objects.length - 1]);
         cameraPreview.scene.addToScene(cameraPreview.objects[cameraPreview.objects.length - 1], false);
         console.log("done");

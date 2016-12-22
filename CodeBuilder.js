@@ -313,7 +313,7 @@ CodeBuilder = function(){
                 "\t\t\tmodifier.orientation.w = " + cameraOrientation.w + ";\n" +
                 "\t\t\tscene.getCamera().getManager().modifiers.push(modifier);\n" +
                 "\t\t\tfor(var i = 0; i < objects.length; i++){\n" +
-                "\t\t\t\tobjects[i].initScript();\n" +
+                "\t\t\t\tobjects[i].initScript();\n" +      // TODO: see if this works
                 "\t\t\tvar update = function(){\n" +
                 "\t\t\t\tAyce.requestAnimFrame(update);\n" +
                 "\t\t\tfor(i = 0; i < objects.length; i++){\n" +

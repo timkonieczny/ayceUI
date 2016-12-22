@@ -1,3 +1,9 @@
+AyceUIMetaObject = function(screenName){
+    this.id = objects.length-1;
+    this.screenName = screenName;
+    this.runScriptInPreview = false;
+    this.runInitScript = false
+};
 var mainCanvas = document.getElementById("main_canvas");
 var scene = new Ayce.Scene(mainCanvas);
 var renderScene = true;
@@ -58,12 +64,7 @@ for(i = 0; i < addObjectButtons.length; i++){
             cameraPreview.objects[objects.length-1].script = function(){};
             cameraPreview.objects[objects.length-1].initScript = function(){};
             var screenName = this.dataset.type;
-            objects[objects.length-1].ayceUI = {
-                id: objects.length-1,
-                screenName: screenName,
-                runScriptInPreview: false,
-                runInitScript: false,
-            };
+            objects[objects.length-1].ayceUI = new AyceUIMetaObject(this.dataset.type);
 
             if(!objects[objects.length-1].textureCoords){
                 scene.addToScene(objects[objects.length-1]);
@@ -92,12 +93,7 @@ document.getElementById("add_light").onclick = function(){
     cameraPreview.objects[objects.length-1].script = function(){};
     cameraPreview.objects[objects.length-1].initScript = function(){};
     var screenName = this.dataset.type;
-    objects[objects.length-1].ayceUI = {
-        id: objects.length-1,
-        screenName: screenName,
-        runScriptInPreview: false,
-        runInitScript: false
-    };
+    objects[objects.length-1].ayceUI = new AyceUIMetaObject(this.dataset.type);
     scene.addToScene(objects[objects.length-1]);
     cameraPreview.scene.addToScene(cameraPreview.objects[cameraPreview.objects.length-1], false);
     var childNode = appendObjectInSceneChildNode(this.dataset.type);

@@ -6,12 +6,8 @@ CameraPreview = function() {
     this.objects = [];
     this.modifier.position.y = .5;
     this.scene.getCamera().getManager().modifiers.push(this.modifier);
-    this.ayceUI = {
-        id: null,
-        screenName: "camera",
-        runScriptInPreview: false,
-        runInitScript: false
-    };
+    this.ayceUI = new AyceUIMetaObject("camera");
+    this.ayceUI.id = null;
     this.renderPreview = false;
 
     this.update = function() {
