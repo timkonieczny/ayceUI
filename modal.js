@@ -180,8 +180,8 @@ var processCSV = function(e, type){
                 document.getElementById("csv_data_drop_done").style.display = "none";
                 document.getElementById("import_csv_processing").style.display = "flex";
 
-                //var o3Ds = csvLoader.getIndividualO3Ds(csvString, csvDataString);
-                var o3Ds = csvLoader.getGroupedO3Ds(csvString, csvDataString);
+                var o3Ds = csvLoader.getIndividualO3Ds(csvString, csvDataString);
+                //var o3Ds = csvLoader.getGroupedO3Ds(csvString, csvDataString);
 
                 objects.push(o3Ds[0]);
                 cameraPreview.objects.push(o3Ds[0]);
