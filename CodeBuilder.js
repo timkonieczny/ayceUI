@@ -222,9 +222,10 @@ CodeBuilder = function(){
                     output += "\t\t\tobjects["+i+"] = new Ayce.Object3D();\n";
                 }
                 for (var property in objects[i]) {
-                    if(objects[i].hasOwnProperty(property) && typeof objects[i][property] != "function" && ((!isLight &&objects[i][property]!=referenceObject[property])||(isLight &&objects[i][property]!=referenceLight[property]))) {
+                    if(objects[i].hasOwnProperty(property) && ((!isLight &&objects[i][property]!=referenceObject[property])||(isLight &&objects[i][property]!=referenceLight[property]))) {
                         switch (typeof objects[i][property]) {
                             case "string":
+                                console.log(objects[i][property]);
                                 output += "\t\t\tobjects["+i+"]." + property + " = \"" + objects[i][property] + "\";\n";
                                 break;
                             case "boolean":
@@ -272,6 +273,12 @@ CodeBuilder = function(){
                                     }
                                 }
                                 break;
+                            case "function":
+                                if(property == "script" || property == "initScript"){
+                                    if(objects[i][property] != referenceObject[property]) {
+                                        output += "\t\t\tobjects["+i+"]." + property + " = " + objects[i][property].toString() + ";\n";    // TODO: function to string
+                                    }
+                                }
                         }
                     }
                 }

@@ -104,7 +104,7 @@ UIFactory = function(){
         }
         if(this.editScript){
             ui+='<li>Scripts:<br>' +
-                '<a id="edit_script" class="button_dark"><i class="fa fa-code"></i>Edit script</a>' +
+                '<a id="edit_script" class="button_dark"><i class="fa fa-code"></i>Edit update script</a>' +
                 '<a id="edit_init_script" class="button_dark"><i class="fa fa-code"></i>Edit initialization script</a>' +
                 '<input type="checkbox" class="property_input" id="run_script_in_preview" />' +
                 '<label for="run_script_in_preview">Run scripts in preview</label>' +
