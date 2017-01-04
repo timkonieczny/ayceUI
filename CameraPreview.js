@@ -3,6 +3,12 @@ CameraPreview = function() {
     var scope = this;
     this.scene = new Ayce.Scene(document.getElementById("camera_preview"));
     this.modifier = new Ayce.CameraModifier();
+    this.modifier.script = function(){};
+    this.modifier.initScript = function(){};
+    this.modifier.runScriptInPreview = false;   //TODO: is this in exported code?
+    this.modifier.runInitScript = false;
+    this.modifier.ayceUI = new AyceUIMetaObject("camera");
+    this.modifier.ayceUI.id = null;
     this.objects = [];
     this.modifier.position.y = .5;
     this.scene.getCamera().getManager().modifiers.push(this.modifier);

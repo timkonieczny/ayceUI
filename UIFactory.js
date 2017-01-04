@@ -120,6 +120,12 @@ UIFactory = function(){
                 '<input type="number" class="property_input" id="camera_rotation_x" title="camera_rotation_x"/>' +
                 '<input type="number" class="property_input" id="camera_rotation_y" title="camera_rotation_y"/>' +
                 '<input type="number" class="property_input" id="camera_rotation_z" title="camera_rotation_z"/>' +
+                '</li>' +
+                '<li>Scripts:<br>' +
+                '<a id="camera_edit_script" class="button_dark"><i class="fa fa-code"></i>Edit update script</a>' +
+                '<a id="camera_edit_init_script" class="button_dark"><i class="fa fa-code"></i>Edit initialization script</a>' +
+                '<input type="checkbox" class="property_input" id="camera_run_script_in_preview" />' +
+                '<label for="camera_run_script_in_preview">Run scripts in preview</label>' +
                 '</li>';
         }
         if(this.skybox){
@@ -289,6 +295,11 @@ UIFactory = function(){
                         objects[currentObjectId].ayceUI.runScriptInPreview = e.target.checked;
                     }
                     break;
+                case "camera_run_script_in_preview":
+                    if(e.type != "wheel") {
+                        cameraPreview.modifier.ayceUI.runScriptInPreview = e.target.checked;
+                    }
+                    break;
                 case "uniform_scaling":
                     break;
                 case "scale_x":
@@ -330,18 +341,29 @@ UIFactory = function(){
         }
         if(document.getElementById("edit_script")) {     // TODO: enable scripting with every object
             document.getElementById("edit_script").addEventListener("click", function () {
-                openModal("script", currentObjectId);
+                openModal("script", objects[currentObjectId]);
             });
             document.getElementById("edit_init_script").addEventListener("click", function () {
-                openModal("initScript", currentObjectId);
+                openModal("initScript", objects[currentObjectId]);
             });
             document.getElementById("run_script_in_preview").addEventListener("click", function (e) {
                 objects[currentObjectId].ayceUI.runScriptInPreview = e.checked;
             });
         }
+        if(document.getElementById("camera_edit_script")) {
+            document.getElementById("camera_edit_script").addEventListener("click", function () {
+                openModal("script", cameraPreview.modifier);
+            });
+            document.getElementById("camera_edit_init_script").addEventListener("click", function () {
+                openModal("initScript", cameraPreview.modifier);
+            });
+            document.getElementById("camera_run_script_in_preview").addEventListener("click", function (e) {
+                cameraPreview.modifier.runScriptInPreview = e.checked;
+            });
+        }
         document.getElementById("object_name").addEventListener("input", function(e){
             if(currentObjectId == undefined){                           // if object is camera
-                cameraPreview.ayceUI.screenName = e.srcElement.value;
+                cameraPreview.modifier.ayceUI.screenName = e.srcElement.value;
                 document.getElementById("camera").innerHTML = e.srcElement.value;
             }else{                                                      // if regular object
                 objects[currentObjectId].ayceUI.screenName = e.srcElement.value;
@@ -487,7 +509,7 @@ UIFactory = function(){
             document.getElementById("camera_rotation_z").value = eulerAngles[2];
         }
         if (uiFactory.camera) {
-            document.getElementById("object_name").value = cameraPreview.ayceUI.screenName;
+            document.getElementById("object_name").value = cameraPreview.modifier.ayceUI.screenName;
         } else if(uiFactory.skybox){
             document.getElementById("object_name").value = "skybox";
         } else {

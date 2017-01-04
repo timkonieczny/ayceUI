@@ -15,8 +15,16 @@ function update() {
         scene.updateScene();
         scene.drawScene();
     }
-    if(cameraPreview.renderPreview)
+    if(cameraPreview.renderPreview){
+        if(cameraPreview.modifier.ayceUI.runScriptInPreview) {
+            if (cameraPreview.modifier.ayceUI.runScriptInPreview && cameraPreview.modifier.ayceUI.runInitScript) {
+                cameraPreview.modifier.initScript();
+                cameraPreview.modifier.ayceUI.runInitScript = false;
+            }
+            cameraPreview.modifier.script();
+        }
         cameraPreview.update();
+    }
 }
 
 update();

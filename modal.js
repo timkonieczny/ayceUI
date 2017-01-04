@@ -6,13 +6,27 @@ var evaluateUpdateScript = function(){
     eval("objects[currentObjectId].script = "+document.getElementById("edit_script_textarea").value);
     closeModal();
 };
-var resetInitScript = function(){
-    document.getElementById("edit_script_textarea").value = objects[currentObjectId].initScript;
+var evaluateCameraInitScript = function(){
+    eval("cameraPreview.modifier.initScript = "+document.getElementById("edit_script_textarea").value);
+    closeModal();
 };
-var resetUpdateScript = function(){
-    document.getElementById("edit_script_textarea").value = objects[currentObjectId].script;
+var evaluateCameraUpdateScript = function(){
+    eval("cameraPreview.modifier.script = "+document.getElementById("edit_script_textarea").value);
+    closeModal();
 };
-var openModal = function(type, currentObjectId){
+var resetCameraInitScript = function(object){
+    document.getElementById("edit_script_textarea").value = cameraPreview.modifier.initScript;
+};
+var resetCameraUpdateScript = function(object){
+    document.getElementById("edit_script_textarea").value = cameraPreview.modifier.script;
+};
+var resetInitScript = function(object){
+    document.getElementById("edit_script_textarea").value = object.initScript;
+};
+var resetUpdateScript = function(object){
+    document.getElementById("edit_script_textarea").value = object.script;
+};
+var openModal = function(type, object){
     if(type == "obj"){
         document.getElementById("modal").style.display = "block";
         document.getElementById("file_upload_wrapper").style.display = "block";
@@ -22,19 +36,35 @@ var openModal = function(type, currentObjectId){
         document.getElementById("modal").style.display = "block";
         document.getElementById("edit_script_wrapper").style.display = "block";
         document.getElementById("edit_script_textarea").style.display = "block";
-        resetUpdateScript();
+        resetUpdateScript(object);
         document.getElementById("save_script").removeEventListener("click", evaluateInitScript);
-        document.getElementById("save_script").addEventListener("click", evaluateUpdateScript);
-        document.getElementById("reset_script").addEventListener("click", resetUpdateScript);
+        document.getElementById("save_script").removeEventListener("click", evaluateCameraInitScript);
+        document.getElementById("save_script").removeEventListener("click", evaluateUpdateScript);
+        document.getElementById("save_script").removeEventListener("click", evaluateCameraUpdateScript);
+        if(object instanceof Ayce.CameraModifier){
+            document.getElementById("save_script").addEventListener("click", evaluateCameraUpdateScript);
+            document.getElementById("reset_script").addEventListener("click", resetCameraUpdateScript);
+        }else {
+            document.getElementById("save_script").addEventListener("click", evaluateUpdateScript);
+            document.getElementById("reset_script").addEventListener("click", resetUpdateScript);
+        }
     }else if(type == "initScript"){
         document.getElementById("modal").style.display = "block";
         document.getElementById("edit_script_wrapper").style.display = "block";
         document.getElementById("edit_script_textarea").style.display = "block";
-        resetInitScript();
+        resetInitScript(object);
+        document.getElementById("save_script").removeEventListener("click", evaluateInitScript);
+        document.getElementById("save_script").removeEventListener("click", evaluateCameraInitScript);
         document.getElementById("save_script").removeEventListener("click", evaluateUpdateScript);
-        document.getElementById("save_script").addEventListener("click", evaluateInitScript);
-        document.getElementById("reset_script").addEventListener("click", resetInitScript);
-        objects[currentObjectId].ayceUI.runInitScript = true;
+        document.getElementById("save_script").removeEventListener("click", evaluateCameraUpdateScript);
+        if(object instanceof Ayce.CameraModifier) {
+            document.getElementById("save_script").addEventListener("click", evaluateCameraInitScript);
+            document.getElementById("reset_script").addEventListener("click", resetCameraInitScript);
+        }else{
+            document.getElementById("save_script").addEventListener("click", evaluateInitScript);
+            document.getElementById("reset_script").addEventListener("click", resetCameraInitScript);
+        }
+        object.ayceUI.runInitScript = true;
     }
     document.getElementById("modal_close").addEventListener("click", closeModal);
 };
