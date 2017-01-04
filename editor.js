@@ -101,21 +101,25 @@ document.getElementById("add_light").onclick = function(){
     showProperties(childNode);
 };
 
-document.getElementById("add_camera").onclick = function(){ // TODO: only allow one camera
-    document.getElementById("camera_preview_wrapper").style.display = "block";
-    cameraPreview.renderPreview = true;
-    var cameraPosition = scene.getCamera().getManager().getGlobalPosition();
-    var cameraRotation = scene.getCamera().getManager().getGlobalRotation();
-    cameraPreview.modifier.position.x = cameraPosition.x;
-    cameraPreview.modifier.position.y = cameraPosition.y;
-    cameraPreview.modifier.position.z = cameraPosition.z;
-    cameraPreview.modifier.orientation.x = cameraRotation.x;
-    cameraPreview.modifier.orientation.y = cameraRotation.y;
-    cameraPreview.modifier.orientation.z = cameraRotation.z;
-    cameraPreview.modifier.orientation.w = cameraRotation.w;
-    var childNode = appendObjectInSceneChildNode(this.dataset.type);
-    childNode.addEventListener("click", handleClickOnObject);
-    showProperties(childNode);
+document.getElementById("add_camera").onclick = function(){
+    if(document.getElementById("camera_preview_wrapper").style.display == "block"){
+        showNotification("There is already a camera in the scene", "fa-exclamation-circle");
+    }else {
+        document.getElementById("camera_preview_wrapper").style.display = "block";  // TODO: scripts
+        cameraPreview.renderPreview = true;
+        var cameraPosition = scene.getCamera().getManager().getGlobalPosition();
+        var cameraRotation = scene.getCamera().getManager().getGlobalRotation();
+        cameraPreview.modifier.position.x = cameraPosition.x;
+        cameraPreview.modifier.position.y = cameraPosition.y;
+        cameraPreview.modifier.position.z = cameraPosition.z;
+        cameraPreview.modifier.orientation.x = cameraRotation.x;
+        cameraPreview.modifier.orientation.y = cameraRotation.y;
+        cameraPreview.modifier.orientation.z = cameraRotation.z;
+        cameraPreview.modifier.orientation.w = cameraRotation.w;
+        var childNode = appendObjectInSceneChildNode(this.dataset.type);
+        childNode.addEventListener("click", handleClickOnObject);
+        showProperties(childNode);
+    }
 };
 
 document.getElementById("import_obj").addEventListener('click', function(){
