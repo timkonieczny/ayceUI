@@ -82,24 +82,28 @@ CodeBuilder = function(){
                             };
 
                             for (var i = 0; i < sourceFiles.length; i++) {
-                                var directories = sourceFiles[i].directory.replace(/^(lib\/allyoucaneatvr\/)/, "").replace(/\/$/, "").split("/");
-                                switch(directories.length){
-                                    case 0:
-                                        allyoucaneatvr.file(sourceFiles[i].filename, sourceFiles[i].content);
-                                        break;
-                                    case 1:
-                                        if(directories[0]=="") allyoucaneatvr.file(sourceFiles[i].filename, sourceFiles[i].content);
-                                        else ayceFiles[directories[0]].folder.file(sourceFiles[i].filename, sourceFiles[i].content);
-                                        break;
-                                    case 2:
-                                        ayceFiles[directories[0]][directories[1]].folder.file(sourceFiles[i].filename, sourceFiles[i].content);
-                                        break;
-                                    case 3:
-                                        ayceFiles[directories[0]][directories[1]][directories[2]].folder.file(sourceFiles[i].filename, sourceFiles[i].content);
-                                        break;
-                                    case 4:
-                                        ayceFiles[directories[0]][directories[1]][directories[2]][directories[3]].folder.file(sourceFiles[i].filename, sourceFiles[i].content);
-                                        break;
+                                if(sourceFiles[i].directory.includes("lib/allyoucaneatvr/")) {  // Add library files
+                                    var directories = sourceFiles[i].directory.replace(/^(lib\/allyoucaneatvr\/)/, "").replace(/\/$/, "").split("/");
+                                    switch (directories.length) {
+                                        case 0:
+                                            allyoucaneatvr.file(sourceFiles[i].filename, sourceFiles[i].content);
+                                            break;
+                                        case 1:
+                                            if (directories[0] == "") allyoucaneatvr.file(sourceFiles[i].filename, sourceFiles[i].content);
+                                            else ayceFiles[directories[0]].folder.file(sourceFiles[i].filename, sourceFiles[i].content);
+                                            break;
+                                        case 2:
+                                            ayceFiles[directories[0]][directories[1]].folder.file(sourceFiles[i].filename, sourceFiles[i].content);
+                                            break;
+                                        case 3:
+                                            ayceFiles[directories[0]][directories[1]][directories[2]].folder.file(sourceFiles[i].filename, sourceFiles[i].content);
+                                            break;
+                                        case 4:
+                                            ayceFiles[directories[0]][directories[1]][directories[2]][directories[3]].folder.file(sourceFiles[i].filename, sourceFiles[i].content);
+                                            break;
+                                    }
+                                }else { // Add MainCameraModifier to root of directory
+                                    zip.file(sourceFiles[i].filename, sourceFiles[i].content);
                                 }
                             }
                             zip.file("index.html", buildCodeString());
@@ -150,6 +154,7 @@ CodeBuilder = function(){
             getFileAsString("lib/allyoucaneatvr/objects/types/ParticleSystem.js");
             getFileAsString("lib/allyoucaneatvr/objects/types/Skybox.js");
             getFileAsString("lib/allyoucaneatvr/objects/types/VRSquare.js");
+            getFileAsString("MainCameraModifier.js");
         };
 
         saveProject("bla");
@@ -193,6 +198,7 @@ CodeBuilder = function(){
                 '\t\t<script type="text/javascript" src="lib/allyoucaneatvr/objects/types/ParticleSystem.js"></script>\n' +
                 '\t\t<script type="text/javascript" src="lib/allyoucaneatvr/objects/types/Skybox.js"></script>\n' +
                 '\t\t<script type="text/javascript" src="lib/allyoucaneatvr/objects/types/VRSquare.js"></script>\n' +
+                '\t\t<script type="text/javascript" src="MainCameraModifier.js"></script>\n' +
                 //'\t\t<script type="text/javascript" src="lib/allyoucaneatvr/objects/examples/Cube3D.js"></script>\n' +
                 //'\t\t<script type="text/javascript" src="lib/allyoucaneatvr/objects/examples/Pyramid3D.js"></script>\n' +
                 //'\t\t<script type="text/javascript" src="lib/allyoucaneatvr/objects/examples/Sphere3D.js"></script>\n' +
@@ -310,7 +316,7 @@ CodeBuilder = function(){
                 "\t\t\t\t\tscene.addToScene(objects[i]);\n" +
                 "\t\t\t\t};\n" +
                 "\t\t\t};\n" +
-                "\t\t\tvar modifier = new Ayce.CameraModifier();\n" +         // TODO: proper support for cameras (parents, modifiers,...)
+                "\t\t\tvar modifier = new MainCameraModifier(document.getElementById('ayce_canvas'));\n" +         // TODO: proper support for cameras (parents, modifiers,...)
                 "\t\t\tmodifier.position.x = " + cameraPosition.x + ";\n" +
                 "\t\t\tmodifier.position.y = " + cameraPosition.y + ";\n" +
                 "\t\t\tmodifier.position.z = " + cameraPosition.z + ";\n" +

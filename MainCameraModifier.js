@@ -22,8 +22,8 @@ MainCameraModifier = function (canvas) {
 
     var moveSpeed = 0.01;
     var rotSpeed = 0.2;
-    var position = new Ayce.Vector3();
-    var rotation = new Ayce.Quaternion();
+    this.position = new Ayce.Vector3();
+    this.rotation = new Ayce.Quaternion();
     var rotX = 0;
     var rotY = 0;
     var xAxis = new Ayce.Quaternion();
@@ -99,7 +99,7 @@ MainCameraModifier = function (canvas) {
                     rotatedTranslation.y = mouse.movement.y;
                     rotatedTranslation.z = 0;
                     rotatedTranslation = orientation.getRotatedPoint(rotatedTranslation);
-                    position.add(
+                    this.position.add(
                         rotatedTranslation.x * moveSpeed,
                         rotatedTranslation.y * moveSpeed,
                         rotatedTranslation.z * moveSpeed
@@ -121,7 +121,7 @@ MainCameraModifier = function (canvas) {
                     xAxis.fromAxisAngle(trivialX, rotY * rotSpeed * Math.PI / 180);
 
                     xAxis.multiply(xAxis, yAxis);
-                    rotation = xAxis;
+                    this.rotation = xAxis;
                 }
             }else{
                 mouse.isInitialized = true;
@@ -134,7 +134,7 @@ MainCameraModifier = function (canvas) {
             rotatedTranslation.y = 0;
             rotatedTranslation.z = mouse.wheel;
             rotatedTranslation = orientation.getRotatedPoint(rotatedTranslation);
-            position.add(
+            this.position.add(
                 rotatedTranslation.x * moveSpeed,
                 rotatedTranslation.y * moveSpeed,
                 rotatedTranslation.z * moveSpeed
@@ -144,11 +144,11 @@ MainCameraModifier = function (canvas) {
     };
 
     this.getPosition = function(){
-        return position;
+        return this.position;
     };
 
     this.getOrientation = function(){
-        return rotation;
+        return this.rotation;
     };
 };
 
