@@ -124,7 +124,7 @@ document.getElementById("parent_actions_cancel").addEventListener("drop", functi
 var appendObjectInSceneChildNode = function(type){
     var child = document.createElement('li');
     if(type=="camera") {
-        child.innerHTML = cameraPreview.ayceUI.screenName;
+        child.innerHTML = cameraPreview.modifier.ayceUI.screenName;
         // TODO: camera deletion
         //child.dataset.id = type;
         //child.id = type;

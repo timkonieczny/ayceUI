@@ -4,17 +4,21 @@ CameraPreview = function() {
     this.canvas = document.getElementById("camera_preview");
     this.scene = new Ayce.Scene(this.canvas);
     this.modifier = new Ayce.CameraModifier();
+    this.modifier.script = function(){};
+    this.modifier.initScript = function(){};
+    this.modifier.runScriptInPreview = false;   //TODO: is this in exported code?
+    this.modifier.runInitScript = false;
+    this.modifier.ayceUI = new AyceUIMetaObject("camera");
+    this.modifier.ayceUI.id = null;
     this.objects = [];
     this.modifier.position.y = .5;
     this.scene.getCamera().getManager().modifiers.push(this.modifier);
     //this.scene.getCamera().getManager().cameraProperties.eyeTranslationL = -0.5;
     //this.scene.getCamera().getManager().cameraProperties.eyeTranslationR = 0.5;
     this.renderer = new StereoProjectorRenderer(scope.canvas);
-    this.ayceUI = {
-        id: null,
-        screenName: "camera",
-        runScriptInPreview: false
-    };
+
+    this.ayceUI = new AyceUIMetaObject("camera");
+    this.ayceUI.id = null;
     this.renderPreview = false;
 
     this.update = function() {
