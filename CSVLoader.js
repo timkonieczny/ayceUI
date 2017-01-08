@@ -260,92 +260,220 @@ CSVLoader = function(){
         csvObjects = [new EmptyObject()];
     };
 
-    var color, prevColor, numberOfVertices, x1, y1, z1, x2, y2, z2, x3, y3, z3, nx, ny, nz, vectorLength, k, j;
+    var color, prevColor, numberOfVertices, x1, y1, z1, x2, y2, z2, x3, y3, z3, nx, ny, nz, vectorLength, k, j, numOfPrevInds;
 
     var getVerticesColorsIndices = function(trajectory, object, heightIndex){
+
+        var addFirstSplitPointVertex = function(){
+            object.vertices.push(
+
+                scalingFactor * ((trajectory[j-1].x - offsetX + trajectory[j].x - offsetX) / 2),
+                heightIndex * trajectoryHeight,
+                scalingFactor * ((trajectory[j-1].y - offsetY + trajectory[j].y - offsetY) / 2),    // prev split front bottom
+
+                scalingFactor * ((trajectory[j-1].x - offsetX + trajectory[j].x - offsetX) / 2),
+                heightIndex * trajectoryHeight + trajectoryHeight,
+                scalingFactor * ((trajectory[j-1].y - offsetY + trajectory[j].y - offsetY) / 2),    // prev split front top
+
+                scalingFactor * ((trajectory[j-1].x - offsetX + trajectory[j].x - offsetX) / 2),
+                heightIndex * trajectoryHeight,
+                scalingFactor * ((trajectory[j-1].y - offsetY + trajectory[j].y - offsetY) / 2),    // prev split back bottom
+
+                scalingFactor * ((trajectory[j-1].x - offsetX + trajectory[j].x - offsetX) / 2),
+                heightIndex * trajectoryHeight + trajectoryHeight,
+                scalingFactor * ((trajectory[j-1].y - offsetY + trajectory[j].y - offsetY) / 2)     // prev split back top
+            );
+        };
+
+        var addMiddleVertex = function(){
+            object.vertices.push(
+
+                scalingFactor * (trajectory[j].x - offsetX),
+                heightIndex * trajectoryHeight,
+                scalingFactor * (trajectory[j].y - offsetY),    // front bottom
+
+                scalingFactor * (trajectory[j].x - offsetX),
+                heightIndex * trajectoryHeight + trajectoryHeight,
+                scalingFactor * (trajectory[j].y - offsetY),    // front top
+
+                scalingFactor * (trajectory[j].x - offsetX),
+                heightIndex * trajectoryHeight,
+                scalingFactor * (trajectory[j].y - offsetY),    // back bottom
+
+                scalingFactor * (trajectory[j].x - offsetX),
+                heightIndex * trajectoryHeight + trajectoryHeight,
+                scalingFactor * (trajectory[j].y - offsetY)     // back top
+
+            );
+        };
+
+        var addSecondSplitPointVertex = function(){
+            object.vertices.push(
+
+                scalingFactor * ((trajectory[j].x - offsetX + trajectory[j+1].x - offsetX) / 2),
+                heightIndex * trajectoryHeight,
+                scalingFactor * ((trajectory[j].y - offsetY + trajectory[j+1].y - offsetY) / 2),    // next split front bottom
+
+                scalingFactor * ((trajectory[j].x - offsetX + trajectory[j+1].x - offsetX) / 2),
+                heightIndex * trajectoryHeight + trajectoryHeight,
+                scalingFactor * ((trajectory[j].y - offsetY + trajectory[j+1].y - offsetY) / 2),    // next split front top
+
+                scalingFactor * ((trajectory[j].x - offsetX + trajectory[j+1].x - offsetX) / 2),
+                heightIndex * trajectoryHeight,
+                scalingFactor * ((trajectory[j].y - offsetY + trajectory[j+1].y - offsetY) / 2),    // next split back bottom
+
+                scalingFactor * ((trajectory[j].x - offsetX + trajectory[j+1].x - offsetX) / 2),
+                heightIndex * trajectoryHeight + trajectoryHeight,
+                scalingFactor * ((trajectory[j].y - offsetY + trajectory[j+1].y - offsetY) / 2)     // next split back top
+
+            );
+        };
+
         colors.reset();
         object.vertices = [];
         object.indices = [];
         object.colors = [];
-        for(j = 0; j < trajectory.length; j++) {    // TODO: Generate color split points (Email)3
-            object.vertices.push(
-                scalingFactor*(trajectory[j].x-offsetX),   heightIndex*trajectoryHeight,                 scalingFactor*(trajectory[j].y-offsetY),    // foreign front bottom
-                scalingFactor*(trajectory[j].x-offsetX),   heightIndex*trajectoryHeight+trajectoryHeight,scalingFactor*(trajectory[j].y-offsetY),    // foreign front top
-                scalingFactor*(trajectory[j].x-offsetX),   heightIndex*trajectoryHeight,                 scalingFactor*(trajectory[j].y-offsetY),    // foreign back bottom
-                scalingFactor*(trajectory[j].x-offsetX),   heightIndex*trajectoryHeight+trajectoryHeight,scalingFactor*(trajectory[j].y-offsetY),    // foreign back top
-                scalingFactor*(trajectory[j].x-offsetX),   heightIndex*trajectoryHeight,                 scalingFactor*(trajectory[j].y-offsetY),    // front bottom
-                scalingFactor*(trajectory[j].x-offsetX),   heightIndex*trajectoryHeight+trajectoryHeight,scalingFactor*(trajectory[j].y-offsetY),    // front top
-                scalingFactor*(trajectory[j].x-offsetX),   heightIndex*trajectoryHeight,                 scalingFactor*(trajectory[j].y-offsetY),    // back bottom
-                scalingFactor*(trajectory[j].x-offsetX),   heightIndex*trajectoryHeight+trajectoryHeight,scalingFactor*(trajectory[j].y-offsetY)     // back top
-            );
+        for(j = 0; j < trajectory.length; j++) {
 
-            if(j>0){
+            numOfPrevInds = 8 + (j-1)*12;   // 8 indices of first data point + j-1 regular data points with 12 indices
+
+            if(j == 0){
+                addMiddleVertex();
+                addSecondSplitPointVertex();
+
                 if(trajectory[j].speed){
                     color = speedScale(trajectory[j].speed).rgb();
-                    prevColor = speedScale(trajectory[j-1].speed).rgb();
                 }else {
                     color = speedScale(trajectory[j].speed_c).rgb();
-                    prevColor = speedScale(trajectory[j-1].speed_c).rgb();
                 }
-            }else {
-                if(trajectory[j].speed){
-                    color = speedScale(trajectory[j].speed).rgb();
-                    prevColor = speedScale(trajectory[trajectory.length-1].speed).rgb();
-                }else {
-                    color = speedScale(trajectory[j].speed_c).rgb();
-                    prevColor = speedScale(trajectory[trajectory.length-1].speed_c).rgb();
-                }
-            }
 
-            colors.speed.push(
-                prevColor[0]/255, prevColor[1]/255, prevColor[2]/255, 1.0,
-                prevColor[0]/255, prevColor[1]/255, prevColor[2]/255, 1.0,
-                prevColor[0]/255, prevColor[1]/255, prevColor[2]/255, 1.0,
-                prevColor[0]/255, prevColor[1]/255, prevColor[2]/255, 1.0,
-                color[0]/255, color[1]/255, color[2]/255, 1.0,
-                color[0]/255, color[1]/255, color[2]/255, 1.0,
-                color[0]/255, color[1]/255, color[2]/255, 1.0,
-                color[0]/255, color[1]/255, color[2]/255, 1.0
-            );
-
-            color = accelerationScale(trajectory[j].acceleration).rgb();
-            if(j>0){
-                prevColor = speedScale(trajectory[j-1].acceleration).rgb();
-            }else {
-                prevColor = accelerationScale(trajectory[trajectory.length-1].acceleration).rgb();
-            }
-
-            colors.acceleration.push(
-                prevColor[0]/255, prevColor[1]/255, prevColor[2]/255, 1.0,
-                prevColor[0]/255, prevColor[1]/255, prevColor[2]/255, 1.0,
-                prevColor[0]/255, prevColor[1]/255, prevColor[2]/255, 1.0,
-                prevColor[0]/255, prevColor[1]/255, prevColor[2]/255, 1.0,
-                color[0]/255, color[1]/255, color[2]/255, 1.0,
-                color[0]/255, color[1]/255, color[2]/255, 1.0,
-                color[0]/255, color[1]/255, color[2]/255, 1.0,
-                color[0]/255, color[1]/255, color[2]/255, 1.0
-            );
-
-            /*colors.speed.push(
-             0.5, 0.5, 0.5, 1.0,
-             0.5, 0.5, 0.5, 1.0,
-             0.5, 0.5, 0.5, 1.0,
-             0.5, 0.5, 0.5, 1.0,
-             0.5, 0.5, 0.5, 1.0,
-             0.5, 0.5, 0.5, 1.0,
-             0.5, 0.5, 0.5, 1.0,
-             0.5, 0.5, 0.5, 1.0
-             );*/
-
-            numberOfVertices = trajectory.length*8;
-
-            if(j*8+11<numberOfVertices)
-                object.indices.push(
-                    (j*8+4)%numberOfVertices, (j*8+5)%numberOfVertices, (j*8+9)%numberOfVertices,   // front 1
-                    (j*8+4)%numberOfVertices, (j*8+9)%numberOfVertices, (j*8+8)%numberOfVertices,   // front 2
-                    (j*8+11)%numberOfVertices, (j*8+7)%numberOfVertices, (j*8+6)%numberOfVertices,  // back 1
-                    (j*8+10)%numberOfVertices, (j*8+11)%numberOfVertices, (j*8+6)%numberOfVertices  // back 2
+                colors.speed.push(
+                    color[0]/255, color[1]/255, color[2]/255, 1.0,
+                    color[0]/255, color[1]/255, color[2]/255, 1.0,
+                    color[0]/255, color[1]/255, color[2]/255, 1.0,
+                    color[0]/255, color[1]/255, color[2]/255, 1.0,
+                    color[0]/255, color[1]/255, color[2]/255, 1.0,
+                    color[0]/255, color[1]/255, color[2]/255, 1.0,
+                    color[0]/255, color[1]/255, color[2]/255, 1.0,
+                    color[0]/255, color[1]/255, color[2]/255, 1.0
                 );
+
+                color = accelerationScale(trajectory[j].acceleration).rgb();
+
+                colors.acceleration.push(
+                    color[0]/255, color[1]/255, color[2]/255, 1.0,
+                    color[0]/255, color[1]/255, color[2]/255, 1.0,
+                    color[0]/255, color[1]/255, color[2]/255, 1.0,
+                    color[0]/255, color[1]/255, color[2]/255, 1.0,
+                    color[0]/255, color[1]/255, color[2]/255, 1.0,
+                    color[0]/255, color[1]/255, color[2]/255, 1.0,
+                    color[0]/255, color[1]/255, color[2]/255, 1.0,
+                    color[0]/255, color[1]/255, color[2]/255, 1.0
+                );
+
+                object.indices.push(
+                    1, 0, 5,    // front 1
+                    5, 0, 4,    // front 2
+                    3, 7, 2,    // back 1
+                    2, 7, 6     // back 2
+                );
+            }else if(j == trajectory.length-1){
+                addFirstSplitPointVertex();
+                addMiddleVertex();
+
+                if(trajectory[j].speed){
+                    color = speedScale(trajectory[j].speed).rgb();
+                }else {
+                    color = speedScale(trajectory[j].speed_c).rgb();
+                }
+
+
+                colors.speed.push(
+                    color[0]/255, color[1]/255, color[2]/255, 1.0,
+                    color[0]/255, color[1]/255, color[2]/255, 1.0,
+                    color[0]/255, color[1]/255, color[2]/255, 1.0,
+                    color[0]/255, color[1]/255, color[2]/255, 1.0,
+                    color[0]/255, color[1]/255, color[2]/255, 1.0,
+                    color[0]/255, color[1]/255, color[2]/255, 1.0,
+                    color[0]/255, color[1]/255, color[2]/255, 1.0,
+                    color[0]/255, color[1]/255, color[2]/255, 1.0
+                );
+
+                color = accelerationScale(trajectory[j].acceleration).rgb();
+
+                colors.acceleration.push(
+                    color[0]/255, color[1]/255, color[2]/255, 1.0,
+                    color[0]/255, color[1]/255, color[2]/255, 1.0,
+                    color[0]/255, color[1]/255, color[2]/255, 1.0,
+                    color[0]/255, color[1]/255, color[2]/255, 1.0,
+                    color[0]/255, color[1]/255, color[2]/255, 1.0,
+                    color[0]/255, color[1]/255, color[2]/255, 1.0,
+                    color[0]/255, color[1]/255, color[2]/255, 1.0,
+                    color[0]/255, color[1]/255, color[2]/255, 1.0
+                );
+
+                object.indices.push(
+                    numOfPrevInds + 1, numOfPrevInds + 0, numOfPrevInds + 5,    // front 1
+                    numOfPrevInds + 5, numOfPrevInds + 0, numOfPrevInds + 4,    // front 2
+                    numOfPrevInds + 3, numOfPrevInds + 7, numOfPrevInds + 2,    // back 1
+                    numOfPrevInds + 2, numOfPrevInds + 7, numOfPrevInds + 6     // back 2
+                );
+            }else {
+
+                addFirstSplitPointVertex();
+                addMiddleVertex();
+                addSecondSplitPointVertex();
+
+                if(trajectory[j].speed){
+                    color = speedScale(trajectory[j].speed).rgb();
+                }else {
+                    color = speedScale(trajectory[j].speed_c).rgb();
+                }
+
+
+                colors.speed.push(
+                    color[0]/255, color[1]/255, color[2]/255, 1.0,
+                    color[0]/255, color[1]/255, color[2]/255, 1.0,
+                    color[0]/255, color[1]/255, color[2]/255, 1.0,
+                    color[0]/255, color[1]/255, color[2]/255, 1.0,
+                    color[0]/255, color[1]/255, color[2]/255, 1.0,
+                    color[0]/255, color[1]/255, color[2]/255, 1.0,
+                    color[0]/255, color[1]/255, color[2]/255, 1.0,
+                    color[0]/255, color[1]/255, color[2]/255, 1.0,
+                    color[0]/255, color[1]/255, color[2]/255, 1.0,
+                    color[0]/255, color[1]/255, color[2]/255, 1.0,
+                    color[0]/255, color[1]/255, color[2]/255, 1.0,
+                    color[0]/255, color[1]/255, color[2]/255, 1.0
+                );
+
+                color = accelerationScale(trajectory[j].acceleration).rgb();
+
+                colors.acceleration.push(
+                    color[0]/255, color[1]/255, color[2]/255, 1.0,
+                    color[0]/255, color[1]/255, color[2]/255, 1.0,
+                    color[0]/255, color[1]/255, color[2]/255, 1.0,
+                    color[0]/255, color[1]/255, color[2]/255, 1.0,
+                    color[0]/255, color[1]/255, color[2]/255, 1.0,
+                    color[0]/255, color[1]/255, color[2]/255, 1.0,
+                    color[0]/255, color[1]/255, color[2]/255, 1.0,
+                    color[0]/255, color[1]/255, color[2]/255, 1.0,
+                    color[0]/255, color[1]/255, color[2]/255, 1.0,
+                    color[0]/255, color[1]/255, color[2]/255, 1.0,
+                    color[0]/255, color[1]/255, color[2]/255, 1.0,
+                    color[0]/255, color[1]/255, color[2]/255, 1.0
+                );
+
+                object.indices.push(
+                    numOfPrevInds + 1, numOfPrevInds + 0, numOfPrevInds + 5,    // front 1
+                    numOfPrevInds + 5, numOfPrevInds + 0, numOfPrevInds + 4,    // front 2
+                    numOfPrevInds + 3, numOfPrevInds + 7, numOfPrevInds + 2,    // back 1
+                    numOfPrevInds + 2, numOfPrevInds + 7, numOfPrevInds + 6,    // back 2
+                    numOfPrevInds + 7, numOfPrevInds + 6, numOfPrevInds + 11,   // front 3
+                    numOfPrevInds + 11, numOfPrevInds + 6, numOfPrevInds + 10,  // front 4
+                    numOfPrevInds + 7, numOfPrevInds + 11, numOfPrevInds + 6,   // back 3
+                    numOfPrevInds + 6, numOfPrevInds + 11, numOfPrevInds + 10   // back 4
+                );
+            }
         }
 
         object.normals = [];
