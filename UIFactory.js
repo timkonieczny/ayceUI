@@ -56,7 +56,7 @@ UIFactory = function(){
                 '<select class="property_input" id="visualization_sorting" title="visualization_sorting">';
             for (var property in this.sortData) {
                 if (this.sortData.hasOwnProperty(property)) {
-                    if(property!="niceNames"&&property!="speedColors"&&property!="accelerationColors")
+                    if(property!="niceNames"&&property!="speedColors"&&property!="accelerationColors"&&property!="points")
                         ui+='<option value="'+property+'">'+this.sortData.niceNames[property]+'</option>';
                 }
             }

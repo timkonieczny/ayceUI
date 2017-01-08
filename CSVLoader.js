@@ -12,8 +12,8 @@ CSVLoader = function(){
         }
     };
 
-    var extractTrajectories = function(trajString, firstTrajectory, lastTrajectory){
-        var trajectories = [];
+    var extractTrajectories = function(trajString, firstTrajectory, lastTrajectory, outTrajectories, outSpeeds, outAccelerations){
+        //outTrajectories = [];
         var csvTraj = trajString;
         var trajHeader;
         csvTraj = csvTraj.replace(/^\s+|\s+cn$/g, "");    // remove \n from start and end of string
@@ -35,8 +35,8 @@ CSVLoader = function(){
 
         var csvTimer = Date.now();
         console.log("extracting data");
-        var speeds = [];
-        var accelerations = [];
+        //outSpeeds = [];
+        //outAccelerations = [];
         var addTrajectory = true;
         for(var i = 0; i < csvTraj.length; i++){
             point = csvTraj[i].split(",");
@@ -46,7 +46,7 @@ CSVLoader = function(){
                 j++;
                 addTrajectory = (j >= firstTrajectory);
                 if(j == lastTrajectory) break;
-                if(addTrajectory) trajectories.push([]);
+                if(addTrajectory) outTrajectories.push([]);
             }
             prevTrID = trID;
 
@@ -57,20 +57,19 @@ CSVLoader = function(){
                 }
                 if (dataPoint.x && dataPoint.x != undefined) dataPoint.x = Number(dataPoint.x);
                 if (dataPoint.y && dataPoint.y != undefined) dataPoint.y = Number(dataPoint.y);
-                trajectories[j-firstTrajectory].push(dataPoint);
+                outTrajectories[j-firstTrajectory].push(dataPoint);
 
-                if (trajectories[j-firstTrajectory][trajectories[j-firstTrajectory].length - 1].speed) {
-                    speeds.push(Number(trajectories[j-firstTrajectory][trajectories[j-firstTrajectory].length - 1].speed));
-                    //console.log(Number(trajectories[j-firstTrajectory][trajectories[j-firstTrajectory].length - 1].speed));
-                } else if (trajectories[j-firstTrajectory][trajectories[j-firstTrajectory].length - 1].speed_c) {
-                    speeds.push(Number(trajectories[j-firstTrajectory][trajectories[j-firstTrajectory].length - 1].speed_c));
-                    //console.log(Number(trajectories[j-firstTrajectory][trajectories[j-firstTrajectory].length - 1].speed_c));
+                if (outTrajectories[j-firstTrajectory][outTrajectories[j-firstTrajectory].length - 1].speed) {
+                    outSpeeds.push(Number(outTrajectories[j-firstTrajectory][outTrajectories[j-firstTrajectory].length - 1].speed));
+                    //console.log(Number(outTrajectories[j-firstTrajectory][outTrajectories[j-firstTrajectory].length - 1].speed));
+                } else if (outTrajectories[j-firstTrajectory][outTrajectories[j-firstTrajectory].length - 1].speed_c) {
+                    outSpeeds.push(Number(outTrajectories[j-firstTrajectory][outTrajectories[j-firstTrajectory].length - 1].speed_c));
+                    //console.log(Number(outTrajectories[j-firstTrajectory][outTrajectories[j-firstTrajectory].length - 1].speed_c));
                 }
-                if (trajectories[j-firstTrajectory][trajectories[j-firstTrajectory].length - 1].acceleration_c)
-                    accelerations.push(Number(trajectories[j-firstTrajectory][trajectories[j-firstTrajectory].length - 1].acceleration_c));
+                if (outTrajectories[j-firstTrajectory][outTrajectories[j-firstTrajectory].length - 1].acceleration_c)
+                    outAccelerations.push(Number(outTrajectories[j-firstTrajectory][outTrajectories[j-firstTrajectory].length - 1].acceleration_c));
             }
         }
-        return [trajectories, speeds, accelerations];
     };
 
     var extractData = function(dataString){
@@ -91,11 +90,13 @@ CSVLoader = function(){
         var newCSVData = [];
 
         for(var i = 0; i < csvData.length; i++){
-            var point = csvData[i].split(",");
-            newCSVData.push({niceNames: {}});
-            for(var j = 0; j < point.length; j++){
-                newCSVData[newCSVData.length-1][dataHeader[j].toLowerCase()] = point[j];
-                newCSVData[newCSVData.length-1].niceNames[dataHeader[j].toLowerCase()] = dataHeaderNiceNames[j]
+            if(csvData[i] != "") {
+                var point = csvData[i].split(",");
+                newCSVData.push({niceNames: {}});
+                for (var j = 0; j < point.length; j++) {
+                    newCSVData[newCSVData.length - 1][dataHeader[j].toLowerCase()] = point[j];
+                    newCSVData[newCSVData.length - 1].niceNames[dataHeader[j].toLowerCase()] = dataHeaderNiceNames[j]
+                }
             }
         }
         return newCSVData;
@@ -185,9 +186,8 @@ CSVLoader = function(){
         return [scaleTop, scaleBottom]
     };
 
-    var trajectories,
-        speeds,
-        accelerations,
+    var speeds = [],
+        accelerations = [],
         csvData,
         speedScale,
         accelerationScale,
@@ -204,11 +204,9 @@ CSVLoader = function(){
             lastTrajectory = Infinity;
         }
 
-        var temp = extractTrajectories(trajString, firstTrajectory, lastTrajectory);
-        trajectories = temp[0];
-        speeds = temp[1];
-        accelerations = temp[2];
         csvData = extractData(dataString, firstTrajectory, lastTrajectory);
+        csvData.points = [];
+        extractTrajectories(trajString, firstTrajectory, lastTrajectory, csvData.points, speeds, accelerations);
 
         speedScale = chroma.scale("Spectral").domain(getMinMaxWithoutOutliers(speeds));
         //speedScale = chroma.scale("Spectral").domain(speeds);
@@ -223,32 +221,32 @@ CSVLoader = function(){
         offsetX = 0;
         offsetY = 0;
         var minX = null, minY = null, maxX = null, maxY = null, numberOfPoints = 0;
-        for(var i = 0; i < trajectories.length; i++) {
-            for(var j = 0; j < trajectories[i].length; j++) {
-                if(trajectories[i][j].x){
-                    offsetX += trajectories[i][j].x;
+        for(var i = 0; i < csvData.points.length; i++) {
+            for(var j = 0; j < csvData.points[i].length; j++) {
+                if(csvData.points[i][j].x){
+                    offsetX += csvData.points[i][j].x;
                     if(maxX)
-                        maxX = Math.max(maxX, trajectories[i][j].x);
+                        maxX = Math.max(maxX, csvData.points[i][j].x);
                     else
-                        maxX = trajectories[i][j].x;
+                        maxX = csvData.points[i][j].x;
 
                     if(maxY)
-                        maxY = Math.max(maxY, trajectories[i][j].y);
+                        maxY = Math.max(maxY, csvData.points[i][j].y);
                     else
-                        maxY = trajectories[i][j].y;
+                        maxY = csvData.points[i][j].y;
 
                     if(minX)
-                        minX = Math.min(minX, trajectories[i][j].x);
+                        minX = Math.min(minX, csvData.points[i][j].x);
                     else
-                        minX = trajectories[i][j].x;
+                        minX = csvData.points[i][j].x;
 
                     if(minY)
-                        minY = Math.min(minY, trajectories[i][j].y);
+                        minY = Math.min(minY, csvData.points[i][j].y);
                     else
-                        minY = trajectories[i][j].y;
+                        minY = csvData.points[i][j].y;
                 }
-                if(trajectories[i][j].y){
-                    offsetY += trajectories[i][j].y;
+                if(csvData.points[i][j].y){
+                    offsetY += csvData.points[i][j].y;
                 }
                 numberOfPoints++;
             }
@@ -523,11 +521,11 @@ CSVLoader = function(){
 
         var index;
 
-        for(var i = 0; i < trajectories.length; i++){
+        for(var i = 0; i < csvData.points.length; i++){
             csvObjects.push(new Ayce.Object3D());
             index = csvObjects.length-1;
             csvObjects[index].visualization = csvData[index-1];
-            getVerticesColorsIndices(trajectories[i], csvObjects[index], i);
+            getVerticesColorsIndices(csvData.points[i], csvObjects[index], i);
 
             csvObjects[index].parent = csvObjects[0];
             csvObjects[index].colors = colors.speed;
@@ -561,10 +559,10 @@ CSVLoader = function(){
 
         var label = {startId: null, endId: null, reset: function(){this.startId = null; this.endId = null}};
 
-        for(var i = 0; i < trajectories.length; i++){
+        for(var i = 0; i < csvData.points.length; i++){
             if(!label.startId) label.startId = Number(csvData[i].id);
             //csvObjects[index].visualization = csvData[index];
-            geometry = getVerticesColorsIndices(trajectories[i], geometry, i);
+            geometry = getVerticesColorsIndices(csvData.points[i], geometry, i);
 
             for(var j = 0; j < geometry.indices.length; j++){
                 if(geometry.indices[j] + csvObjects[csvObjects.length-1].vertices.length/3 <= 65535) {
