@@ -72,7 +72,7 @@ CSVLoader = function(){
         }
     };
 
-    var extractData = function(dataString){
+    var extractData = function(dataString, firstTrajectory, lastTrajectory){
         var csvData = dataString;
         var dataHeader, dataHeaderNiceNames;
 
@@ -90,13 +90,14 @@ CSVLoader = function(){
         var newCSVData = [];
 
         for(var i = 0; i < csvData.length; i++){
-            if(csvData[i] != "") {
+            if(csvData[i] != "" && i >= firstTrajectory && i < lastTrajectory) {
                 var point = csvData[i].split(",");
                 newCSVData.push({niceNames: {}});
                 for (var j = 0; j < point.length; j++) {
                     newCSVData[newCSVData.length - 1][dataHeader[j].toLowerCase()] = point[j];
                     newCSVData[newCSVData.length - 1].niceNames[dataHeader[j].toLowerCase()] = dataHeaderNiceNames[j]
                 }
+                newCSVData[newCSVData.length - 1].points = [];
             }
         }
         return newCSVData;
@@ -205,8 +206,18 @@ CSVLoader = function(){
         }
 
         csvData = extractData(dataString, firstTrajectory, lastTrajectory);
-        csvData.points = [];
-        extractTrajectories(trajString, firstTrajectory, lastTrajectory, csvData.points, speeds, accelerations);
+
+        var trajectories = [];
+
+        extractTrajectories(trajString, firstTrajectory, lastTrajectory, trajectories, speeds, accelerations);
+
+        for(i = 0; i < csvData.length; i++){
+            csvData[i].points = trajectories[i];
+        }
+
+        csvData = csvData.sort(function(a, b){
+            return Number(a.clustersroutesimilaritykm) - Number(b.clustersroutesimilaritykm);
+        });
 
         speedScale = chroma.scale("Spectral").domain(getMinMaxWithoutOutliers(speeds));
         //speedScale = chroma.scale("Spectral").domain(speeds);
@@ -221,32 +232,32 @@ CSVLoader = function(){
         offsetX = 0;
         offsetY = 0;
         var minX = null, minY = null, maxX = null, maxY = null, numberOfPoints = 0;
-        for(var i = 0; i < csvData.points.length; i++) {
-            for(var j = 0; j < csvData.points[i].length; j++) {
-                if(csvData.points[i][j].x){
-                    offsetX += csvData.points[i][j].x;
+        for(var i = 0; i < csvData.length; i++) {
+            for(var j = 0; j < csvData[i].points.length; j++) {
+                if(csvData[i].points[j].x){
+                    offsetX += csvData[i].points[j].x;
                     if(maxX)
-                        maxX = Math.max(maxX, csvData.points[i][j].x);
+                        maxX = Math.max(maxX, csvData[i].points[j].x);
                     else
-                        maxX = csvData.points[i][j].x;
+                        maxX = csvData[i].points[j].x;
 
                     if(maxY)
-                        maxY = Math.max(maxY, csvData.points[i][j].y);
+                        maxY = Math.max(maxY, csvData[i].points[j].y);
                     else
-                        maxY = csvData.points[i][j].y;
+                        maxY = csvData[i].points[j].y;
 
                     if(minX)
-                        minX = Math.min(minX, csvData.points[i][j].x);
+                        minX = Math.min(minX, csvData[i].points[j].x);
                     else
-                        minX = csvData.points[i][j].x;
+                        minX = csvData[i].points[j].x;
 
                     if(minY)
-                        minY = Math.min(minY, csvData.points[i][j].y);
+                        minY = Math.min(minY, csvData[i].points[j].y);
                     else
-                        minY = csvData.points[i][j].y;
+                        minY = csvData[i].points[j].y;
                 }
-                if(csvData.points[i][j].y){
-                    offsetY += csvData.points[i][j].y;
+                if(csvData[i].points[j].y){
+                    offsetY += csvData[i].points[j].y;
                 }
                 numberOfPoints++;
             }
@@ -521,11 +532,11 @@ CSVLoader = function(){
 
         var index;
 
-        for(var i = 0; i < csvData.points.length; i++){
+        for(var i = 0; i < csvData.length; i++){
             csvObjects.push(new Ayce.Object3D());
             index = csvObjects.length-1;
             csvObjects[index].visualization = csvData[index-1];
-            getVerticesColorsIndices(csvData.points[i], csvObjects[index], i);
+            getVerticesColorsIndices(csvData[i].points, csvObjects[index], i);
 
             csvObjects[index].parent = csvObjects[0];
             csvObjects[index].colors = colors.speed;
@@ -559,10 +570,10 @@ CSVLoader = function(){
 
         var label = {startId: null, endId: null, reset: function(){this.startId = null; this.endId = null}};
 
-        for(var i = 0; i < csvData.points.length; i++){
+        for(var i = 0; i < csvData.length; i++){
             if(!label.startId) label.startId = Number(csvData[i].id);
             //csvObjects[index].visualization = csvData[index];
-            geometry = getVerticesColorsIndices(csvData.points[i], geometry, i);
+            geometry = getVerticesColorsIndices(csvData[i].points, geometry, i);
 
             for(var j = 0; j < geometry.indices.length; j++){
                 if(geometry.indices[j] + csvObjects[csvObjects.length-1].vertices.length/3 <= 65535) {
