@@ -316,7 +316,7 @@ CodeBuilder = function(){
                 "\t\t\t\t\tscene.addToScene(objects[i]);\n" +
                 "\t\t\t\t};\n" +
                 "\t\t\t};\n" +
-                "\t\t\tvar modifier = new MainCameraModifier(document.getElementById('ayce_canvas'));\n" +         // TODO: proper support for cameras (parents, modifiers,...)
+                "\t\t\tvar modifier = new Ayce.CameraModifier();\n" +         // TODO: proper support for cameras (parents, modifiers,...)
                 "\t\t\tmodifier.position.x = " + cameraPosition.x + ";\n" +
                 "\t\t\tmodifier.position.y = " + cameraPosition.y + ";\n" +
                 "\t\t\tmodifier.position.z = " + cameraPosition.z + ";\n" +
