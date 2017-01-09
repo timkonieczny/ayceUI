@@ -34,7 +34,7 @@ html, body{
     z-index: 3;
     position: fixed;
 }
-#camera_preview{
+#ayce_canvas{
     position: absolute;
     z-index: 0;
 }
