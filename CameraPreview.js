@@ -1,7 +1,7 @@
 CameraPreview = function() {
 
     var scope = this;
-    this.scene = new Ayce.Scene(document.getElementById("camera_preview"));
+    this.scene = new Ayce.Scene(document.getElementById("ayce_canvas"));
     this.modifier = new Ayce.CameraModifier();
     this.modifier.script = function(){};
     this.modifier.initScript = function(){};
