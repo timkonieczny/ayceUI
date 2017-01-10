@@ -228,7 +228,9 @@ var processCSV = function(e, type){
                 objects.push(o3Ds[0]);
                 cameraPreview.objects.push(o3Ds[0]);
                 objects[objects.length - 1].script = function () {};
+                objects[objects.length - 1].initScript = function () {};
                 cameraPreview.objects[objects.length - 1].script = function () {};
+                cameraPreview.objects[objects.length - 1].initScript = function () {};
                 objects[objects.length - 1].ayceUI = {
                     id: objects.length - 1,
                     screenName: "dataset",
@@ -240,7 +242,9 @@ var processCSV = function(e, type){
                     objects.push(o3Ds[i]);
                     cameraPreview.objects.push(cloneO3D(o3Ds[i]));
                     objects[objects.length - 1].script = function () {};
+                    objects[objects.length - 1].initScript = function () {};
                     cameraPreview.objects[objects.length - 1].script = function () {};
+                    cameraPreview.objects[objects.length - 1].initScript = function () {};
                     objects[objects.length - 1].ayceUI = new AyceUIMetaObject("trajectory "+o3Ds[i].visualization.id);
                     scene.addToScene(objects[objects.length - 1]);
                     cameraPreview.scene.addToScene(cameraPreview.objects[cameraPreview.objects.length - 1], false);

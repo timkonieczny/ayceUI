@@ -103,7 +103,7 @@ CodeBuilder = function(){
                                             break;
                                     }
                                 }else { // Add MainCameraModifier to root of directory
-                                    zip.file(sourceFiles[i].filename, sourceFiles[i].content);
+                                    //zip.file(sourceFiles[i].filename, sourceFiles[i].content);
                                 }
                             }
                             zip.file("index.html", buildCodeString());
@@ -198,7 +198,7 @@ CodeBuilder = function(){
                 '\t\t<script type="text/javascript" src="lib/allyoucaneatvr/objects/types/ParticleSystem.js"></script>\n' +
                 '\t\t<script type="text/javascript" src="lib/allyoucaneatvr/objects/types/Skybox.js"></script>\n' +
                 '\t\t<script type="text/javascript" src="lib/allyoucaneatvr/objects/types/VRSquare.js"></script>\n' +
-                '\t\t<script type="text/javascript" src="MainCameraModifier.js"></script>\n' +
+                //'\t\t<script type="text/javascript" src="MainCameraModifier.js"></script>\n' +
                 //'\t\t<script type="text/javascript" src="lib/allyoucaneatvr/objects/examples/Cube3D.js"></script>\n' +
                 //'\t\t<script type="text/javascript" src="lib/allyoucaneatvr/objects/examples/Pyramid3D.js"></script>\n' +
                 //'\t\t<script type="text/javascript" src="lib/allyoucaneatvr/objects/examples/Sphere3D.js"></script>\n' +
@@ -352,12 +352,11 @@ CodeBuilder = function(){
                 "\t\t\t\tobjects[i].initScript();\n" +
                 "\t\t\tvar update = function(){\n" +
                 "\t\t\t\tAyce.requestAnimFrame(update);\n" +
-                "\t\t\t\tfor(i = 0; i < objects.length; i++){\n" +
-                "\t\t\t\t\tmodifier.updateScript();\n" +
+                "\t\t\t\tfor(i = 0; i < objects.length; i++)\n" +
                 "\t\t\t\t\tobjects[i].script();\n" +
-                "\t\t\t\t\tscene.updateScene();\n" +
-                "\t\t\t\t\tscene.drawScene();\n" +
-                "\t\t\t\t};\n" +
+                "\t\t\t\tmodifier.updateScript();\n" +
+                "\t\t\t\tscene.updateScene();\n" +
+                "\t\t\t\tscene.drawScene();\n" +
                 "\t\t\t};\n" +
                 "\t\t\tupdate();\n" +
                 "\t\t</script>\n" +
