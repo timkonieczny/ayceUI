@@ -309,8 +309,8 @@ CodeBuilder = function(){
                 "\t\t\t\tif(objects[i] instanceof Ayce.Object3D || objects[i] instanceof Ayce.Light){\n" +
                 "\t\t\t\t\tscene.addToScene(objects[i]);\n" +
                 "\t\t\t\t};\n" +
-                "\t\t\t};\n" +
-                "\t\t\tvar modifier = new Ayce.CameraModifier();\n" +         // TODO: proper support for cameras (parents, modifiers,...)
+                "\t\t\t};\n" +      // TODO: code export of modifiers
+                "\t\t\tvar modifier = new Ayce.CameraModifier();\n" +         // TODO: proper support for camera parenting
                 "\t\t\tmodifier.position.x = " + cameraPosition.x + ";\n" +
                 "\t\t\tmodifier.position.y = " + cameraPosition.y + ";\n" +
                 "\t\t\tmodifier.position.z = " + cameraPosition.z + ";\n" +
