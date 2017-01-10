@@ -346,12 +346,11 @@ CodeBuilder = function(){
                 "\t\t\t\tobjects[i].initScript();\n" +
                 "\t\t\tvar update = function(){\n" +
                 "\t\t\t\tAyce.requestAnimFrame(update);\n" +
-                "\t\t\t\tfor(i = 0; i < objects.length; i++){\n" +
-                "\t\t\t\t\tmodifier.updateScript();\n" +
+                "\t\t\t\tfor(i = 0; i < objects.length; i++)\n" +
                 "\t\t\t\t\tobjects[i].script();\n" +
-                "\t\t\t\t\tscene.updateScene();\n" +
-                "\t\t\t\t\tscene.drawScene();\n" +
-                "\t\t\t\t};\n" +
+                "\t\t\t\tmodifier.updateScript();\n" +
+                "\t\t\t\tscene.updateScene();\n" +
+                "\t\t\t\tscene.drawScene();\n" +
                 "\t\t\t};\n" +
                 "\t\t\tupdate();\n" +
                 "\t\t</script>\n" +
