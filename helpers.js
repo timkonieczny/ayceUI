@@ -84,6 +84,12 @@ var getO3dChildrenIds = function(parentId){
     return childIds;
 };
 
+var getDOMNodesFromString = function(string){
+    var div = document.createElement('div');
+    div.innerHTML = string;
+    return div.childNodes;
+};
+
 // Enables \t indenting in textareas
 var textareas = document.getElementsByTagName('textarea');
 var count = textareas.length;

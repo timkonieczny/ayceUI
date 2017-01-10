@@ -45,7 +45,7 @@ ul{
     right:0;
     display: none;
 }
-#objects_in_scene_div {
+#objects_in_scene_div, #added_modifiers{
     margin-top: 40px;
     padding: 0 5px 5px 5px;
     background-color: transparent;
@@ -181,7 +181,7 @@ li{
 .button_dark_active:hover{
     background-color: #16a7ff;
 }
-.delete_object_from_scene{
+.delete_object_from_scene, .delete_modifier{
     color: #eeeeee;
     display: inline-block;
     text-align: center;
@@ -191,4 +191,9 @@ li{
 }
 .delete_object_from_scene:hover{
     color: #ffffff;
+}
+#added_modifiers{
+    margin-top: 0;
+    padding: 5px;
+    display: block;
 }

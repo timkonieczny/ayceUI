@@ -150,6 +150,22 @@ UIFactory = function(){
                 '<a id="camera_edit_init_script" class="button_dark"><i class="fa fa-code"></i>Edit initialization script</a>' +
                 '<input type="checkbox" class="property_input" id="camera_run_script_in_preview" />' +
                 '<label for="camera_run_script_in_preview">Run scripts in preview</label>' +
+                '</li>' +
+                '<li>Additional modifiers:<br>' +
+                '<a id="add_mouse_keyboard_modifier" class="button_dark"><i class="fa fa-plus-circle"></i>Add Mouse / Keyboard</a>' +
+                '<a id="add_gamepad_modifier" class="button_dark"><i class="fa fa-plus-circle"></i>Add Gamepad</a>' +
+                /*'<a id="add_custom_modifier" class="button_dark"><i class="fa fa-plus-circle"></i>Add Custom</a>' +*/
+                '<ul id="added_modifiers">';
+                for(i = 1; i < cameraPreview.scene.getCamera().getManager().modifiers.length; i++){
+                    var modifier = cameraPreview.scene.getCamera().getManager().modifiers[i];
+                    if(modifier instanceof Ayce.MouseKeyboard)
+                        ui+='<li id="modifier_'+i+'" class="button_dark"><i class="fa fa-mouse-pointer"></i>Mouse / Keyboard <a class="delete_modifier" id="delete_'+i+'" >&#215</a></li>';
+                    else if(modifier instanceof Ayce.Gamepad)
+                        ui+='<li id="modifier_'+i+'" class="button_dark"><i class="fa fa-gamepad"></i>Gamepad <a class="delete_modifier" id="delete_'+i+'" >&#215</a></li>';
+                    else
+                        ui+='<li id="modifier_'+i+'" class="button_dark"><i class="fa fa-code"></i>Custom <a class="delete_modifier" id="delete_'+i+'" >&#215</a></li>'
+                }
+            ui+='</ul>' +
                 '</li>';
         }
         if(this.skybox){
@@ -439,6 +455,38 @@ UIFactory = function(){
             document.getElementById("camera_run_script_in_preview").addEventListener("click", function (e) {
                 cameraPreview.modifier.runScriptInPreview = e.checked;
             });
+        }
+        if(document.getElementById("add_mouse_keyboard_modifier")) {
+            document.getElementById("add_mouse_keyboard_modifier").addEventListener("click", function () {
+                cameraPreview.scene.getCamera().getManager().modifiers.push(new Ayce.MouseKeyboard(document.getElementById("ayce_canvas"), document.getElementById("ayce_canvas")));
+                var modifierId = cameraPreview.scene.getCamera().getManager().modifiers.length-1;
+                document.getElementById("added_modifiers").appendChild(
+                    getDOMNodesFromString(
+                        '<li id="modifier_'+modifierId+'" class="button_dark"><i class="fa fa-mouse-pointer"></i>Mouse / Keyboard <a class="delete_modifier" id="delete_'+modifierId+'" >&#215</a></li>'
+                    )[0]
+                );
+                document.getElementById('delete_'+modifierId).addEventListener("click", function(e){
+                    document.getElementById("added_modifiers").removeChild(document.getElementById("modifier_"+modifierId));
+                    cameraPreview.scene.getCamera().getManager().modifiers.splice(modifierId, 1);
+                    document.exitPointerLock();
+                });
+            });
+            document.getElementById("add_gamepad_modifier").addEventListener("click", function () {
+                cameraPreview.scene.getCamera().getManager().modifiers.push(new Ayce.Gamepad());
+                var modifierId = cameraPreview.scene.getCamera().getManager().modifiers.length-1;
+                document.getElementById("added_modifiers").appendChild(
+                    getDOMNodesFromString(
+                        '<li id="modifier_'+modifierId+'" class="button_dark"><i class="fa fa-gamepad"></i>Gamepad <a class="delete_modifier" id="delete_'+modifierId+'" >&#215</a></li>'
+                    )[0]
+                );
+                document.getElementById('delete_'+modifierId).addEventListener("click", function(e){
+                    document.getElementById("added_modifiers").removeChild(document.getElementById("modifier_"+modifierId));
+                    cameraPreview.scene.getCamera().getManager().modifiers.splice(modifierId, 1);
+                });
+            });
+            /*document.getElementById("add_custom_modifier").addEventListener("click", function (e) {
+                cameraPreview.modifier.runScriptInPreview = e.checked;
+            });*/
         }
         document.getElementById("object_name").addEventListener("input", function(e){
             if(currentObjectId == undefined){                           // if object is camera

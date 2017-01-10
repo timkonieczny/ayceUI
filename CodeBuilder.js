@@ -303,32 +303,52 @@ CodeBuilder = function(){
                 }
             }
 
-            var cameraPosition, cameraOrientation;
-            if(cameraPreview.renderPreview) {           // if camera was added, use its pose
-                cameraPosition = cameraPreview.scene.getCamera().getManager().getGlobalPosition();
-                cameraOrientation = cameraPreview.scene.getCamera().getManager().getGlobalRotation();
-            }else{                                      // else use pose of editor camera
-                cameraPosition = scene.getCamera().getManager().getGlobalPosition();
-                cameraOrientation = scene.getCamera().getManager().getGlobalRotation();
-            }
             output += "\t\t\tfor(var i = 0; i < objects.length; i++){\n" +
                 "\t\t\t\tif(objects[i] instanceof Ayce.Object3D || objects[i] instanceof Ayce.Light){\n" +
                 "\t\t\t\t\tscene.addToScene(objects[i]);\n" +
                 "\t\t\t\t};\n" +
-                "\t\t\t};\n" +
-                "\t\t\tvar modifier = new Ayce.CameraModifier();\n" +         // TODO: proper support for cameras (parents, modifiers,...)
-                "\t\t\tmodifier.position.x = " + cameraPosition.x + ";\n" +
-                "\t\t\tmodifier.position.y = " + cameraPosition.y + ";\n" +
-                "\t\t\tmodifier.position.z = " + cameraPosition.z + ";\n" +
-                "\t\t\tmodifier.orientation.x = " + cameraOrientation.x + ";\n" +
-                "\t\t\tmodifier.orientation.y = " + cameraOrientation.y + ";\n" +
-                "\t\t\tmodifier.orientation.z = " + cameraOrientation.z + ";\n" +
-                "\t\t\tmodifier.orientation.w = " + cameraOrientation.w + ";\n" +
-                "\t\t\tmodifier.updateScript = " + cameraPreview.modifier.script + ";\n" +  // TODO: can modifier.update() be used for this?
-                "\t\t\tmodifier.initScript = " + cameraPreview.modifier.initScript + ";\n" +
-                "\t\t\tscene.getCamera().getManager().modifiers.push(modifier);\n" +
-                "\t\t\tmodifier.initScript();\n" +
-                "\t\t\tfor(var i = 0; i < objects.length; i++)\n" +
+                "\t\t\t};\n";      // TODO: code export of modifiers
+
+            if(cameraPreview.renderPreview) {           // if camera was added, use its pose
+                var modifiers = cameraPreview.scene.getCamera().getManager().modifiers;
+
+                for(i = 0; i < modifiers.length; i++){
+                    if(modifiers[i] instanceof Ayce.MouseKeyboard)
+                        output += "\t\t\tscene.getCamera().getManager().modifiers.push(new Ayce.MouseKeyboard(document.getElementById('ayce_canvas'), document.getElementById('ayce_canvas')));\n";
+                    else if(modifiers[i] instanceof Ayce.Gamepad)
+                        output += "\t\t\tscene.getCamera().getManager().modifiers.push(new Ayce.Gamepad());\n";
+                    else
+                        output += "\t\t\tvar modifier = new Ayce.CameraModifier();\n" +         // TODO: proper support for camera parenting
+                            "\t\t\tmodifier.position.x = " + modifiers[i].position.x + ";\n" +
+                            "\t\t\tmodifier.position.y = " + modifiers[i].position.y + ";\n" +
+                            "\t\t\tmodifier.position.z = " + modifiers[i].position.z + ";\n" +
+                            "\t\t\tmodifier.orientation.x = " + modifiers[i].orientation.x + ";\n" +
+                            "\t\t\tmodifier.orientation.y = " + modifiers[i].orientation.y + ";\n" +
+                            "\t\t\tmodifier.orientation.z = " + modifiers[i].orientation.z + ";\n" +
+                            "\t\t\tmodifier.orientation.w = " + modifiers[i].orientation.w + ";\n" +
+                            "\t\t\tmodifier.updateScript = " + cameraPreview.modifier.script + ";\n" +  // TODO: can modifier.update() be used for this?
+                            "\t\t\tmodifier.initScript = " + cameraPreview.modifier.initScript + ";\n" +
+                            "\t\t\tscene.getCamera().getManager().modifiers.push(modifier);\n" +
+                            "\t\t\tmodifier.initScript();\n";
+                }
+            }else{
+                // else use pose of editor camera
+                var cameraPosition = scene.getCamera().getManager().getGlobalPosition();
+                var cameraOrientation = scene.getCamera().getManager().getGlobalRotation();
+                output += "\t\t\tvar modifier = new Ayce.CameraModifier();\n" +
+                    "\t\t\tmodifier.position.x = " + cameraPosition.x + ";\n" +
+                    "\t\t\tmodifier.position.y = " + cameraPosition.y + ";\n" +
+                    "\t\t\tmodifier.position.z = " + cameraPosition.z + ";\n" +
+                    "\t\t\tmodifier.orientation.x = " + cameraOrientation.x + ";\n" +
+                    "\t\t\tmodifier.orientation.y = " + cameraOrientation.y + ";\n" +
+                    "\t\t\tmodifier.orientation.z = " + cameraOrientation.z + ";\n" +
+                    "\t\t\tmodifier.orientation.w = " + cameraOrientation.w + ";\n" +
+                    "\t\t\tmodifier.updateScript = " + cameraPreview.modifier.script + ";\n" +
+                    "\t\t\tmodifier.initScript = " + cameraPreview.modifier.initScript + ";\n" +
+                    "\t\t\tscene.getCamera().getManager().modifiers.push(modifier);\n" +
+                    "\t\t\tmodifier.initScript();\n";
+            }
+            output += "\t\t\tfor(i = 0; i < objects.length; i++)\n" +
                 "\t\t\t\tobjects[i].initScript();\n" +
                 "\t\t\tvar update = function(){\n" +
                 "\t\t\t\tAyce.requestAnimFrame(update);\n" +
