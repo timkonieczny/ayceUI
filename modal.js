@@ -249,6 +249,7 @@ var o3DFromCSVStrings = function(csvString, csvDataString){
         screenName: "dataset",
         runScriptInPreview: false
     };
+    var idOfParent = objects[objects.length - 1].ayceUI.id;
     appendObjectInSceneChildNode("empty");
     currentObjectId = objects.length - 1;
     for(var i = 1; i < o3Ds.length; i++){
@@ -264,6 +265,7 @@ var o3DFromCSVStrings = function(csvString, csvDataString){
         appendObjectInSceneChildNode("csv");
         currentObjectId = objects.length - 1;
     }
+    showProperties(document.getElementById(idOfParent))
 };
 
 var csvTimer;
