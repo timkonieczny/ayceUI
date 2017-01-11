@@ -27,4 +27,21 @@ function update() {
     }
 }
 
+var trajPath = "data/st_augustin.csv";
+var dataPath = "data/st_augustin_data.csv";
+var data, traj;
+data = Ayce.XMLLoader.getSourceSynch(dataPath);
+if(data != null){
+    traj = Ayce.XMLLoader.getSourceSynch(trajPath);
+    if(traj != null){
+        o3DFromCSVStrings(traj, data);
+    }else{
+        console.log("Dataset could not be loaded. There is no file "+trajPath);
+        showNotification("Dataset could not be loaded. There is no file "+trajPath, "fa-exclamation-circle")
+    }
+}else{
+    console.log("Dataset could not be loaded. There is no file "+dataPath);
+    showNotification("Dataset could not be loaded. There is no file "+dataPath, "fa-exclamation-circle")
+}
+
 update();
