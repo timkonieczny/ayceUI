@@ -259,8 +259,12 @@ var processCSV = function(e, type){
 };
 
 var o3DFromCSVStrings = function(csvString, csvDataString){
-    var o3Ds = csvLoader.getIndividualO3Ds(csvString, csvDataString);
-    //var o3Ds = csvLoader.getGroupedO3Ds(csvString, csvDataString);
+    var o3Ds;
+    if(document.getElementById("group_objects").checked)
+        o3Ds = csvLoader.getGroupedO3Ds(csvString, csvDataString);
+    else{
+        o3Ds = csvLoader.getIndividualO3Ds(csvString, csvDataString);
+    }
 
     objects.push(o3Ds[0]);
     cameraPreview.objects.push(o3Ds[0]);

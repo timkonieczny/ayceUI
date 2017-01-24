@@ -58,7 +58,8 @@ var showProperties = function(node) {
             nextSibling = nextSibling.nextElementSibling;
         }
         if(nextSibling){
-            uiFactory.sortData = objects[Number(nextSibling.id)].visualization;
+            uiFactory.sortData = false;
+            //uiFactory.sortData = objects[Number(nextSibling.id)].visualization;
         }else{
             uiFactory.sortData = false;
         }

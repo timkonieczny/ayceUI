@@ -148,3 +148,8 @@
     width: 100%;
     height: 100%;
 }
+#modal_footer{
+    background-color: white;
+    color: #676767;
+    padding: 6px 6px 0 6px;
+}
