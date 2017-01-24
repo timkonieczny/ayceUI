@@ -4,7 +4,7 @@ CameraPreview = function() {
     this.canvas = document.getElementById("ayce_canvas");
     this.scene = new Ayce.Scene(scope.canvas);
     this.modifier = new Ayce.CameraModifier();
-    this.modifier.script = function(){};
+    this.modifier.updateScript = function(){};
     this.modifier.initScript = function(){};
     this.modifier.runScriptInPreview = false;   //TODO: is this in exported code?
     this.modifier.runInitScript = false;
@@ -19,7 +19,7 @@ CameraPreview = function() {
 
     this.update = function() {
 
-        for(var i=0; i < this.objects.length; i++) if(this.objects[i]) this.objects[i].script();
+        for(var i=0; i < this.objects.length; i++) if(this.objects[i]) this.objects[i].updateScript();
 
         this.scene.updateScene();
         this.scene.drawScene();

@@ -3,6 +3,6 @@ EmptyObject = function(){
     this.rotation = new Ayce.Quaternion();
     this.getGlobalRotation = function() { return this.rotation };
     this.getGlobalPosition = function() { return this.position };
-    this.script = function () {};
+    this.updateScript = function () {};
     this.ayceUI = new AyceUIMetaObject("empty object");
 };

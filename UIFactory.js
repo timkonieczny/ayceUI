@@ -322,7 +322,7 @@ UIFactory = function(){
                     break;
                 case "run_script_in_preview":
                     if(e.type != "wheel") {
-                        if(e.target.checked && (typeof objects[currentObjectId].script != "function" || typeof objects[currentObjectId].initScript != "function")){
+                        if(e.target.checked && (typeof objects[currentObjectId].updateScript != "function" || typeof objects[currentObjectId].initScript != "function")){
                             showNotification("Code contains errors. Scripts will not be run until the errors are fixed.", "fa-exclamation-circle", "error");
                         }
                         objects[currentObjectId].ayceUI.runScriptInPreview = e.target.checked;
@@ -374,7 +374,7 @@ UIFactory = function(){
         }
         if(document.getElementById("edit_script")) {     // TODO: enable scripting with every object
             document.getElementById("edit_script").addEventListener("click", function () {
-                openModal("script", objects[currentObjectId]);
+                openModal("updateScript", objects[currentObjectId]);
             });
             document.getElementById("edit_init_script").addEventListener("click", function () {
                 openModal("initScript", objects[currentObjectId]);
@@ -385,7 +385,7 @@ UIFactory = function(){
         }
         if(document.getElementById("camera_edit_script")) {
             document.getElementById("camera_edit_script").addEventListener("click", function () {
-                openModal("script", cameraPreview.modifier);
+                openModal("updateScript", cameraPreview.modifier);
             });
             document.getElementById("camera_edit_init_script").addEventListener("click", function () {
                 openModal("initScript", cameraPreview.modifier);

@@ -274,7 +274,7 @@ CodeBuilder = function(){
                                 }
                                 break;
                             case "function":
-                                if(property == "script" || property == "initScript"){
+                                if(property == "updateScript" || property == "initScript"){
                                     if(objects[i][property] != referenceObject[property]) {
                                         output += "\t\t\tobjects["+i+"]." + property + " = " + objects[i][property].toString() + ";\n";    // TODO: function to string
                                     }
@@ -320,7 +320,7 @@ CodeBuilder = function(){
                             "\t\t\tmodifier.orientation.y = " + modifiers[i].orientation.y + ";\n" +
                             "\t\t\tmodifier.orientation.z = " + modifiers[i].orientation.z + ";\n" +
                             "\t\t\tmodifier.orientation.w = " + modifiers[i].orientation.w + ";\n" +
-                            "\t\t\tmodifier.updateScript = " + cameraPreview.modifier.script + ";\n" +  // TODO: can modifier.update() be used for this?
+                            "\t\t\tmodifier.updateScript = " + cameraPreview.modifier.updateScript + ";\n" +  // TODO: can modifier.update() be used for this?
                             "\t\t\tmodifier.initScript = " + cameraPreview.modifier.initScript + ";\n" +
                             "\t\t\tscene.getCamera().getManager().modifiers.push(modifier);\n" +
                             "\t\t\tmodifier.initScript();\n";
@@ -337,7 +337,7 @@ CodeBuilder = function(){
                     "\t\t\tmodifier.orientation.y = " + cameraOrientation.y + ";\n" +
                     "\t\t\tmodifier.orientation.z = " + cameraOrientation.z + ";\n" +
                     "\t\t\tmodifier.orientation.w = " + cameraOrientation.w + ";\n" +
-                    "\t\t\tmodifier.updateScript = " + cameraPreview.modifier.script + ";\n" +
+                    "\t\t\tmodifier.updateScript = " + cameraPreview.modifier.updateScript + ";\n" +
                     "\t\t\tmodifier.initScript = " + cameraPreview.modifier.initScript + ";\n" +
                     "\t\t\tscene.getCamera().getManager().modifiers.push(modifier);\n" +
                     "\t\t\tmodifier.initScript();\n";
@@ -347,7 +347,7 @@ CodeBuilder = function(){
                 "\t\t\tvar update = function(){\n" +
                 "\t\t\t\tAyce.requestAnimFrame(update);\n" +
                 "\t\t\t\tfor(i = 0; i < objects.length; i++)\n" +
-                "\t\t\t\t\tobjects[i].script();\n" +
+                "\t\t\t\t\tobjects[i].updateScript();\n" +
                 "\t\t\t\tmodifier.updateScript();\n" +
                 "\t\t\t\tscene.updateScene();\n" +
                 "\t\t\t\tscene.drawScene();\n" +
