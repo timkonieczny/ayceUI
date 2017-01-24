@@ -1,9 +1,33 @@
 var evaluateInitScript = function(){
-    eval("objects[currentObjectId].initScript = "+document.getElementById("edit_script_textarea").value);
+    var errorInfo = document.getElementById("init_script_error");
+    try{
+        eval("objects[currentObjectId].initScript = " + document.getElementById("edit_script_textarea").value);
+        errorInfo.style.display = "none";
+        objects[currentObjectId].ayceUI.initScriptError = null;
+        removeClass(document.getElementById(currentObjectId), "button_error");
+    }catch(error){
+        showNotification("Code contains errors. Initialization script will not be run.", "fa-exclamation-circle", "error");
+        errorInfo.style.display = "block";
+        errorInfo.innerHTML = objects[currentObjectId].ayceUI.initScriptError = '<i class="fa fa-exclamation-circle"></i>' + error;
+        objects[currentObjectId].initScript = document.getElementById("edit_script_textarea").value;
+        addClass(document.getElementById(currentObjectId), "button_error");
+    }
     closeModal();
 };
 var evaluateUpdateScript = function(){
-    eval("objects[currentObjectId].script = "+document.getElementById("edit_script_textarea").value);
+    var errorInfo = document.getElementById("update_script_error");
+    try{
+        eval("objects[currentObjectId].script = "+document.getElementById("edit_script_textarea").value);
+        errorInfo.style.display = "none";
+        objects[currentObjectId].ayceUI.updateScriptError = null;
+        removeClass(document.getElementById(currentObjectId), "button_error");
+    }catch(error){
+        showNotification("Code contains errors. Update script will not be run.", "fa-exclamation-circle", "error");
+        errorInfo.style.display = "block";
+        errorInfo.innerHTML = objects[currentObjectId].ayceUI.updateScriptError = '<i class="fa fa-exclamation-circle"></i>' + error;
+        objects[currentObjectId].script = document.getElementById("edit_script_textarea").value;
+        addClass(document.getElementById(currentObjectId), "button_error");
+    }
     closeModal();
 };
 var evaluateCameraInitScript = function(){
@@ -14,7 +38,7 @@ var evaluateCameraUpdateScript = function(){
     eval("cameraPreview.modifier.script = "+document.getElementById("edit_script_textarea").value);
     closeModal();
 };
-var resetCameraInitScript = function(object){
+var resetCameraInitScript = function(){
     document.getElementById("edit_script_textarea").value = cameraPreview.modifier.initScript;
 };
 var resetCameraUpdateScript = function(object){
@@ -46,7 +70,7 @@ var openModal = function(type, object){
             document.getElementById("reset_script").addEventListener("click", resetCameraUpdateScript);
         }else {
             document.getElementById("save_script").addEventListener("click", evaluateUpdateScript);
-            document.getElementById("reset_script").addEventListener("click", resetUpdateScript);
+            document.getElementById("reset_script").addEventListener("click", function(){resetUpdateScript(objects[currentObjectId])});
         }
     }else if(type == "initScript"){
         document.getElementById("modal").style.display = "block";
@@ -62,7 +86,7 @@ var openModal = function(type, object){
             document.getElementById("reset_script").addEventListener("click", resetCameraInitScript);
         }else{
             document.getElementById("save_script").addEventListener("click", evaluateInitScript);
-            document.getElementById("reset_script").addEventListener("click", resetCameraInitScript);
+            document.getElementById("reset_script").addEventListener("click", function(){resetInitScript(objects[currentObjectId])});
         }
         object.ayceUI.runInitScript = true;
     }
@@ -130,7 +154,7 @@ var fileToGeometry = function(e, type){
         };
         reader.readAsText(file);    // TODO: enable direct data passing to OBJLoader
     }else{
-        showNotification("Please provide a valid ." + type + " file.", "fa-exclamation-circle");
+        showNotification("Please provide a valid ." + type + " file.", "fa-exclamation-circle", "error");
     }
 };
 
@@ -150,7 +174,7 @@ var createGeometry = function(obj, mtl){
         closeModal();
         child.onclick({srcElement: {dataset: {type: "obj"}}});
     }else{
-        showNotification("At least one of the provided files is invalid. The object wasn't created.", "fa-exclamation-circle");
+        showNotification("At least one of the provided files is invalid. The object wasn't created.", "fa-exclamation-circle", "error");
         closeModal();
         openModal("obj");
     }

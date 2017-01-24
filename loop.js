@@ -1,14 +1,25 @@
 function update() {
 
     for(var i=0; i < objects.length; i++)
-        if(objects[i] && objects[i].ayceUI.runScriptInPreview && objects[i].ayceUI.runInitScript) {
+        if(
+            objects[i] &&
+            objects[i].ayceUI.runScriptInPreview &&
+            objects[i].ayceUI.runInitScript &&
+            typeof objects[i].initScript == typeof objects[i].script == "function"  // if script is of type string the code has errors
+        ) {
             objects[i].initScript();
             objects[i].ayceUI.runInitScript = false;
         }
 
-    for(i=0; i < objects.length; i++)
-        if(objects[i] && objects[i].ayceUI.runScriptInPreview)
+    for(i=0; i < objects.length; i++) {
+        if (
+            objects[i] &&
+            objects[i].ayceUI.runScriptInPreview &&
+            typeof objects[i].initScript == typeof objects[i].script == "function"  // if script is of type string the code has errors
+        ) {
             objects[i].script();
+        }
+    }
 
     Ayce.requestAnimFrame(update);
     if(renderScene) {

@@ -103,9 +103,23 @@ UIFactory = function(){
                 '</li>';
         }
         if(this.editScript){
+            console.log(objects[currentObjectId].ayceUI.updateScriptError);
             ui+='<li>Scripts:<br>' +
-                '<a id="edit_script" class="button_dark"><i class="fa fa-code"></i>Edit update script</a>' +
-                '<a id="edit_init_script" class="button_dark"><i class="fa fa-code"></i>Edit initialization script</a>' +
+                '<a id="edit_script" class="button_dark"><i class="fa fa-code"></i>Edit update script<div id="update_script_error"';
+
+                if(objects[currentObjectId].ayceUI.updateScriptError)
+                    ui+='style="display: block;">' + objects[currentObjectId].ayceUI.updateScriptError;
+                else
+                    ui+='>';
+
+                ui+='</div></a>' +
+                '<a id="edit_init_script" class="button_dark"><i class="fa fa-code"></i>Edit initialization script<div id="init_script_error"';
+                if(objects[currentObjectId].ayceUI.initScriptError)
+                    ui+='style="display: block;">' + objects[currentObjectId].ayceUI.initScriptError;
+                else
+                    ui+='>';
+
+                ui+='</div></a>' +
                 '<input type="checkbox" class="property_input" id="run_script_in_preview" />' +
                 '<label for="run_script_in_preview">Run scripts in preview</label>' +
                 '</li>';
@@ -308,6 +322,9 @@ UIFactory = function(){
                     break;
                 case "run_script_in_preview":
                     if(e.type != "wheel") {
+                        if(e.target.checked && (typeof objects[currentObjectId].script != "function" || typeof objects[currentObjectId].initScript != "function")){
+                            showNotification("Code contains errors. Scripts will not be run until the errors are fixed.", "fa-exclamation-circle", "error");
+                        }
                         objects[currentObjectId].ayceUI.runScriptInPreview = e.target.checked;
                     }
                     break;
@@ -420,7 +437,7 @@ UIFactory = function(){
         });
         document.getElementById("object_name").addEventListener("focusout", function(e){
             if(e.srcElement.value == ""){
-                showNotification("Please enter an object name.", "fa-exclamation-circle");
+                showNotification("Please enter an object name.", "fa-exclamation-circle", "info");
                 e.srcElement.focus();
             }
         });
@@ -443,7 +460,7 @@ UIFactory = function(){
                 e.stopPropagation();
                 console.log("drop");
                 if (Number(e.dataTransfer.getData("text/html")) == currentObjectId) {
-                    showNotification("Cannot make the active object the active object's parent", "fa-exclamation-circle");
+                    showNotification("Cannot make the active object the active object's parent", "fa-exclamation-circle", "info");
                 } else {
                     var parentObject = objects[Number(e.dataTransfer.getData("text/html"))];
                     this.innerHTML = "<div id='parent_dropped'>" + parentObject.ayceUI.screenName + "</div>";
@@ -503,7 +520,7 @@ UIFactory = function(){
 
                         reader.readAsDataURL(file);
                     } else {
-                        showNotification("Please provide a valid image file.", "fa-exclamation-circle");
+                        showNotification("Please provide a valid image file.", "fa-exclamation-circle", "error");
                     }
                 });
             }

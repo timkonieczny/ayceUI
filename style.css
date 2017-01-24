@@ -61,7 +61,6 @@ html, body{
 }
 #notification{
     display: none;
-    background: #0091ff;
     position: fixed;
     z-index: 4;
     border-radius: 3px;
@@ -76,6 +75,12 @@ html, body{
     box-shadow: 0 8px 80px -13px rgba(0, 0, 0, 1);
     opacity: 0;
     animation: showNotification 5s;
+}
+.errorNotification{
+    background-color: #ff0a23;
+}
+.infoNotification{
+    background-color: #0091ff;
 }
 #notification p{
     display: inline;
