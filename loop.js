@@ -48,11 +48,11 @@ if(data != null){
         o3DFromCSVStrings(traj, data);
     }else{
         console.log("Dataset could not be loaded. There is no file "+trajPath);
-        showNotification("Dataset could not be loaded. There is no file "+trajPath, "fa-exclamation-circle")
+        showNotification("Dataset could not be loaded. There is no file "+trajPath, "fa-exclamation-circle", "info")
     }
 }else{
     console.log("Dataset could not be loaded. There is no file "+dataPath);
-    showNotification("Dataset could not be loaded. There is no file "+dataPath, "fa-exclamation-circle")
+    showNotification("Dataset could not be loaded. There is no file "+dataPath, "fa-exclamation-circle", "info")
 }
 
 update();

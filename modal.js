@@ -254,7 +254,7 @@ var processCSV = function(e, type){
         };
         reader.readAsText(file);
     }else{
-        showNotification("Please provide a valid .csv file.", "fa-exclamation-circle");
+        showNotification("Please provide a valid .csv file.", "fa-exclamation-circle", "error");
     }
 };
 
