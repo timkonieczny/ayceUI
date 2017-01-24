@@ -17,7 +17,7 @@ var evaluateInitScript = function(){
 var evaluateUpdateScript = function(){
     var errorInfo = document.getElementById("update_script_error");
     try{
-        eval("objects[currentObjectId].script = "+document.getElementById("edit_script_textarea").value);
+        eval("objects[currentObjectId].updateScript = "+document.getElementById("edit_script_textarea").value);
         errorInfo.style.display = "none";
         objects[currentObjectId].ayceUI.updateScriptError = null;
         removeClass(document.getElementById(currentObjectId), "button_error");
@@ -25,7 +25,7 @@ var evaluateUpdateScript = function(){
         showNotification("Code contains errors. Update script will not be run.", "fa-exclamation-circle", "error");
         errorInfo.style.display = "block";
         errorInfo.innerHTML = objects[currentObjectId].ayceUI.updateScriptError = '<i class="fa fa-exclamation-circle"></i>' + error;
-        objects[currentObjectId].script = document.getElementById("edit_script_textarea").value;
+        objects[currentObjectId].updateScript = document.getElementById("edit_script_textarea").value;
         addClass(document.getElementById(currentObjectId), "button_error");
     }
     closeModal();
@@ -35,20 +35,20 @@ var evaluateCameraInitScript = function(){
     closeModal();
 };
 var evaluateCameraUpdateScript = function(){
-    eval("cameraPreview.modifier.script = "+document.getElementById("edit_script_textarea").value);
+    eval("cameraPreview.modifier.updateScript = "+document.getElementById("edit_script_textarea").value);
     closeModal();
 };
 var resetCameraInitScript = function(){
     document.getElementById("edit_script_textarea").value = cameraPreview.modifier.initScript;
 };
 var resetCameraUpdateScript = function(object){
-    document.getElementById("edit_script_textarea").value = cameraPreview.modifier.script;
+    document.getElementById("edit_script_textarea").value = cameraPreview.modifier.updateScript;
 };
 var resetInitScript = function(object){
     document.getElementById("edit_script_textarea").value = object.initScript;
 };
 var resetUpdateScript = function(object){
-    document.getElementById("edit_script_textarea").value = object.script;
+    document.getElementById("edit_script_textarea").value = object.updateScript;
 };
 var openModal = function(type, object){
     if(type == "obj"){
@@ -56,7 +56,7 @@ var openModal = function(type, object){
         document.getElementById("file_upload_wrapper").style.display = "block";
         document.getElementById("obj_drop").style.display = "flex";
         document.getElementById("mtl_drop").style.display = "flex";
-    }else if(type == "script"){
+    }else if(type == "updateScript"){
         document.getElementById("modal").style.display = "block";
         document.getElementById("edit_script_wrapper").style.display = "block";
         document.getElementById("edit_script_textarea").style.display = "block";

@@ -61,10 +61,10 @@ for(i = 0; i < addObjectButtons.length; i++){
                 cameraPreview.objects.push(new Ayce.Skybox("", "", "", "", "", "", "", scene.getCamera().getManager(), scene.getCamera().farPlane));
             }
 
-            objects[objects.length-1].script = function(){};
+            objects[objects.length-1].updateScript = function(){};
             objects[objects.length-1].useFragmentLighting = true;
             objects[objects.length-1].initScript = function(){};
-            cameraPreview.objects[objects.length-1].script = function(){};
+            cameraPreview.objects[objects.length-1].updateScript = function(){};
             cameraPreview.objects[objects.length-1].initScript = function(){};
             var screenName = this.dataset.type;
             objects[objects.length-1].ayceUI = new AyceUIMetaObject(this.dataset.type);
@@ -91,9 +91,9 @@ document.getElementById("add_empty").onclick = function(){
 document.getElementById("add_light").onclick = function(){
     objects.push(new Ayce.Light());
     cameraPreview.objects.push(new Ayce.Light());
-    objects[objects.length-1].script = function(){};
+    objects[objects.length-1].updateScript = function(){};
     objects[objects.length-1].initScript = function(){};
-    cameraPreview.objects[objects.length-1].script = function(){};
+    cameraPreview.objects[objects.length-1].updateScript = function(){};
     cameraPreview.objects[objects.length-1].initScript = function(){};
     var screenName = this.dataset.type;
     objects[objects.length-1].ayceUI = new AyceUIMetaObject(this.dataset.type);
