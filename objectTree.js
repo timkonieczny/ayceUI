@@ -11,12 +11,12 @@ var handleDragover = function(e){
 };
 var handleChildParentDrop = function(id, newParent){
     if(id==newParent.id){
-        showNotification("Cannot make the active object the active object's parent", "fa-exclamation-circle");
+        showNotification("Cannot make the active object the active object's parent", "fa-exclamation-circle", "info");
         // same element
     }else if(newParent.parentNode.id!="objects_in_scene" &&
         Array.prototype.indexOf.call(newParent.parentNode.childNodes, newParent)==0 &&
         (hasChildNodeWithId(newParent.parentNode, id))){
-        showNotification("The object is already a child", "fa-exclamation-circle");
+        showNotification("The object is already a child", "fa-exclamation-circle", "info");
         // TODO: implement removing parent
         // already a child
     }else{

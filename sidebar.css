@@ -168,18 +168,24 @@ fieldset{
     background-color: #676767;
     display: block;
 }
+.button_dark:hover{
+    background-color: #7d7d7d;
+}
+.button_error{
+    background-color: #ff0a23;
+}
+.button_error:hover{
+    background-color: #ff2137;
+}
 .button_dark_active {
     background-color: #0091ff;
     min-height: calc(1em + 5px);    /* height if text is empty: 1 line + 5px margin-bottom*/
 }
-li{
-    list-style-type: none;
-}
-.button_dark:hover{
-    background-color: #7d7d7d;
-}
 .button_dark_active:hover{
     background-color: #16a7ff;
+}
+li{
+    list-style-type: none;
 }
 .delete_object_from_scene, .delete_modifier{
     color: #eeeeee;
@@ -192,8 +198,14 @@ li{
 .delete_object_from_scene:hover{
     color: #ffffff;
 }
-#added_modifiers{
+#added_modifiers {
     margin-top: 0;
     padding: 5px;
     display: block;
+}
+#init_script_error, #update_script_error{
+    background-color: #ff0a23;
+    padding: 5px 5px 5px 1.2em;
+    border-radius: 3px;
+    display: none;
 }

@@ -2,7 +2,9 @@ AyceUIMetaObject = function(screenName){
     this.id = objects.length-1;
     this.screenName = screenName;
     this.runScriptInPreview = false;
-    this.runInitScript = false
+    this.runInitScript = false;
+    this.initScriptError = null;
+    this.updateScriptError = null;
 };
 var mainCanvas = document.getElementById("main_canvas");
 var scene = new Ayce.Scene(mainCanvas);
@@ -104,7 +106,7 @@ document.getElementById("add_light").onclick = function(){
 
 document.getElementById("add_camera").onclick = function(){
     if(document.getElementById("camera_preview_wrapper").style.display == "block"){
-        showNotification("There is already a camera in the scene", "fa-exclamation-circle");
+        showNotification("There is already a camera in the scene", "fa-exclamation-circle", "info");
     }else {
         document.getElementById("camera_preview_wrapper").style.display = "block";  // TODO: scripts
         cameraPreview.renderPreview = true;
