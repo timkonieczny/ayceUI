@@ -67,7 +67,7 @@ ul{
     width: calc(100% - 2px - 2px - 30px);
 }
 #object_name:hover{
-    border: 2px solid #676767;
+    border: 2px solid #16a7ff;
 }
 #object_name:focus{
     border: 2px solid #ffffff;
@@ -76,8 +76,9 @@ ul{
     width: 30px;
 }
 #properties_header{
-    margin-top: 0.83em;
-    margin-bottom: 2px;
+    padding: 0.83em 5px 5px 5px;
+    margin: 0 -5px 2px -5px;
+    background-color: #0091ff;
 }
 .property_input{
     width: calc(33.33% - 3px - 3px - 3.33px);
