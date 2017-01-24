@@ -122,12 +122,12 @@
     display: none;
 }
 .modal_top_half{
-    position: absolute;
-    top: 0;
+    position: relative;
+    float: left;
 }
 .modal_bottom_half{
-    position: absolute;
-    bottom: 0;
+    position: relative;
+    float: left;
 }
 #import_processing{
     position: absolute;
