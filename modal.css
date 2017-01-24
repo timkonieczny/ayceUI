@@ -15,7 +15,7 @@
     bottom: 0;
     margin: auto;
     background-color: #ffffff;
-    box-shadow: 0px 8px 80px -13px rgba(0, 0, 0, 1);
+    box-shadow: 0 8px 80px -13px rgba(0, 0, 0, 1);
 }
 #modal_close {
     position: absolute;
@@ -24,7 +24,7 @@
     z-index: 1;
     background-color: red;
     margin:0;
-    padding: 0px 1em 0px 1em;
+    padding: 0 1em 0 1em;
     cursor: pointer;
 }
 #export_code_textarea{
@@ -71,7 +71,7 @@
     color: #b4b4b4;
     display: inline-block;
     float: right;
-    margin: 5px 5px 5px 0px;
+    margin: 5px 5px 5px 0;
 }
 .button_light:hover {
     background-color: #b4b4b4;
@@ -87,7 +87,7 @@
     background-color: #00ed90;
 }
 .modal_file_drop {
-    margin: 6px;
+    margin: 6px 6px 0 6px;
     border-radius: 3px;
     border: 2px solid #dddddd;
     align-items: center;
@@ -99,16 +99,12 @@
     text-align: center;
     font-size: 1.7em;
 }
-.modal_top_half, .modal_bottom_half{
+.modal_top_half, .modal_bottom_half {
     height: calc(50% - 9px - 4px);
     width: calc(100% - 12px - 4px);
     display: none;
-}
-.modal_top_half{
-    margin-bottom: 3px;
-}
-.modal_bottom_half{
-    margin-top: 3px;
+    position: relative;
+    float: left;
 }
 .modal_file_done{
     display: none;
@@ -120,14 +116,6 @@
 }
 .modal_file_loading{
     display: none;
-}
-.modal_top_half{
-    position: relative;
-    float: left;
-}
-.modal_bottom_half{
-    position: relative;
-    float: left;
 }
 #import_processing, #import_csv_processing{
     position: absolute;
