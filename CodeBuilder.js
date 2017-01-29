@@ -360,6 +360,7 @@ CodeBuilder = function(){
                 "\t\t\t// Desktop rendering is enabled by default.\n" +
                 "\t\t\t//scene.setRendererDesktop();\n" +
                 "\t\t\t//scene.setRendererVR(false);\t//The argument toggles barrel distortion / chromatic abberation correction.\n" +
+                "\t\t\t//scene.setRenderer(new StereoProjectorRenderer(document.getElementById('ayce_canvas')));\n" +
                 "\t\t\tfor(i = 0; i < objects.length; i++)\n" +
                 "\t\t\t\tobjects[i].initScript();\n" +
                 "\t\t\tvar update = function(){\n" +
