@@ -340,6 +340,9 @@ UIFactory = function(){
                     objects[currentObjectId].color.red = document.getElementById("light_color_r").value;
                     objects[currentObjectId].color.green = document.getElementById("light_color_g").value;
                     objects[currentObjectId].color.blue = document.getElementById("light_color_b").value;
+                    cameraPreview.objects[currentObjectId].color.red = document.getElementById("light_color_r").value;
+                    cameraPreview.objects[currentObjectId].color.green = document.getElementById("light_color_g").value;
+                    cameraPreview.objects[currentObjectId].color.blue = document.getElementById("light_color_b").value;
                     break;
                 case "light_specular_color_r":
                 case "light_specular_color_g":
@@ -353,6 +356,9 @@ UIFactory = function(){
                     objects[currentObjectId].specularColor.red = document.getElementById("light_specular_color_r").value;
                     objects[currentObjectId].specularColor.green = document.getElementById("light_specular_color_g").value;
                     objects[currentObjectId].specularColor.blue = document.getElementById("light_specular_color_b").value;
+                    cameraPreview.objects[currentObjectId].specularColor.red = document.getElementById("light_specular_color_r").value;
+                    cameraPreview.objects[currentObjectId].specularColor.green = document.getElementById("light_specular_color_g").value;
+                    cameraPreview.objects[currentObjectId].specularColor.blue = document.getElementById("light_specular_color_b").value;
                     break;
                 case "run_script_in_preview":
                     if(e.type != "wheel") {
@@ -429,6 +435,14 @@ UIFactory = function(){
                     objects[currentObjectId].scale.x = document.getElementById("scale_x").value;
                     objects[currentObjectId].scale.y = document.getElementById("scale_y").value;
                     objects[currentObjectId].scale.z = document.getElementById("scale_z").value;
+                    break;
+                case "two_face_transparency":
+                    scene.removeFromScene(objects[currentObjectId]);
+                    cameraPreview.scene.removeFromScene(cameraPreview.objects[currentObjectId]);
+                    objects[currentObjectId].twoFaceTransparency = e.target.checked;
+                    cameraPreview.objects[currentObjectId].twoFaceTransparency = e.target.checked;
+                    scene.addToScene(objects[currentObjectId]);
+                    cameraPreview.scene.addToScene(cameraPreview.objects[currentObjectId], false);
                     break;
                 default:
                     var attribute = e.srcElement.id.split("_");
@@ -625,14 +639,25 @@ UIFactory = function(){
             document.getElementById("scale_z").value = objects[currentObjectId].scale.z;
         }
         if (uiFactory.color) {
-            document.getElementById("colors_r").value = document.getElementById("colors_g").value = document.getElementById("colors_b").value = 0.5;
-            document.getElementById("colors_a").value = 1;
+            if(document.getElementById("colors_r").value = objects[currentObjectId].colors) {
+                document.getElementById("colors_r").value = objects[currentObjectId].colors[0];
+                document.getElementById("colors_g").value = objects[currentObjectId].colors[1];
+                document.getElementById("colors_b").value = objects[currentObjectId].colors[2];
+                document.getElementById("colors_a").value = objects[currentObjectId].colors[3];
+            }else{
+                document.getElementById("colors_r").value = document.getElementById("colors_g").value = document.getElementById("colors_b").value = 0.5;
+                document.getElementById("colors_a").value = 1.0;
+            }
         }
         if (uiFactory.lightColor) {
-            document.getElementById("light_color_r").value = document.getElementById("light_color_g").value = document.getElementById("light_color_b").value = 1.0;
+            document.getElementById("light_color_r").value = objects[currentObjectId].color.red;
+            document.getElementById("light_color_g").value = objects[currentObjectId].color.green;
+            document.getElementById("light_color_b").value = objects[currentObjectId].color.blue;
         }
         if(uiFactory.lightSpecularColor){
-            document.getElementById("light_specular_color_r").value = document.getElementById("light_specular_color_g").value = document.getElementById("light_specular_color_b").value = 1.0;
+            document.getElementById("light_specular_color_r").value = objects[currentObjectId].specularColor.red;
+            document.getElementById("light_specular_color_g").value = objects[currentObjectId].specularColor.green;
+            document.getElementById("light_specular_color_b").value = objects[currentObjectId].specularColor.blue;
         }
         if (uiFactory.visibility) {
             document.getElementById("visible").checked = objects[currentObjectId].visible;
