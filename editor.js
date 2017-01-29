@@ -5,6 +5,7 @@ AyceUIMetaObject = function(screenName){
     this.runInitScript = false;
     this.initScriptError = null;
     this.updateScriptError = null;
+    this.parent = null;
 };
 var mainCanvas = document.getElementById("main_canvas");
 var scene = new Ayce.Scene(mainCanvas);
