@@ -40,8 +40,8 @@ function update() {
     }
 }
 
-var trajPath = "data/st_augustin.csv";
-var dataPath = "data/st_augustin_data.csv";
+var trajPath = "data/traj.csv";
+var dataPath = "data/traj_data.csv";
 var data, traj;
 data = Ayce.XMLLoader.getSourceSynch(dataPath);
 if(data != null){
