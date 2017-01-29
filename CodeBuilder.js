@@ -213,93 +213,101 @@ CodeBuilder = function(){
                 '\t\t<script type="text/javascript" >\n';
             output += '\t\t\tvar scene = new Ayce.Scene(document.getElementById("ayce_canvas"));\n' +
                 "\t\t\tvar objects = [];\n";
+            var outputObjectIndex = 0;
             for(var i=0; i<objects.length; i++){
                 console.log(Math.round(i/objects.length*100)+"%");
-                var isLight = objects[i] instanceof Ayce.Light;
-                if(isLight){
-                    output += "\t\t\tobjects["+i+"] = new Ayce.Light();\t// " + objects[i].ayceUI.screenName + "\n";
-                }else if(objects[i] instanceof EmptyObject){
-                    output += "\t\t\tobjects["+i+"] = {\t// " + objects[i].ayceUI.screenName + "\n" +
-                        "\t\t\t\tposition: new Ayce.Vector3(" + objects[i].position.x + ", "+ objects[i].position.y + ", "+ objects[i].position.z +"),\n" +
-                        "\t\t\t\trotation: new Ayce.Quaternion(" + objects[i].rotation.x + ", " + objects[i].rotation.y + ", " + objects[i].rotation.z + ", " + objects[i].rotation.w + "),\n" +
-                        "\t\t\t\tgetGlobalPosition: function(){return this.position},\n" +
-                        "\t\t\t\tgetGlobalRotation: function(){return this.rotation}\n\t\t\t};\n";
-                }else{
-                    output += "\t\t\tobjects["+i+"] = new Ayce.Object3D();\t// " + objects[i].ayceUI.screenName + "\n";
-                }
-                for (var property in objects[i]) {
-                    if(objects[i].hasOwnProperty(property) && ((!isLight &&objects[i][property]!=referenceObject[property])||(isLight &&objects[i][property]!=referenceLight[property]))) {
-                        switch (typeof objects[i][property]) {
-                            case "string":
-                                console.log(objects[i][property]);
-                                output += "\t\t\tobjects["+i+"]." + property + " = \"" + objects[i][property] + "\";\n";
-                                break;
-                            case "boolean":
-                                output += "\t\t\tobjects["+i+"]." + property + " = " + objects[i][property] + ";\n";
-                                break;
-                            case "object":
-                                if (Array.isArray(objects[i][property])&&property != "collideWith") {   // collideWith is handled after this loop
-                                    output += "\t\t\tobjects["+i+"]." + property + " = [" + objects[i][property].toString() + "];\n";
-                                } else if (objects[i][property] == null) {
-                                    output += "\t\t\tobjects["+i+"]." + property + " = " + objects[i][property] + ";\n";
-                                } else {
-                                    if (property == "parentPositionWeight" || property == "parentRotationWeight" ||
-                                        property == "position" ||   // properties of type Ayce.Vector3
-                                        property == "scale" ||
-                                        property == "velocity") {
-                                        if(objects[i][property].x != referenceObject[property].x ||     // property is different from default property
-                                            objects[i][property].y != referenceObject[property].y ||
-                                            objects[i][property].z != referenceObject[property].z) {
-                                            output += "\t\t\tobjects["+i+"]." + property + " = new Ayce.Vector3(" +
-                                                objects[i][property].x + ", " +
-                                                objects[i][property].y + ", " +
-                                                objects[i][property].z + ");\n";
+                if(objects[i]) {
+                    var isLight = objects[i] instanceof Ayce.Light;
+                    if (isLight) {
+                        output += "\t\t\tobjects[" + outputObjectIndex + "] = new Ayce.Light();\t// " + objects[i].ayceUI.screenName + "\n";
+                    } else if (objects[i] instanceof EmptyObject) {
+                        output += "\t\t\tobjects[" + outputObjectIndex + "] = {\t// " + objects[i].ayceUI.screenName + "\n" +
+                            "\t\t\t\tposition: new Ayce.Vector3(" + objects[i].position.x + ", " + objects[i].position.y + ", " + objects[i].position.z + "),\n" +
+                            "\t\t\t\trotation: new Ayce.Quaternion(" + objects[i].rotation.x + ", " + objects[i].rotation.y + ", " + objects[i].rotation.z + ", " + objects[i].rotation.w + "),\n" +
+                            "\t\t\t\tgetGlobalPosition: function(){return this.position},\n" +
+                            "\t\t\t\tgetGlobalRotation: function(){return this.rotation}\n\t\t\t};\n";
+                    } else {
+                        output += "\t\t\tobjects[" + outputObjectIndex + "] = new Ayce.Object3D();\t// " + objects[i].ayceUI.screenName + "\n";
+                    }
+                    for (var property in objects[i]) {
+                        if (objects[i].hasOwnProperty(property) && ((!isLight && objects[i][property] != referenceObject[property]) || (isLight && objects[i][property] != referenceLight[property]))) {
+                            switch (typeof objects[i][property]) {
+                                case "string":
+                                    console.log(objects[i][property]);
+                                    output += "\t\t\tobjects[" + outputObjectIndex + "]." + property + " = \"" + objects[i][property] + "\";\n";
+                                    break;
+                                case "boolean":
+                                    output += "\t\t\tobjects[" + outputObjectIndex + "]." + property + " = " + objects[i][property] + ";\n";
+                                    break;
+                                case "object":
+                                    if (Array.isArray(objects[i][property]) && property != "collideWith") {   // collideWith is handled after this loop
+                                        output += "\t\t\tobjects[" + outputObjectIndex + "]." + property + " = [" + objects[i][property].toString() + "];\n";
+                                    } else if (objects[i][property] == null) {
+                                        output += "\t\t\tobjects[" + outputObjectIndex + "]." + property + " = " + objects[i][property] + ";\n";
+                                    } else {
+                                        if (property == "parentPositionWeight" || property == "parentRotationWeight" ||
+                                            property == "position" ||   // properties of type Ayce.Vector3
+                                            property == "scale" ||
+                                            property == "velocity") {
+                                            if (objects[i][property].x != referenceObject[property].x ||     // property is different from default property
+                                                objects[i][property].y != referenceObject[property].y ||
+                                                objects[i][property].z != referenceObject[property].z) {
+                                                output += "\t\t\tobjects[" + outputObjectIndex + "]." + property + " = new Ayce.Vector3(" +
+                                                    objects[i][property].x + ", " +
+                                                    objects[i][property].y + ", " +
+                                                    objects[i][property].z + ");\n";
+                                            }
+                                        } else if (property == "rotation") {    // properties of type Ayce.Quaternion
+                                            if (objects[i][property].x != referenceObject[property].x ||     // property is different from default property
+                                                objects[i][property].y != referenceObject[property].y ||
+                                                objects[i][property].z != referenceObject[property].z ||
+                                                objects[i][property].w != referenceObject[property].w) {
+                                                output += "\t\t\tobjects[" + outputObjectIndex + "]." + property + " = new Ayce.Quaternion(" +
+                                                    objects[i][property].x + ", " +
+                                                    objects[i][property].y + ", " +
+                                                    objects[i][property].z + ", " +
+                                                    objects[i][property].w + ");\n";
+                                            }
+                                        } else if (property == "color" || property == "specularColor") {
+                                            output += "\t\t\tobjects[" + outputObjectIndex + "]." + property + " = {\n" +
+                                                "\t\t\t\tred: " + objects[i][property].red + ",\n" +
+                                                "\t\t\t\tgreen: " + objects[i][property].green + ",\n" +
+                                                "\t\t\t\tblue: " + objects[i][property].blue + "\n\t\t\t};\n";
+                                        } else if (property == "ayceUI") {
+                                            output += "\t\t\tobjects[" + outputObjectIndex + "]." + property + " = {\n" +
+                                                "\t\t\t\tid: " + objects[i][property].id + ",\n" +
+                                                "\t\t\t\tscreenName: \"" + objects[i][property].screenName + "\",\n" +
+                                                "\t\t\t\trunScriptInPreview: " + objects[i][property].runScriptInPreview + "\n\t\t\t};\n";
                                         }
-                                    } else if (property == "rotation") {    // properties of type Ayce.Quaternion
-                                        if(objects[i][property].x != referenceObject[property].x ||     // property is different from default property
-                                            objects[i][property].y != referenceObject[property].y ||
-                                            objects[i][property].z != referenceObject[property].z ||
-                                            objects[i][property].w != referenceObject[property].w) {
-                                            output += "\t\t\tobjects["+i+"]." + property + " = new Ayce.Quaternion(" +
-                                                objects[i][property].x + ", " +
-                                                objects[i][property].y + ", " +
-                                                objects[i][property].z + ", " +
-                                                objects[i][property].w + ");\n";
+                                    }
+                                    break;
+                                case "function":
+                                    if (property == "updateScript" || property == "initScript") {
+                                        if (objects[i][property] != referenceObject[property]) {
+                                            output += "\t\t\tobjects[" + outputObjectIndex + "]." + property + " = " + objects[i][property].toString() + ";\n";    // TODO: function to string
                                         }
-                                    } else if (property == "color" || property == "specularColor"){
-                                        output += "\t\t\tobjects["+i+"]." + property + " = {\n" +
-                                            "\t\t\t\tred: "+objects[i][property].red + ",\n" +
-                                            "\t\t\t\tgreen: "+objects[i][property].green + ",\n" +
-                                            "\t\t\t\tblue: "+objects[i][property].blue + "\n\t\t\t};\n";
-                                    } else if(property == "ayceUI"){
-                                        output += "\t\t\tobjects["+i+"]." + property + " = {\n" +
-                                            "\t\t\t\tid: "+objects[i][property].id + ",\n" +
-                                            "\t\t\t\tscreenName: \""+objects[i][property].screenName + "\",\n" +
-                                            "\t\t\t\trunScriptInPreview: "+objects[i][property].runScriptInPreview+ "\n\t\t\t};\n";
                                     }
-                                }
-                                break;
-                            case "function":
-                                if(property == "updateScript" || property == "initScript"){
-                                    if(objects[i][property] != referenceObject[property]) {
-                                        output += "\t\t\tobjects["+i+"]." + property + " = " + objects[i][property].toString() + ";\n";    // TODO: function to string
-                                    }
-                                }
+                            }
                         }
                     }
+                    outputObjectIndex ++;
                 }
             }
+            outputObjectIndex = 0;
             for(i = 0; i < objects.length; i++){
-                if(objects[i].parent!=null){
-                    output += "\t\t\tobjects["+i+"].parent = objects[" + objects[i].parent.ayceUI.id + "];\n";
-                }
-                if(objects[i].collideWith!=null){
-                    output += "\t\t\tobjects["+i+"].collideWith = [";
-                    for(var j = 0; j < objects[i].collideWith.length; j++){
-                        output += "\t\t\tobjects["+objects[i].collideWith[j].ayceUI.id+"], "
+                if(objects[i]) {
+                    if (objects[i].parent != null) {
+                        output += "\t\t\tobjects[" + outputObjectIndex + "].parent = objects[" + objects[i].parent.ayceUI.id + "];\n";
                     }
-                    output = output.replace(/[, ]+$/, "");  // remove trailing ", "
-                    output += "\t\t\t];\n";
+                    if (objects[i].collideWith != null) {
+                        output += "\t\t\tobjects[" + outputObjectIndex + "].collideWith = [";
+                        for (var j = 0; j < objects[i].collideWith.length; j++) {
+                            output += "\t\t\tobjects[" + objects[i].collideWith[j].ayceUI.id + "], "    // TODO: this is not the correct ID because deleted objects are replaced by null. Best solution is to splice() deleted objects out of array and update ids of other objects
+                        }
+                        output = output.replace(/[, ]+$/, "");  // remove trailing ", "
+                        output += "\t\t\t];\n";
+                    }
+                    outputObjectIndex ++;
                 }
             }
 

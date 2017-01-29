@@ -191,9 +191,9 @@ var deleteObject = function(child){
     if(!(objects[child.id] instanceof EmptyObject)) {
         scene.removeFromScene(objects[child.id]);
         cameraPreview.scene.removeFromScene(cameraPreview.objects[child.id]);
-        cameraPreview.objects[child.id] = null;
     }
     objects[child.id] = null;
+    cameraPreview.objects[child.id] = null;
     handleDeletedObject(child);
 };
 
@@ -205,5 +205,6 @@ var deleteParent = function(child){
             deleteObject(child.parentNode.childNodes[i]);
         }
     }
+
     deleteObject(document.getElementById(child.parentNode.firstChild.id));    // delete first node separately because it doesn't have a wrapper anymore
 };
