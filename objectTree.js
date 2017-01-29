@@ -190,10 +190,10 @@ var handleDeletedObject = function(child){
 var deleteObject = function(child){
     if(!(objects[child.id] instanceof EmptyObject)) {
         scene.removeFromScene(objects[child.id]);
-        objects[child.id] = null;
         cameraPreview.scene.removeFromScene(cameraPreview.objects[child.id]);
         cameraPreview.objects[child.id] = null;
     }
+    objects[child.id] = null;
     handleDeletedObject(child);
 };
 
