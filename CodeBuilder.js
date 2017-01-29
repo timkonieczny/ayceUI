@@ -211,15 +211,15 @@ CodeBuilder = function(){
                 console.log(Math.round(i/objects.length*100)+"%");
                 var isLight = objects[i] instanceof Ayce.Light;
                 if(isLight){
-                    output += "\t\t\tobjects["+i+"] = new Ayce.Light();\n";
+                    output += "\t\t\tobjects["+i+"] = new Ayce.Light();\t// " + objects[i].ayceUI.screenName + "\n";
                 }else if(objects[i] instanceof EmptyObject){
-                    output += "\t\t\tobjects["+i+"] = {\n" +
+                    output += "\t\t\tobjects["+i+"] = {\t// " + objects[i].ayceUI.screenName + "\n" +
                         "\t\t\t\tposition: new Ayce.Vector3(" + objects[i].position.x + ", "+ objects[i].position.y + ", "+ objects[i].position.z +"),\n" +
                         "\t\t\t\trotation: new Ayce.Quaternion(" + objects[i].rotation.x + ", " + objects[i].rotation.y + ", " + objects[i].rotation.z + ", " + objects[i].rotation.w + "),\n" +
                         "\t\t\t\tgetGlobalPosition: function(){return this.position},\n" +
                         "\t\t\t\tgetGlobalRotation: function(){return this.rotation}\n\t\t\t};\n";
                 }else{
-                    output += "\t\t\tobjects["+i+"] = new Ayce.Object3D();\n";
+                    output += "\t\t\tobjects["+i+"] = new Ayce.Object3D();\t// " + objects[i].ayceUI.screenName + "\n";
                 }
                 for (var property in objects[i]) {
                     if(objects[i].hasOwnProperty(property) && ((!isLight &&objects[i][property]!=referenceObject[property])||(isLight &&objects[i][property]!=referenceLight[property]))) {
@@ -342,7 +342,11 @@ CodeBuilder = function(){
                     "\t\t\tscene.getCamera().getManager().modifiers.push(modifier);\n" +
                     "\t\t\tmodifier.initScript();\n";
             }
-            output += "\t\t\tfor(i = 0; i < objects.length; i++)\n" +
+            output += "\t\t\t// Switch to different rendering modes by un-commenting one of the following lines.\n" +
+                "\t\t\t// Desktop rendering is enabled by default.\n" +
+                "\t\t\t//scene.setRendererDesktop();\n" +
+                "\t\t\t//scene.setRendererVR(false);\t//The argument toggles barrel distortion / chromatic abberation correction.\n" +
+                "\t\t\tfor(i = 0; i < objects.length; i++)\n" +
                 "\t\t\t\tobjects[i].initScript();\n" +
                 "\t\t\tvar update = function(){\n" +
                 "\t\t\t\tAyce.requestAnimFrame(update);\n" +
