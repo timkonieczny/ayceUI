@@ -127,7 +127,6 @@ UIFactory = function(){
                 '</li>';
         }
         if(this.editScript){
-            console.log(objects[currentObjectId].ayceUI.updateScriptError);
             ui+='<li>Scripts:<br>' +
                 '<a id="edit_script" class="button_dark"><i class="fa fa-code"></i>Edit update script<div id="update_script_error"';
 

@@ -4,5 +4,6 @@ EmptyObject = function(){
     this.getGlobalRotation = function() { return this.rotation };
     this.getGlobalPosition = function() { return this.position };
     this.updateScript = function () {};
+    this.initScript = function () {};
     this.ayceUI = new AyceUIMetaObject("empty object");
 };
