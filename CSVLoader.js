@@ -555,13 +555,8 @@ CSVLoader = function(){
         var index;
 
         for(var i = 0; i < csvData.length; i++){
-            csvObjects.push(new Ayce.Object3D());
-            index = csvObjects.length-1;
-
-
-
             objects.push(new Ayce.Object3D());
-            objects[objects.length-1].visualization = csvData[index-1];
+            objects[objects.length-1].visualization = csvData[i];
             getVerticesColorsIndices(csvData[i].points, objects[objects.length-1], i);
 
             objects[objects.length-1].parent = objects[parentId];
@@ -582,9 +577,6 @@ CSVLoader = function(){
         showProperties(document.getElementById(idOfParent));
 
         console.log("done (" + (Date.now()-csvTimer) + "ms)");
-
-
-        return csvObjects;
     };
 
     this.getGroupedO3Ds = function(trajString, dataString, firstTrajectory, lastTrajectory){
