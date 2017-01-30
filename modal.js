@@ -258,42 +258,49 @@ var processCSV = function(e, type){
     }
 };
 
-var o3DFromCSVStrings = function(csvString, csvDataString){
+var o3DFromCSVStrings = function(csvString, csvDataString) {
     var o3Ds;
-    if(document.getElementById("group_objects").checked)
+    if (document.getElementById("group_objects").checked){
         o3Ds = csvLoader.getGroupedO3Ds(csvString, csvDataString);
-    else{
-        o3Ds = csvLoader.getIndividualO3Ds(csvString, csvDataString);
-    }
-
-    objects.push(o3Ds[0]);
-    cameraPreview.objects.push(o3Ds[0]);
-    objects[objects.length - 1].script = function () {};
-    objects[objects.length - 1].initScript = function () {};
-    cameraPreview.objects[objects.length - 1].script = function () {};
-    cameraPreview.objects[objects.length - 1].initScript = function () {};
-    objects[objects.length - 1].ayceUI = {
-        id: objects.length - 1,
-        screenName: "dataset",
-        runScriptInPreview: false
-    };
-    var idOfParent = objects[objects.length - 1].ayceUI.id;
-    appendObjectInSceneChildNode("empty");
-    currentObjectId = objects.length - 1;
-    for(var i = 1; i < o3Ds.length; i++){
-        objects.push(o3Ds[i]);
-        cameraPreview.objects.push(cloneO3D(o3Ds[i]));
-        objects[objects.length - 1].script = function () {};
-        objects[objects.length - 1].initScript = function () {};
-        cameraPreview.objects[objects.length - 1].script = function () {};
-        cameraPreview.objects[objects.length - 1].initScript = function () {};
-        objects[objects.length - 1].ayceUI = new AyceUIMetaObject("trajectory "+o3Ds[i].visualization.id);
-        scene.addToScene(objects[objects.length - 1]);
-        cameraPreview.scene.addToScene(cameraPreview.objects[cameraPreview.objects.length - 1], false);
-        appendObjectInSceneChildNode("csv");
+        objects.push(o3Ds[0]);
+        cameraPreview.objects.push(o3Ds[0]);
+        objects[objects.length - 1].script = function () {
+        };
+        objects[objects.length - 1].initScript = function () {
+        };
+        cameraPreview.objects[objects.length - 1].script = function () {
+        };
+        cameraPreview.objects[objects.length - 1].initScript = function () {
+        };
+        objects[objects.length - 1].ayceUI = {
+            id: objects.length - 1,
+            screenName: "dataset",
+            runScriptInPreview: false
+        };
+        var idOfParent = objects[objects.length - 1].ayceUI.id;
+        appendObjectInSceneChildNode("empty");
         currentObjectId = objects.length - 1;
+        for (var i = 1; i < o3Ds.length; i++) {
+            objects.push(o3Ds[i]);
+            cameraPreview.objects.push(cloneO3D(o3Ds[i]));
+            objects[objects.length - 1].script = function () {
+            };
+            objects[objects.length - 1].initScript = function () {
+            };
+            cameraPreview.objects[objects.length - 1].script = function () {
+            };
+            cameraPreview.objects[objects.length - 1].initScript = function () {
+            };
+            objects[objects.length - 1].ayceUI = new AyceUIMetaObject("trajectory " + o3Ds[i].visualization.id);
+            scene.addToScene(objects[objects.length - 1]);
+            cameraPreview.scene.addToScene(cameraPreview.objects[cameraPreview.objects.length - 1], false);
+            appendObjectInSceneChildNode("csv");
+            currentObjectId = objects.length - 1;
+        }
+        showProperties(document.getElementById(idOfParent))
+    }else{
+        o3Ds = csvLoader.getIndividualO3Ds(csvString, csvDataString, objects, cameraPreview.objects, scene, cameraPreview.scene);
     }
-    showProperties(document.getElementById(idOfParent))
 };
 
 var csvTimer;

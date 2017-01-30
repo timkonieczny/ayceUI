@@ -526,26 +526,63 @@ CSVLoader = function(){
         return object
     };
 
-    this.getIndividualO3Ds = function(trajString, dataString, firstTrajectory, lastTrajectory){
+    this.getIndividualO3Ds = function(trajString, dataString, objects, cameraPreviewObjects, scene, cameraPreviewScene, firstTrajectory, lastTrajectory){
 
         preprocessData(trajString, dataString, firstTrajectory, lastTrajectory);
+
+        objects.push(new EmptyObject());
+        cameraPreviewObjects.push(new EmptyObject());
+
+        var parentId = objects.length-1;
+
+        objects[objects.length - 1].script = function () {};
+        objects[objects.length - 1].initScript = function () {};
+        cameraPreviewObjects[objects.length - 1].script = function () {};
+        cameraPreviewObjects[objects.length - 1].initScript = function () {};
+        objects[objects.length - 1].ayceUI = {
+            id: objects.length - 1,
+            screenName: "dataset",
+            runScriptInPreview: false
+        };
+
+        objects[objects.length - 1].visualization = {isGrouped: false};
+        cameraPreviewObjects[objects.length - 1].visualization = {isGrouped: false};
+
+        var idOfParent = objects[objects.length - 1].ayceUI.id;
+        appendObjectInSceneChildNode("empty");
+        currentObjectId = objects.length - 1;
 
         var index;
 
         for(var i = 0; i < csvData.length; i++){
             csvObjects.push(new Ayce.Object3D());
             index = csvObjects.length-1;
-            csvObjects[index].visualization = csvData[index-1];
-            getVerticesColorsIndices(csvData[i].points, csvObjects[index], i);
 
-            csvObjects[index].parent = csvObjects[0];
-            csvObjects[index].colors = colors.speed;
-            csvObjects[index].visualization.speedColors = colors.speed;
-            csvObjects[index].visualization.accelerationColors = colors.acceleration;
+
+
+            objects.push(new Ayce.Object3D());
+            objects[objects.length-1].visualization = csvData[index-1];
+            getVerticesColorsIndices(csvData[i].points, objects[objects.length-1], i);
+
+            objects[objects.length-1].parent = objects[parentId];
+            objects[objects.length-1].colors = colors.speed;
+            objects[objects.length-1].visualization.speedColors = colors.speed;
+            objects[objects.length-1].visualization.accelerationColors = colors.acceleration;
+            cameraPreviewObjects.push(cloneO3D(objects[objects.length-1]));
+            objects[objects.length - 1].script = function () {};
+            objects[objects.length - 1].initScript = function () {};
+            cameraPreviewObjects[objects.length - 1].script = function () {};
+            cameraPreviewObjects[objects.length - 1].initScript = function () {};
+            objects[objects.length - 1].ayceUI = new AyceUIMetaObject("trajectory "+objects[objects.length-1].visualization.id);
+            scene.addToScene(objects[objects.length - 1]);
+            cameraPreviewScene.addToScene(cameraPreviewObjects[cameraPreviewObjects.length - 1], false);
+            appendObjectInSceneChildNode("csv");
+            currentObjectId = objects.length - 1;
         }
+        showProperties(document.getElementById(idOfParent));
+
         console.log("done (" + (Date.now()-csvTimer) + "ms)");
 
-        csvObjects[0].visualization = {isGrouped: false};
 
         return csvObjects;
     };
