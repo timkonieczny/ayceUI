@@ -23,7 +23,9 @@ CameraPreview = function() {
 
     this.update = function() {
 
-        for(var i=0; i < this.objects.length; i++) if(this.objects[i]) this.objects[i].updateScript();
+        for(var i=0; i < this.objects.length; i++) if(this.objects[i]) {
+            this.objects[i].updateScript();
+        }
 
         this.scene.updateScene();
         this.scene.drawScene();

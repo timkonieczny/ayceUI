@@ -535,9 +535,9 @@ CSVLoader = function(){
 
         var parentId = objects.length-1;
 
-        objects[objects.length - 1].script = function () {};
+        objects[objects.length - 1].updateScript = function () {};
         objects[objects.length - 1].initScript = function () {};
-        cameraPreviewObjects[objects.length - 1].script = function () {};
+        cameraPreviewObjects[objects.length - 1].updateScript = function () {};
         cameraPreviewObjects[objects.length - 1].initScript = function () {};
         objects[objects.length - 1].ayceUI = {
             id: objects.length - 1,
@@ -564,9 +564,9 @@ CSVLoader = function(){
             objects[objects.length-1].visualization.speedColors = colors.speed;
             objects[objects.length-1].visualization.accelerationColors = colors.acceleration;
             cameraPreviewObjects.push(cloneO3D(objects[objects.length-1]));
-            objects[objects.length - 1].script = function () {};
+            objects[objects.length - 1].updateScript = function () {};
             objects[objects.length - 1].initScript = function () {};
-            cameraPreviewObjects[objects.length - 1].script = function () {};
+            cameraPreviewObjects[objects.length - 1].updateScript = function () {};
             cameraPreviewObjects[objects.length - 1].initScript = function () {};
             objects[objects.length - 1].ayceUI = new AyceUIMetaObject("trajectory "+objects[objects.length-1].visualization.id);
             scene.addToScene(objects[objects.length - 1]);
