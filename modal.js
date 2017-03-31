@@ -264,11 +264,11 @@ var o3DFromCSVStrings = function(csvString, csvDataString) {
         o3Ds = csvLoader.getGroupedO3Ds(csvString, csvDataString);
         objects.push(o3Ds[0]);
         cameraPreview.objects.push(o3Ds[0]);
-        objects[objects.length - 1].script = function () {
+        objects[objects.length - 1].updateScript = function () {
         };
         objects[objects.length - 1].initScript = function () {
         };
-        cameraPreview.objects[objects.length - 1].script = function () {
+        cameraPreview.objects[objects.length - 1].updateScript = function () {
         };
         cameraPreview.objects[objects.length - 1].initScript = function () {
         };
@@ -283,11 +283,11 @@ var o3DFromCSVStrings = function(csvString, csvDataString) {
         for (var i = 1; i < o3Ds.length; i++) {
             objects.push(o3Ds[i]);
             cameraPreview.objects.push(cloneO3D(o3Ds[i]));
-            objects[objects.length - 1].script = function () {
+            objects[objects.length - 1].updateScript = function () {
             };
             objects[objects.length - 1].initScript = function () {
             };
-            cameraPreview.objects[objects.length - 1].script = function () {
+            cameraPreview.objects[objects.length - 1].updateScript = function () {
             };
             cameraPreview.objects[objects.length - 1].initScript = function () {
             };
