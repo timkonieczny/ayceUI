@@ -48,6 +48,7 @@ var resetInitScript = function(object){
     document.getElementById("edit_script_textarea").value = object.initScript;
 };
 var resetUpdateScript = function(object){
+    console.log(object);
     document.getElementById("edit_script_textarea").value = object.updateScript;
 };
 var openModal = function(type, object){
@@ -164,7 +165,11 @@ var createGeometry = function(obj, mtl){
     if(object.vertices) {
 
         objects.push(object);                // TODO: more efficient solution for copying the O3D
+        objects[objects.length-1].updateScript = function(){};
+        objects[objects.length-1].initScript = function(){};
         cameraPreview.objects.push(new Ayce.OBJLoader(null, obj, mtl, true)[0]);
+        cameraPreview.objects[cameraPreview.objects.length-1].updateScript = function(){};
+        cameraPreview.objects[cameraPreview.objects.length-1].initScript = function(){};
         objects[objects.length-1].ayceUI = new AyceUIMetaObject("imported object");
         scene.addToScene(objects[objects.length - 1]);
         cameraPreview.scene.addToScene(cameraPreview.objects[cameraPreview.objects.length - 1], false);
@@ -172,7 +177,7 @@ var createGeometry = function(obj, mtl){
 
         var child = appendObjectInSceneChildNode("obj");
         closeModal();
-        child.onclick({srcElement: {dataset: {type: "obj"}}});
+        showProperties(child);
     }else{
         showNotification("At least one of the provided files is invalid. The object wasn't created.", "fa-exclamation-circle", "error");
         closeModal();
