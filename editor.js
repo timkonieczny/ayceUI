@@ -67,7 +67,6 @@ for(i = 0; i < addObjectButtons.length; i++){
             objects[objects.length-1].initScript = function(){};
             cameraPreview.objects[objects.length-1].updateScript = function(){};
             cameraPreview.objects[objects.length-1].initScript = function(){};
-            var screenName = this.dataset.type;
             objects[objects.length-1].ayceUI = new AyceUIMetaObject(this.dataset.type);
 
             if(!objects[objects.length-1].textureCoords){
